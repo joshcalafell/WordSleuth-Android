@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:id="@+id/fragment_search_loading">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView_unused"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Loading..."
+        android:id="@+id/tv_title"
+        android:layout_below="@+id/textView_unused"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/tv_title"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:elevation="2dp"
+        android:padding="30dp"
+        android:progressBackgroundTint="@color/abc_background_cache_hint_selector_material_dark"
+        android:progressBackgroundTintMode="src_over"
+        android:progressDrawable="@android:color/holo_blue_dark"
+        android:progressTint="@android:color/holo_blue_dark"
+        android:progressTintMode="src_over"
+        android:textAlignment="center"/>
+</RelativeLayout>

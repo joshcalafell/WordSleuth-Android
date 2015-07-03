@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <item android:id="@+id/help"
+          android:icon="@mipmap/ic_action_save"
+          android:title="Save"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/share"
+          android:icon="@mipmap/ic_action_share"
+          android:title="Share"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/favorites"
+          android:icon="@mipmap/ic_action_favorite"
+          android:title="Favorites"
+          app:showAsAction="always"/>
+
+
+    <group>
+        <item
+            android:id="@+id/about_option"
+            android:orderInCategory="1"
+            app:showAsAction="never"
+            android:title="@string/txt_about" />
+
+        <item
+            android:id="@+id/dictionary_option"
+            android:orderInCategory="2"
+            app:showAsAction="never"
+            android:title="@string/txt_dict_info" />
+
+    </group>
+</menu>
+
+
+
+    

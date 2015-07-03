@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/wordsleuth_bg_512x512"
+                android:id="@+id/fragment_search_results"
+                android:textAlignment="textEnd">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Search Results"
+        android:id="@+id/tv_title"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Query: "
+        android:id="@+id/tv_query_title"
+        android:layout_below="@+id/tv_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tv_query"
+        android:layout_above="@+id/tv_length"
+        android:layout_toRightOf="@+id/tv_query_title"
+        android:paddingLeft="20dp"
+        android:background="@android:color/transparent"
+        android:layout_alignTop="@+id/tv_query_title"
+        android:paddingTop="10dp"
+        android:textColor="@android:color/white"
+        android:text="Query"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Length: "
+        android:id="@+id/tv_length_title"
+        android:layout_below="@+id/tv_query_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="30dp"
+        android:background="@android:color/transparent"
+        android:paddingTop="10dp"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="5 letters"
+        android:id="@+id/tv_length"
+        android:layout_below="@+id/tv_query_title"
+        android:layout_toRightOf="@+id/tv_query_title"
+        android:paddingLeft="20dp"
+        android:background="@android:color/transparent"
+        android:paddingTop="10dp"
+        android:textColor="@android:color/white"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Advanced Filter"
+        android:id="@+id/button"
+        android:textColor="@android:color/holo_blue_light"
+        android:background="@android:color/transparent"
+        android:paddingTop="0dp"
+        android:paddingLeft="30dp"
+        android:backgroundTintMode="src_over"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Wildcards: "
+        android:id="@+id/textView"
+        android:layout_below="@+id/tv_length_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="10dp"
+        android:paddingLeft="30dp"
+        android:textColor="@android:color/white"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/tv_length"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:textColor="@android:color/white"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:background="@android:color/transparent"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_results"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="10dp"/>
+
+</RelativeLayout>

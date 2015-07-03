@@ -1,0 +1,53 @@
+Notice regarding the SCRABBLE® DICTIONARY
+=========================================
+SCRABBLE® Official Scrabble Players Dictionary (OSPD) and the Full version (enable1) are trademarks
+registered in the US and Canada by Hasbro Inc. J.W. Spear & Sons Limited of Maidenhead, Berkshire,
+England, a subsidiary of Mattel Inc, possesses rights in other countries.
+
+Words with Friends is a trademark of Zynga With Friends.
+
+Mattel and Spear are not affiliated with Hasbro.
+
+Rabbit Fighter Studios has no affiliation with SCRABBLE®, Mattel, Spear, Hasbro,
+or Zynga with Friends in any way.
+
+About: The dictionaries in use:
+From: Link -> http://www.puzzlers.org/dokuwiki/doku.php?id=solving%3awordlists%3aabout%3astart
+--------------------------------------------------------------------------------------------------
+
+Scrabble(tm) Dictionaries
+=========================
+
+The official Scrabble player's dictionary, known as OSPD, is widely available on the internet.
+There is also a list targeted at Scrabble players known as the Enable list. This has been
+explicitly placed in the public domain. The Enable list is much more comprehensive than OSPD;
+you can read the authors' comments if you are interested. We have left their comments exactly
+as found, so a couple of references (e.g. to SIGWORDS.LST) do not make sense in this context.
+Note that OSPD contains no words over 8 letters; one reason that the Enable list is so much
+larger is that it includes longer words (which are of course much less likely to be used
+in Scrabble).
+
+    * OSPD – 79,338 entries
+    * Enable – 172,823 entries
+
+--------------------------------------------------------------------------------------------------
+
+NI2--Webster's New International Dictionary, Second Edition
+===========================================================
+
+The two NI2 word lists are known as “web2” and “web2a”, and have both been widely available for a
+long time. They are collectively known as the “Air Force” lists. You may be interested in
+information we received from Doug McIlroy about the origin of both these lists and the Unix
+dictionary (see below). The first contains all single words from NI2; the second, all compound
+forms. Not every word in NI2 is here; not every word here is in NI2. The correspondence is
+very close for web2, but not so good for web2a–there are many NI2 compound entries missing
+from web2a. In addition, there are many inflected forms missing from these lists.
+However, for NPL purposes these two lists are invaluable since they cover the largest
+current reference very well.
+
+These lists are mixed case.
+
+    * Single words – 234,936 entries
+    * Compound forms – 76, 205 entries
+
+--------------------------------------------------------------------------------------------------

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/wordsleuth_bg_512x512"
+                android:id="@+id/fragment_search_results"
+                android:textAlignment="textEnd">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Search Results"
+        android:id="@+id/tv_title"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tv_query_title"
+        android:paddingLeft="30dp"
+        android:background="@android:color/transparent"
+        android:paddingTop="10dp"
+        android:textColor="@android:color/white"
+        android:text="Query: "
+        android:layout_below="@+id/tv_title"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Advanced Filter"
+        android:id="@+id/button"
+        android:textColor="@android:color/holo_blue_light"
+        android:background="@android:color/transparent"
+        android:paddingTop="0dp"
+        android:paddingLeft="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Query"
+        android:id="@+id/tv_query"
+        android:textColor="@android:color/white"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:background="@android:color/transparent"
+        android:layout_above="@+id/tv_results_title"
+        android:layout_toRightOf="@+id/tv_query_title"
+        android:layout_toEndOf="@+id/tv_query_title"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_results"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="10dp"
+        android:layout_below="@+id/tv_results_title"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Results: "
+        android:id="@+id/tv_results_title"
+        android:layout_below="@+id/tv_query_title"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/tv_numResults"
+        android:layout_above="@+id/lv_results"
+        android:layout_toRightOf="@+id/tv_results_title"
+        android:layout_toEndOf="@+id/tv_results_title"
+        android:paddingLeft="10dp"
+        android:textColor="@android:color/white"/>
+    android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:textColor="@android:color/white"/>
+
+</RelativeLayout>
