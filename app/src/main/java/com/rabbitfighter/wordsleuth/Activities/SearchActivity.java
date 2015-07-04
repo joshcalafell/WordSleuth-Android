@@ -228,7 +228,10 @@ public class SearchActivity extends ActionBarActivity {
      */
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY).replaceAll("/[^a-zA-Z]/", "");
+            String query = intent.getStringExtra(SearchManager.QUERY)
+                    .replaceAll("/[^a-zA-Z]/", "") // Remove all non a-zA-Z chars
+                    .replaceAll("\\s","")          // Remove all spaces
+                    .toLowerCase().trim();         // Lowercase
             // Query may be empty...
             if (query.isEmpty()) {
                 Log.i(TAG, "Query is empty");
