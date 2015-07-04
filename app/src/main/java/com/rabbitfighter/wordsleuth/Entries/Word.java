@@ -1,4 +1,4 @@
-package com.rabbitfighter.wordsleuth.Objects;
+package com.rabbitfighter.wordsleuth.Entries;
 
 import java.util.Arrays;
 

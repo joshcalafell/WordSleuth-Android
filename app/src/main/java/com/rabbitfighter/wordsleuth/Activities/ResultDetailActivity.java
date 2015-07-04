@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.rabbitfighter.wordsleuth.Objects.Result;
+import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
@@ -99,7 +99,7 @@ public class ResultDetailActivity extends ActionBarActivity {
         tv_words_points.setTypeface(RobotoFontsHelper.getTypeface(getApplicationContext(), RobotoFontsHelper.roboto_regular));
 
         // This is a hack to change "anagram" to "Anagrams" for display without changing other stuff
-        String rt = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
+        String rt = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + " Result";
 
         /* Set text */
         tv_title.setText(rt);
@@ -123,17 +123,19 @@ public class ResultDetailActivity extends ActionBarActivity {
     private void handleIntent() {
         bundle = getIntent().getExtras();
         query =  bundle.getString("query").toString();
-        Log.i(TAG, query);
         result = new Result(bundle.getString("result"));
-        Log.i(TAG, result.getWord());
         resultType = bundle.getString("resultType").toString();
-        Log.i(TAG, resultType);
-        result.getNumLetters();
-        Log.i(TAG, "Length: " + length);
+        length = result.getNumLetters();
         score_scrabble = result.getPointsScrabble();
-        Log.i(TAG, "Scrabble(TM) score: " + score_scrabble);
         score_words = result.getPointsWordsWithFriends();
-        Log.i(TAG, "Words(TM) score: " + score_scrabble);
+
+        // Log (temporary)
+        Log.i(TAG, query);
+        Log.i(TAG, result.getWord());
+        Log.i(TAG, resultType);
+        Log.i(TAG, "Length: " + length);
+        Log.i(TAG, "Scrabble(TM) score: " + score_scrabble);
+        Log.i(TAG, "Words(TM) score: " + score_words);
     }
 
     /**

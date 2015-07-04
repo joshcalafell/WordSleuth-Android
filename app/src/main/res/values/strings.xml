@@ -10,46 +10,40 @@
     <string name="txt_title_page3">Finding Sub-Words</string>
     <string name="txt_title_page4">Word Combinations</string>
     <string name="txt_title_page5">Crosswords and using Wildcards (*)</string>
-    <string name="txt_lorem_ipsum">Instruction Text Lorem ipsum dolor sit
-        amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat.
-    </string>
-    <string name="txt_skip_instructions">I\'m ready, Skip Instructions...</string>
+
+    <string name="txt_skip_instructions">Swipe for more info, tap to skip...</string>
 
     <string name="txt_instructions_page1">This app is designed to easily help users find anagrams,
         subwords, or word combinations that can be made from a set of letters. You could find an
         anagram of your name or other things, or use it as an aid for crosswords or games like
-        Words With Friends(TM), or Scrabble(TM)...
-    </string>
+        Words With Friends(TM), or Scrabble(TM)...</string>
     <string name="txt_instructions_page2">To find anagrams, simply type the letters of names, or
         a words you are curious about. For games like Scrabble(TM) or Words With Friends(TM),
         just enter your letters in no specific order in the search bar and Word Sleuth will do
-        the work for you...
-    </string>
+        the work for you...</string>
     <string name="txt_instructions_page3">Sub-words are words that can be made with the letters
-        provided, but are not full anagrams. They have 1 or more letters left over. Finding
-        subwords is easy with Word Sleuth. They will appear as an option in a list to
-        view when a query is submitted, along with anagrams, and combinations, if any are found...
-    </string>
-    <string name="txt_instructions_page4">Word combinations are simply multiple word anagrams from
-        a user\'s query. For example a word combination anagram for \"Word Sleuth\" is
-        \"Slower Thud\"...
-    </string>
+        provided. They are not full anagrams. Finding subwords is easy with Word Sleuth.
+        They will appear in a list to view when a query is submitted, along with anagrams, and
+        combinations, if any are found...</string>
+    <string name="txt_instructions_page4">Word combinations are simply multiple word anagrams that
+        match a user\'s query. For example a word combination anagram for \"Word Sleuth\" is
+        \"Slower Thud\"...</string>
     <string name="txt_instructions_page5">Sometimes you don\'t know all the letters for a
-        query, such as in a crossword, or in other games with blank letters. You can substitute
+        query such as in crossword games or games with blank letters. You can substitute
         unknown letters with the "*" wildcard character and Word Sleuth will do the heavy
-        lifting to find matches...
-    </string>
+        lifting to find matches...</string>
     <string name="app_label">Word Sleuth Search</string>
     <string name="search_hint">Search for...</string>
-    <string name="tv_search_instructions">To search, enter your query in the search bar above. Click on the icon to expand. Type \"*\" for wildcards.</string>
+    <string name="tv_search_instructions">To search, enter your query in the search bar above.
+        Click on the icon to expand. Type \"*\" for wildcards.</string>
     <string name="txt_about">About WordSleuth</string>
     <string name="txt_dict_info">Dictionary Info</string>
-    <string name="txt_input_instructions">To search, enter your query in the search bar above. Click on the icon to expand. Type \"*\" for wildcards.</string>
+    <string name="txt_input_instructions">To search, enter your query in the search bar above.
+        Click on the icon to expand. Type \"*\" for wildcards.</string>
     <string name="txt_loading">Loading...</string>
     <string name="txt_add">Add to list</string>
     <string name="txt_sample_query">Query</string>
     <string name="REGEX_ACCEPT_LOWER_PLUS_ASTERISK">[^a-z*]</string>
     <string name="regex_line_sperator">line.separator</string>
+    <string name="txt_settings_tag">Settings</string>
 </resources>

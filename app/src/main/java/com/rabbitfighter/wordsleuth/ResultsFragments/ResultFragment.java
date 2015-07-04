@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.rabbitfighter.wordsleuth.Activities.ResultDetailActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
 import com.rabbitfighter.wordsleuth.ListItems.ResultItem;
-import com.rabbitfighter.wordsleuth.Objects.Result;
+import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 

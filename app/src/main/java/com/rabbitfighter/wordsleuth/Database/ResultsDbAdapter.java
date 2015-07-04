@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.rabbitfighter.wordsleuth.Objects.Result;
+import com.rabbitfighter.wordsleuth.Entries.Result;
 
 import java.util.ArrayList;
 

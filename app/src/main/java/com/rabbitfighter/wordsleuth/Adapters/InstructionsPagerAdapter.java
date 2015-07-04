@@ -6,11 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionFragment1;
-import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionFragment2;
-import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionFragment3;
-import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionFragment4;
-import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionFragment5;
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsWelcome;
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsAnagrams;
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsSubwords;
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsCombos;
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsWildcards;
 
 /**
  * InstructionsPagerAdapter Extends FragmentStatePagerAdapter and is the controller for
@@ -45,27 +45,27 @@ public class InstructionsPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                fragment = new InstructionFragment1();
+                fragment = new InstructionsWelcome();
                 args.putInt("page_position", position + 1);
                 fragment.setArguments(args);
                 return fragment;
             case 1:
-                fragment = new InstructionFragment2();
+                fragment = new InstructionsAnagrams();
                 args.putInt("page_position", position + 1);
                 fragment.setArguments(args);
                 return fragment;
             case 2:
-                fragment = new InstructionFragment3();
+                fragment = new InstructionsSubwords();
                 args.putInt("page_position", position + 1);
                 fragment.setArguments(args);
                 return fragment;
             case 3:
-                fragment = new InstructionFragment4();
+                fragment = new InstructionsCombos();
                 args.putInt("page_position", position + 1);
                 fragment.setArguments(args);
                 return fragment;
             case 4:
-                fragment = new InstructionFragment5();
+                fragment = new InstructionsWildcards();
                 args.putInt("page_position", position + 1);
                 fragment.setArguments(args);
                 return fragment;

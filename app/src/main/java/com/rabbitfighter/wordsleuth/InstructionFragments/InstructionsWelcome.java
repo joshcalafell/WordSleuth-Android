@@ -17,23 +17,22 @@ import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 /**
  * Created by rabbitfighter on 6/12/15.
  */
-public class InstructionFragment3 extends Fragment {
+public class InstructionsWelcome extends Fragment {
 
-    TextView tv_title, tv_instructions, tv_page_number;
+    TextView  tv_title, tv_instructions, tv_page_number;
     Button btn_skip_instruction;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-                // Inflate the layout resource that will be returned
+        // Inflate the layout resource that will be returned
         View rootView = inflater.inflate(R.layout.fragment_instructions, container, false);
         Context context = rootView.getContext();
-        // Get the arguments that was supplied when
-        // the fragment was instantiated in the
-        // InstructionsPagerAdapter
+        // Get the arguments that was supplied when the fragment was instantiated in the adapter
         Bundle args = getArguments();
-
+        // show the page position
         ((TextView) rootView.findViewById(R.id.page_number)).setText("Page " + args.getInt("page_position"));
 
+        /* Set views */
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         tv_instructions = (TextView) rootView.findViewById(R.id.tv_instructions);
         tv_page_number = (TextView) rootView.findViewById(R.id.page_number);
@@ -46,16 +45,16 @@ public class InstructionFragment3 extends Fragment {
         btn_skip_instruction.setTypeface(RobotoFontsHelper.getTypeface(context, RobotoFontsHelper.roboto_medium_italic));
 
         /* Set the text */
-        tv_title.setText(R.string.txt_title_page3);
-        tv_instructions.setText(R.string.txt_instructions_page3);
+        tv_title.setText(R.string.txt_welcome);
+        tv_instructions.setText(R.string.txt_instructions_page1);
 
         btn_skip_instruction.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        skipInstructions();
-                    }
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    skipInstructions();
                 }
+            }
         );
 
         return rootView;
@@ -68,5 +67,4 @@ public class InstructionFragment3 extends Fragment {
         Intent i = new Intent(getActivity(), SearchActivity.class);
         startActivity(i);
     }
-
 }

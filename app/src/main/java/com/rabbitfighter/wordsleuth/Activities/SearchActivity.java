@@ -228,7 +228,7 @@ public class SearchActivity extends ActionBarActivity {
      */
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY).replaceAll("/[^a-zA-Z ]/", "");
+            String query = intent.getStringExtra(SearchManager.QUERY).replaceAll("/[^a-zA-Z]/", "");
             // Query may be empty...
             if (query.isEmpty()) {
                 Log.i(TAG, "Query is empty");
@@ -270,7 +270,8 @@ public class SearchActivity extends ActionBarActivity {
         Message.msgLong(getApplicationContext(), "\"" + query + "\" submitted");
         // If dictionary is loaded, start the search service
         try {
-            if (searchService.prepareDictionary()) {
+            // Send the query length so that the search knows which dictionary to use
+            if (searchService.prepareDictionary(query.length())) {
                 searchService.searchDictionary(query);
             }
         } catch (Exception e) {

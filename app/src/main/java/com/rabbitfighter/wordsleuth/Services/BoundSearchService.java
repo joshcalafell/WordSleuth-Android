@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
-import com.rabbitfighter.wordsleuth.Objects.Result;
+import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.Utils.RoutineTimer;
 
 import java.io.BufferedReader;
@@ -69,24 +69,43 @@ public class BoundSearchService extends Service  {
 
     }
 
-    public boolean prepareDictionary() {
+    public boolean prepareDictionary(int queryLength) {
         // Load the dictionary
         Log.i(TAG, "Loading dictionary...");
         RoutineTimer dictionaryTimer = new RoutineTimer();
         dictionaryTimer.start();
-        try {
-            assetManager = this.getAssets();
-            inputStream = assetManager.open("dictionaries/ospd.txt");
-            inputStreamReader = new InputStreamReader(inputStream);
-            bufferedReader = new BufferedReader(inputStreamReader);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            dictionaryTimer.stop();
-            Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
+        if (queryLength < 9) {
+            try {
+                assetManager = this.getAssets();
+                // OSPD has only 8-letter and under words for use in Scrabble(TM) and Words(TM)
+                inputStream = assetManager.open("dictionaries/ospd.txt");
+                inputStreamReader = new InputStreamReader(inputStream);
+                bufferedReader = new BufferedReader(inputStreamReader);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                dictionaryTimer.stop();
+                Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
+            }
+        } else {
+            try {
+                assetManager = this.getAssets();
+                // enable1 has all 170,000+ words for use in Scrabble(TM) and Words(TM)
+                inputStream = assetManager.open("dictionaries/enable1.txt");
+                inputStreamReader = new InputStreamReader(inputStream);
+                bufferedReader = new BufferedReader(inputStreamReader);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                dictionaryTimer.stop();
+                Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
+            }
         }
+
     }
 
     /**

@@ -61,11 +61,10 @@ public class SearchResultsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // Get query from bundle
-        if (savedInstanceState == null) {
-            query =  getArguments().get("query").toString();
-            dbAdapter = new ResultsDbAdapter(getActivity());
-            resultTypeItemList = new ArrayList<>();
-        }
+        query =  getArguments().get("query").toString();
+        dbAdapter = new ResultsDbAdapter(getActivity());
+        resultTypeItemList = new ArrayList<>();
+
         super.onCreate(savedInstanceState);
     }
 
@@ -139,8 +138,9 @@ public class SearchResultsFragment extends Fragment {
             resultType = resultTypeItemList.get(position);
 
             // Result type
+            String rt = resultType.getResultType().substring(0, 1).toUpperCase() + resultType.getResultType().substring(1) + " Results";
             tv_resultType = (TextView) itemView.findViewById(R.id.tv_resultType);
-            tv_resultType.setText(String.valueOf(resultType.getResultType()));
+            tv_resultType.setText(rt);
             // Number of matches
             tv_numMatches = (TextView) itemView.findViewById(R.id.tv_numMatches);
             tv_numMatches.setText(String.valueOf(resultType.getNumMatches()) + " results found");
