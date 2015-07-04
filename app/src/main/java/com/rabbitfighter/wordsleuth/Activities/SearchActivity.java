@@ -143,6 +143,7 @@ public class SearchActivity extends ActionBarActivity {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
                         Log.i(TAG, "onQueryTextSubmit(" + query + ")");
+
                         return false;
                     }
                     // Text changed --> (i.e. F, FO, FOO, FOOB, FOOBA, FOOBAR)
@@ -233,6 +234,7 @@ public class SearchActivity extends ActionBarActivity {
                     .replaceAll("\\s","")          // Remove all spaces
                     .toLowerCase().trim();         // Lowercase
             // Query may be empty...
+
             if (query.isEmpty()) {
                 Log.i(TAG, "Query is empty");
                 Message.msgLong(getApplicationContext(), "Query cannot be empty");

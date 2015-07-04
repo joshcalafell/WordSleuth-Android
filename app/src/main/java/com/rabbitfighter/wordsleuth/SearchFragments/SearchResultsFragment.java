@@ -50,7 +50,6 @@ public class SearchResultsFragment extends Fragment {
     // Vars
     View itemView;
     ResultTypeItem resultType;
-    ImageView iv_success;
     TextView tv_resultType, tv_numMatches, tv_title, tv_query, tv_number_letters;
     View rootView;
 
@@ -130,10 +129,10 @@ public class SearchResultsFragment extends Fragment {
             Log.i(TAG, "getView() called");
 
             // The view passed in may be null, just an F.Y.I.
-            if ((itemView = convertView) == null) {
-                Log.i(TAG, "Item view is null!");
-                itemView = getActivity().getLayoutInflater().inflate(R.layout.item_result_type, parent, false);
-            }
+
+            Log.i(TAG, "Item view is null!");
+            itemView = getActivity().getLayoutInflater().inflate(R.layout.item_result_type, parent, false);
+
             // Find Result Type
             resultType = resultTypeItemList.get(position);
 
@@ -160,12 +159,14 @@ public class SearchResultsFragment extends Fragment {
      * @param resultType the resultType to lookup
      */
     private void openResultListActivity(String resultType) {
+        query =  getArguments().get("query").toString();
         Intent intent = new Intent(getActivity(), ResultsListActivity.class);
         Bundle b = new Bundle();
         b.putString("query", query);
         b.putString("resultType", resultType);
         intent.putExtras(b);
         startActivity(intent);
+
     }
 
     /**
@@ -188,6 +189,7 @@ public class SearchResultsFragment extends Fragment {
      */
     private void populateListView() {
         Log.i(TAG, "populateListView() called");
+        query =  getArguments().get("query").toString();
         // Vars
         ArrayAdapter<ResultTypeItem> adapter;
         ListView list;
@@ -199,6 +201,7 @@ public class SearchResultsFragment extends Fragment {
         if (getView() != null) {
             list = (ListView) getView().findViewById(R.id.lv_results);
             // Assign te list adapter
+
             list.setAdapter(adapter);
         }
 
@@ -250,6 +253,7 @@ public class SearchResultsFragment extends Fragment {
     @Override
     public void onResume() {
         // Populate the list and list view again, then call super on resume
+        query =  getArguments().get("query").toString();
         populateResultTypeList();
         populateListView();
         super.onResume();
@@ -260,6 +264,7 @@ public class SearchResultsFragment extends Fragment {
      */
     @Override
     public void onStart() {
+        query =  getArguments().get("query").toString();
         // Populate the list and list view again, then call super on resume
         populateResultTypeList();
         populateListView();
