@@ -24,7 +24,7 @@ Team (as of now...)
 ----------------
 <ul>
 <li>Joshua Michael Waggoner (@rabbitfighter81)</li>
-<li>Srepehn Chavez (@redragonx)</li> 
+<li>Stephen Chavez (@redragonx)</li>
 </ul>
 
 Email
