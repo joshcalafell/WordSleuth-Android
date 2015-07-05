@@ -6,6 +6,7 @@ import java.util.HashMap;
  * A result is a type of Word. Read about Scrabble(TM) and Words(TM)
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta) 2015-06-17.
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'https://en.wikipedia.org/wiki/Scrabble_letter_distributions'

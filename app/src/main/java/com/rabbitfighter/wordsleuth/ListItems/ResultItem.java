@@ -3,6 +3,7 @@ package com.rabbitfighter.wordsleuth.ListItems;
 /**
  * A result item
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta) 2015-05-28.
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'Android custom list viws - Assosciated XML: item_result.xml'

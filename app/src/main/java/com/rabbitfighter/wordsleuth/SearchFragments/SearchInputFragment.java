@@ -17,6 +17,7 @@ import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
  * Search input fragment handles search input.
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta) 2015-06-17.
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'http://developer.android.com/guide/topics/search/search-dialog.html'
@@ -25,7 +26,6 @@ import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 public class SearchInputFragment extends Fragment {
 
     private final static String TAG = "SearchInputFragment";
-    SearchManager searchManager;
 
     /*
     The system calls this when creating the fragment. Within your implementation, you

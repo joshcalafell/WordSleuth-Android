@@ -4,7 +4,8 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/wordsleuth_bg_512x512"
                 android:id="@+id/fragment_search_results"
-                android:textAlignment="textEnd">
+                android:textAlignment="textEnd"
+                android:layout_gravity="end">
 
     <TextView
         android:layout_width="wrap_content"

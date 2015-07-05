@@ -5,17 +5,31 @@
                 android:background="@android:color/transparent"
                 android:id="@+id/fragment_search_loading">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView_unused"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
     <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
+        style="@android:style/Widget.ProgressBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:elevation="2dp"
         android:padding="30dp"
         android:progressBackgroundTint="@color/abc_background_cache_hint_selector_material_dark"
         android:progressBackgroundTintMode="src_over"
+        android:progressDrawable="@android:color/holo_blue_dark"
         android:progressTint="@android:color/holo_blue_dark"
         android:progressTintMode="src_over"
-        android:textAlignment="center"
-        android:layout_centerVertical="true" android:layout_centerHorizontal="true"/>
+        android:textAlignment="center" android:layout_below="@+id/textView_unused"/>
 </RelativeLayout>

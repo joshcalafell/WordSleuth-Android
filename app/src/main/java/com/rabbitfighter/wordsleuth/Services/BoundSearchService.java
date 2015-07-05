@@ -17,11 +17,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Bound service for searching dictionary asynchronously.
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta) 2015-06-17.
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'http://developer.android.com/guide/components/bound-services.html'
@@ -31,7 +33,6 @@ import java.util.Arrays;
 public class BoundSearchService extends Service  {
 
     private static final String TAG = "BoundSearchService";
-    private static final boolean TESTING = true;
 
     /*
     Create an object that is going to be the binder object
@@ -53,20 +54,15 @@ public class BoundSearchService extends Service  {
     // Database
     ResultsDbAdapter dbAdapter;
 
-    //ContentValues contentValues;
-
     public BoundSearchService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) throws UnsupportedOperationException {
-
         // Database
         dbAdapter = new ResultsDbAdapter(this);
-
         return myBinder;
         // Autogen: TODO: Return the communication channel to the service.
-
     }
 
     public boolean prepareDictionary(int queryLength) {
@@ -105,7 +101,6 @@ public class BoundSearchService extends Service  {
                 Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
             }
         }
-
     }
 
     /**
@@ -140,11 +135,11 @@ public class BoundSearchService extends Service  {
                             Result r = new Result(dictWord);
                             // Insert item into database
                             long id = dbAdapter.insertData(
-                                "anagram",
-                                String.valueOf(r.getWord()),
-                                String.valueOf(r.getNumLetters()),
-                                String.valueOf(r.getPointsScrabble()),
-                                String.valueOf(r.getPointsWordsWithFriends())
+                                    "anagram",
+                                    String.valueOf(r.getWord()),
+                                    String.valueOf(r.getNumLetters()),
+                                    String.valueOf(r.getPointsScrabble()),
+                                    String.valueOf(r.getPointsWordsWithFriends())
                             );
                             if (id<0) {
                                 Log.i(TAG, "Database anagram insertion unsuccessful :(");
@@ -154,17 +149,16 @@ public class BoundSearchService extends Service  {
 
                         } else {
                             if (isSubword(query, dictWord)) { // sortWord returns a String
-
                                 // Get result object
                                 Result r = new Result(dictWord);
                                 subwords.add(r);
                                 // Insert item into database
                                 long id = dbAdapter.insertData(
-                                    "subword",
-                                    r.getWord(),
-                                    String.valueOf(r.getNumLetters()),
-                                    String.valueOf(r.getPointsScrabble()),
-                                    String.valueOf(r.getPointsWordsWithFriends())
+                                        "subword",
+                                        r.getWord(),
+                                        String.valueOf(r.getNumLetters()),
+                                        String.valueOf(r.getPointsScrabble()),
+                                        String.valueOf(r.getPointsWordsWithFriends())
                                 );
                                 if (id<0) {
                                     Log.i(TAG, "Database subword insertion unsuccessful :(");
@@ -186,11 +180,11 @@ public class BoundSearchService extends Service  {
                             Result r = new Result(String.valueOf(foo + " " + bar));
                             // Insert item into database
                             long id = dbAdapter.insertData(
-                                "combo",
-                                r.getWord(),
-                                String.valueOf(r.getNumLetters()),
-                                String.valueOf(r.getPointsScrabble()),
-                                String.valueOf(r.getPointsWordsWithFriends())
+                                    "combo",
+                                    r.getWord(),
+                                    String.valueOf(r.getNumLetters()),
+                                    String.valueOf(r.getPointsScrabble()),
+                                    String.valueOf(r.getPointsWordsWithFriends())
                             );
                             if (id<0) {
                                 Log.i(TAG, "Database combo insertion unsuccessful :(");
@@ -250,13 +244,13 @@ public class BoundSearchService extends Service  {
         ArrayList<Character> tempList = new ArrayList<>();
 
         for (int i = 0; i < wordList.size(); i++) {
-           for (int j = 0; j < queryList.size(); j++) {
-               if (wordList.get(i) == queryList.get(j)) {
+            for (int j = 0; j < queryList.size(); j++) {
+                if (wordList.get(i) == queryList.get(j)) {
                     tempList.add(wordList.get(i));
                     queryList.remove(j);
                     j+=1;
-               }
-           }
+                }
+            }
         }
         // this is the trick...
         return (tempList.size() == wordList.size());

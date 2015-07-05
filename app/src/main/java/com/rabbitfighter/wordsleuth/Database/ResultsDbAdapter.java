@@ -25,6 +25,7 @@ import static com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter.ResultsDbHe
  * SQLite Database. There are many like it but this one is mine...
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta) 2015-06-17.
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'http://developer.android.com/reference/android/database/sqlite/package-summary.html'

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -25,12 +26,11 @@ import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsFragment;
 import com.rabbitfighter.wordsleuth.Services.BoundSearchService;
 import com.rabbitfighter.wordsleuth.Utils.Message;
 
-import org.w3c.dom.Text;
-
 /**
  * Search activity. 3 Frags. There are many like it but this one is mine...
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta) 2015-06-17.
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'http://developer.android.com/guide/topics/search/search-dialog.html'
@@ -59,13 +59,7 @@ public class SearchActivity extends ActionBarActivity {
     // bound or not.
     boolean isBound;
 
-    /* This is the lifecylcle of the states... */
-    private final static int SEARCH_STATE = 0x0;
-    private final static int LOADER_STATE = 0x1; // TODO: Not implemented. State for progress bar
-    private final static int RESULT_STATE = 0x2;
-    // Array to hold fragment states
-    public Fragment[] frags = new Fragment[] // [0x0,0x1,0x2]
-            {new SearchInputFragment(),new SearchLoadingFragment(),new SearchResultsFragment()};
+    String userQuery;
 
     /* ------------------------- */
     /* --- @Override methods --- */
@@ -82,7 +76,7 @@ public class SearchActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search);
         // Boolean for bound or not
         isBound = false;
-
+        userQuery = null;
         // Orientation change
         if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE) {
@@ -95,7 +89,7 @@ public class SearchActivity extends ActionBarActivity {
          * it is a new activity, it won't, so only start the process if it is indeed null */
         if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.
-            fragment = frags[SEARCH_STATE];
+            fragment = new SearchInputFragment();
             fragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
         }
@@ -164,7 +158,7 @@ public class SearchActivity extends ActionBarActivity {
     /**
      * Menu items selected
      * @param item - The me
-        }nu item passed in.
+    }nu item passed in.
      * @return false to allow normal menu processing to
      *         proceed, true to consume it here.
      *         <- From the notes in superclass' docs.
@@ -248,13 +242,17 @@ public class SearchActivity extends ActionBarActivity {
         }
     }
 
+    /* ---------------------------- */
+    /* --- Fragment transitions --- */
+    /* ---------------------------- */
+
     /**
      * Transitions to the results fragment using a fragment manager transition
      * @param query - the user's query
      */
-    private void transitionFragment(String query) {
+    private void transitionToResultsFragment(String query) {
         // Fragment manager stuff
-        fragment = frags[RESULT_STATE];
+        fragment = new SearchResultsFragment();
         // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
         if (!fragment.isAdded()) {
             Bundle b = new Bundle();
@@ -272,6 +270,14 @@ public class SearchActivity extends ActionBarActivity {
         }
     }
 
+    private void transitionToLoadingFragment() {
+        // Fragment manager stuff
+        fragment = new SearchLoadingFragment();
+        // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
+        if (!fragment.isAdded()) {
+            getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
+        }
+    }
 
     /* ---------------------- */
     /* --- Custom methods --- */
@@ -279,27 +285,39 @@ public class SearchActivity extends ActionBarActivity {
 
     /**
      * Performs the search
-     * @param query - the user's query
      */
     public void performSearch(String query) {
+        userQuery = query;
+        transitionToLoadingFragment();
         // MSG query
-        Message.msgLong(getApplicationContext(), "\"" + query + "\" submitted");
-        // If dictionary is loaded, start the search service
-        try {
-            // Send the query length so that the search knows which dictionary to use
-            if (searchService.prepareDictionary(query.length())) {
-                searchService.searchDictionary(query);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "An error occurred performing search");
-        } finally {
-            Log.i(TAG, "Search completed");
-            // Transition to results fragment
-            transitionFragment(query);
-        }
+        Message.msgLong(getApplicationContext(), userQuery + " was submitted");
+        // Execute the new Async task
+        new AsyncSearchTask().execute();
+
     }
 
+    /**
+     * This is to make the searches bound service asynchronous.
+     */
+    private class AsyncSearchTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            searchService.prepareDictionary(userQuery.length());
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            searchService.searchDictionary(userQuery);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            transitionToResultsFragment(userQuery);
+        }
+
+    }
 
     /* ------------------ */
     /* ----- States ----- */
