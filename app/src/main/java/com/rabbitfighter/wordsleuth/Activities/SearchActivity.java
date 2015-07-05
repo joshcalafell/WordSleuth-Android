@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchInputFragment;
@@ -23,6 +24,8 @@ import com.rabbitfighter.wordsleuth.SearchFragments.SearchLoadingFragment;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsFragment;
 import com.rabbitfighter.wordsleuth.Services.BoundSearchService;
 import com.rabbitfighter.wordsleuth.Utils.Message;
+
+import org.w3c.dom.Text;
 
 /**
  * Search activity. 3 Frags. There are many like it but this one is mine...
@@ -258,6 +261,14 @@ public class SearchActivity extends ActionBarActivity {
             b.putString("query", query);
             fragment.setArguments(b);
             getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
+        }
+        else { // The fragment is already showing, so just grab the text views.
+            TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
+            TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
+            TextView resultWildCardNum = (TextView)fragment.getView().findViewById(R.id.tv_wildcard_number);
+            resultTV.setText(query);
+            resultLength.setText(String.valueOf(query.length()));
+            resultWildCardNum.setText("not used yet");
         }
     }
 

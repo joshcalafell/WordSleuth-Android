@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="0"
-        android:id="@+id/textView2"
+        android:id="@+id/tv_wildcard_number"
         android:layout_below="@+id/tv_length"
         android:layout_toRightOf="@+id/textView"
         android:layout_toEndOf="@+id/textView"
