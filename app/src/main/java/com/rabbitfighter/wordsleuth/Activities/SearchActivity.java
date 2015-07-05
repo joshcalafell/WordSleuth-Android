@@ -238,6 +238,8 @@ public class SearchActivity extends ActionBarActivity {
             } else {
                 Log.i(TAG, "Query is: " + query);
                 performSearch(query);
+                // Fixed issue #21
+                searchView.setQuery("", false);
             }
         }
     }
