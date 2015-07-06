@@ -1,11 +1,14 @@
 package com.rabbitfighter.wordsleuth.Splash;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.rabbitfighter.wordsleuth.Activities.InstructionActivity;
+import com.rabbitfighter.wordsleuth.Activities.SearchActivity;
 import com.rabbitfighter.wordsleuth.R;
 
 
@@ -24,8 +27,18 @@ public class SplashActivity extends Activity {
     private final String TAG = "splashActivity";
 
     public void startNewActivity() {
-        Intent i = new Intent(this, InstructionActivity.class);
-        startActivity(i);
+        final boolean isHelpOn = isHelpEnabledOnAppStart();
+
+        if(isHelpOn) {
+            Intent instructionStart = new Intent(this, InstructionActivity.class);
+
+            // For future use when we need to check if we need to display a dialog.
+            instructionStart.putExtra("isHelpOn", isHelpOn);
+            startActivity(instructionStart);
+        } else {
+            Intent searchStart = new Intent(this, SearchActivity.class);
+            startActivity(searchStart);
+        }
     }
 
     @Override
@@ -68,6 +81,18 @@ public class SplashActivity extends Activity {
         // Destroy assets
         super.onPause();
         finish();
+    }
+
+    private boolean isHelpEnabledOnAppStart() {
+        Context context = SplashActivity.this;
+        SharedPreferences sharedPrefs = context.getSharedPreferences(
+                getString(R.string.PREFERENCE_FILE_KEY), Context.MODE_PRIVATE);
+        boolean defaultSetting = true;
+
+        // this will return true if the user wants help on app start
+        boolean userSetting = sharedPrefs.getBoolean(
+                getString(R.string.app_setting_disable_help), defaultSetting);
+        return  userSetting;
     }
 
 }
