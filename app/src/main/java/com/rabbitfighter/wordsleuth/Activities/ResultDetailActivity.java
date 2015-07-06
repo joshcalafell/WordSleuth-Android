@@ -1,5 +1,6 @@
 package com.rabbitfighter.wordsleuth.Activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -167,11 +168,37 @@ public class ResultDetailActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.search_bar) {
-            return true;
+        // Handle item selection
+        switch (id) {
+            case R.id.save:
+                // Josh this is your favorite list stuff.
+                return true;
+            case R.id.share:
+                showShareOptions();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void showShareOptions() {
+
+        Intent shareResultIntent = new Intent(Intent.ACTION_SEND);
+        switch (resultType.toString()) {
+            case "anagram":
+                String userResult = getString(R.string.txt_share_I_Found) +
+                        " " + '"' + result.getWord() + '"' + " " +
+                        getString(R.string.txt_share_is_an_anagram) + " " +
+                        '"' + query.toString() + '"' + " " +
+                        getString(R.string.txt_with_word_sleuth);
+                shareResultIntent.putExtra(Intent.EXTRA_TEXT, userResult);
+                shareResultIntent.setType("text/plain");
+
+                startActivity(Intent.createChooser(shareResultIntent, getString(R.string.abc_shareactionprovider_share_with)));
+                break;
+        }
+
     }
 
     /* ------------------ */
