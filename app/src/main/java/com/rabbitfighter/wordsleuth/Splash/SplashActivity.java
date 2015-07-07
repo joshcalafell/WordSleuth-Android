@@ -23,21 +23,11 @@ public class SplashActivity extends Activity {
 
     private final String TAG = "splashActivity";
 
-    public void startNewActivity() {
-        Intent i = new Intent(this, InstructionActivity.class);
-        startActivity(i);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "splashActivity() started");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-        showSplashScreen();
-
-    }
-
-    public void showSplashScreen() {
         /*
         Runnable thread for waiting for the splash screen
         while not hogging resources.
@@ -46,7 +36,7 @@ public class SplashActivity extends Activity {
         myThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                long futureTime = System.currentTimeMillis() + 2000; // 2 seconds
+                long futureTime = System.currentTimeMillis() + 3000; // 3 seconds
                 while (System.currentTimeMillis() < futureTime) {
                     synchronized (this) {
                         try {
@@ -61,6 +51,11 @@ public class SplashActivity extends Activity {
             }
         });
         myThread.start();
+    }
+
+    public void startNewActivity() {
+        Intent i = new Intent(this, InstructionActivity.class);
+        startActivity(i);
     }
 
     @Override

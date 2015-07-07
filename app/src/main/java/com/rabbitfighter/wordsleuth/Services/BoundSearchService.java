@@ -2,22 +2,20 @@ package com.rabbitfighter.wordsleuth.Services;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.AssetManager;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteException;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.rabbitfighter.wordsleuth.Database.DictionaryDbHelper;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
+import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.Utils.RoutineTimer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
 /**
  * Bound service for searching dictionary asynchronously.
@@ -44,15 +42,12 @@ public class BoundSearchService extends Service  {
     ArrayList<Result> anagrams;
     ArrayList<Result> subwords;
     ArrayList<Result> combos;
-
-    // For reading dictionary
-    AssetManager assetManager;
-    InputStream inputStream;
-    InputStreamReader inputStreamReader;
-    BufferedReader bufferedReader;
+    ArrayList<Result> matches;
 
     // Database
     ResultsDbAdapter dbAdapter;
+
+    DictionaryDbHelper helper;
 
     public BoundSearchService() {
     }
@@ -60,156 +55,135 @@ public class BoundSearchService extends Service  {
     @Override
     public IBinder onBind(Intent intent) throws UnsupportedOperationException {
         // Database
+        helper = new DictionaryDbHelper(this);
         dbAdapter = new ResultsDbAdapter(this);
         return myBinder;
         // Autogen: TODO: Return the communication channel to the service.
     }
 
-    public boolean prepareDictionary(int queryLength) {
+    public boolean prepareDictionary() {
         // Load the dictionary
         Log.i(TAG, "Loading dictionary...");
+        helper = new DictionaryDbHelper(this);
         RoutineTimer dictionaryTimer = new RoutineTimer();
         dictionaryTimer.start();
-        if (queryLength < 9) {
             try {
-                assetManager = this.getAssets();
-                // OSPD has only 8-letter and under words for use in Scrabble(TM) and Words(TM)
-                inputStream = assetManager.open("dictionaries/ospd.txt");
-                inputStreamReader = new InputStreamReader(inputStream);
-                bufferedReader = new BufferedReader(inputStreamReader);
-                return true;
-            } catch (IOException e) {
+
+                // Create the database
+                try {
+                    helper.createDataBase();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "Unable to create database");
+                    throw new Error("Unable to create database");
+                }
+                // Create the database
+                try {
+                    helper.openDataBase();
+                }catch(SQLException e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "Unable to open database");
+                    throw new Error("Unable to open database");
+                }
+            } catch (SQLiteException e) {
                 e.printStackTrace();
+                Log.i(TAG, "Couldn't prepare dictionary database.");
                 return false;
             } finally {
                 dictionaryTimer.stop();
                 Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
             }
-        } else {
-            try {
-                assetManager = this.getAssets();
-                // enable1 has all 170,000+ words for use in Scrabble(TM) and Words(TM)
-                inputStream = assetManager.open("dictionaries/enable1.txt");
-                inputStreamReader = new InputStreamReader(inputStream);
-                bufferedReader = new BufferedReader(inputStreamReader);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            } finally {
-                dictionaryTimer.stop();
-                Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
-            }
-        }
+        return true;
     }
 
-    /**
-     * Searches the dictionary array for matches.
-     * @param userQuery
-     */
-    public void searchDictionary(String userQuery) {
-        Log.i(TAG, "Search started...");
-
-        RoutineTimer timer = new RoutineTimer();
-        timer.start();
-
-        // Delete items from old the table
+    // Search the dictionary database for matches
+    public void search(String userQuery) {
         dbAdapter.deleteEntries();
-
-        // Lists to hold results
         anagrams = new ArrayList<>();
-        subwords = new ArrayList<>();
         combos = new ArrayList<>();
+        subwords = new ArrayList<>();
+        Entry query = new Entry(userQuery);
+        if (query.getWord()!=null) {
+            try {
+                matches = new ArrayList<>(helper.getMatches(
+                        query.getCount_A(), query.getCount_B(), query.getCount_C(), query.getCount_D(),
+                        query.getCount_E(), query.getCount_F(), query.getCount_G(), query.getCount_H(),
+                        query.getCount_I(), query.getCount_J(), query.getCount_K(), query.getCount_L(),
+                        query.getCount_M(), query.getCount_N(), query.getCount_O(), query.getCount_P(),
+                        query.getCount_Q(), query.getCount_R(), query.getCount_S(), query.getCount_T(),
+                        query.getCount_U(), query.getCount_V(), query.getCount_W(), query.getCount_X(),
+                        query.getCount_Y(), query.getCount_Z(), query.getCount_Wildcards() // wildcards not in use yet
+                ));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i(TAG, "There was an error in the search");
+            } finally {
+                //helper.close();
+            }
 
-        String query = sorted(userQuery);
-
-        try {
-            String receiveString;
-            if (inputStream != null) {
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    String dictWord = receiveString;
-                    // First condition will fail if dictionary word is longer than query
-                    if (dictWord.length() <= query.length()) {
-                        if (dictWord.length() == query.length() && isAnagram(query, dictWord)) {
-                            // Get result object
-                            Result r = new Result(dictWord);
-                            // Insert item into database
-                            long id = dbAdapter.insertData(
-                                    "anagram",
-                                    String.valueOf(r.getWord()),
-                                    String.valueOf(r.getNumLetters()),
-                                    String.valueOf(r.getPointsScrabble()),
-                                    String.valueOf(r.getPointsWordsWithFriends())
-                            );
-                            if (id<0) {
-                                Log.i(TAG, "Database anagram insertion unsuccessful :(");
-                            } else {
-                                Log.i(TAG, "Database anagram insertion successful :)");
-                            }
-
-                        } else {
-                            if (isSubword(query, dictWord)) { // sortWord returns a String
-                                // Get result object
-                                Result r = new Result(dictWord);
-                                subwords.add(r);
-                                // Insert item into database
-                                long id = dbAdapter.insertData(
-                                        "subword",
-                                        r.getWord(),
-                                        String.valueOf(r.getNumLetters()),
-                                        String.valueOf(r.getPointsScrabble()),
-                                        String.valueOf(r.getPointsWordsWithFriends())
-                                );
-                                if (id<0) {
-                                    Log.i(TAG, "Database subword insertion unsuccessful :(");
-                                } else {
-                                    Log.i(TAG, "Database subword insertion successful :)");
-                                }
-                            }
-                        }
+            // Put anagrams and subwords in the database
+            for (Result result : matches) {
+                if (result.getNumLetters() == query.getNumLetters() && result.getWord().compareToIgnoreCase(userQuery)!=0) {
+                    anagrams.add(result);
+                    long id = dbAdapter.insertData(
+                            "anagram",
+                            result.getWord(),
+                            String.valueOf(result.getNumLetters()),
+                            String.valueOf(result.getPointsScrabble()),
+                            String.valueOf(result.getPointsWordsWithFriends())
+                    );
+                    if (id < 0) {
+                        Log.i(TAG, "Database anagram insertion of " + result.getWord() + " unsuccessful :(");
+                    } else {
+                        Log.i(TAG, "Database anagram insertion of " + result.getWord() + " successful :)");
+                    }
+                } else {
+                    subwords.add(result);
+                    long id = dbAdapter.insertData(
+                            "subword",
+                            result.getWord(),
+                            String.valueOf(result.getNumLetters()),
+                            String.valueOf(result.getPointsScrabble()),
+                            String.valueOf(result.getPointsWordsWithFriends())
+                    );
+                    if (id < 0) {
+                        Log.i(TAG, "Database subword insertion of " + result.getWord() + " unsuccessful :(");
+                    } else {
+                        Log.i(TAG, "Database subword insertion of " + result.getWord() + " successful :)");
                     }
                 }
-                // Find combos
+            }
+
+            if (!subwords.isEmpty()) {
+                // Put combos in the database
                 for (int i = 0; i < subwords.size(); i++) {
                     String foo = subwords.get(i).getWord();
                     for (int j = 0; j < subwords.size(); j++) {
                         String bar = subwords.get(j).getWord();
                         String foobar = sorted(String.valueOf("" + foo + bar));
-                        if (isAnagram(query, foobar)) {
+                        if (isAnagram(query.getWordSorted(), foobar)) {
                             // Get result object
-                            Result r = new Result(String.valueOf(foo + " " + bar));
+                            Result result = new Result(String.valueOf(foo + " " + bar));
                             // Insert item into database
+                            combos.add(result);
                             long id = dbAdapter.insertData(
                                     "combo",
-                                    r.getWord(),
-                                    String.valueOf(r.getNumLetters()),
-                                    String.valueOf(r.getPointsScrabble()),
-                                    String.valueOf(r.getPointsWordsWithFriends())
+                                    result.getWord(),
+                                    String.valueOf(result.getNumLetters()),
+                                    String.valueOf(result.getPointsScrabble()),
+                                    String.valueOf(result.getPointsWordsWithFriends())
                             );
-                            if (id<0) {
-                                Log.i(TAG, "Database combo insertion unsuccessful :(");
+                            if (id < 0) {
+                                Log.i(TAG, "Database combo insertion of " + result.getWord() + " unsuccessful :(");
                             } else {
-                                Log.i(TAG, "Database combo insertion successful :)");
+                                Log.i(TAG, "Database combo insertion of " + result.getWord() + " successful :)");
                             }
                         }
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            // Stop timer
-            timer.stop();
-            // Close resources
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
         }
-        Log.i(TAG, "Search complete...");
-    }
+    }// End search
 
     /**
      * Returns whether or not a word Lists an anagram
@@ -221,40 +195,6 @@ public class BoundSearchService extends Service  {
         return (query.compareToIgnoreCase(sorted(dictWord))==0);
     }
 
-    /**
-     * Returns whether a word in the dictionary is a subword os the user query
-     * @param query the query list
-     * @param word the dictionary word
-     * @return whether it is a subword or not
-     */
-    private boolean isSubword(String query, String word) {
-
-        char[] queryArray = query.toCharArray();
-        ArrayList<Character> queryList = new ArrayList<>();
-        for (char c : queryArray ) {
-            queryList.add(c);
-        }
-
-        char[] wordArray = word.toCharArray();
-        ArrayList<Character> wordList = new ArrayList<>();
-        for (char c : wordArray ) {
-            wordList.add(c);
-        }
-
-        ArrayList<Character> tempList = new ArrayList<>();
-
-        for (int i = 0; i < wordList.size(); i++) {
-            for (int j = 0; j < queryList.size(); j++) {
-                if (wordList.get(i) == queryList.get(j)) {
-                    tempList.add(wordList.get(i));
-                    queryList.remove(j);
-                    j+=1;
-                }
-            }
-        }
-        // this is the trick...
-        return (tempList.size() == wordList.size());
-    }
 
     /**
      * Returns a sanitized sorted word

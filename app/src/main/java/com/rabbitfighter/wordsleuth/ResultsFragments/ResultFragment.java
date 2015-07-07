@@ -143,7 +143,7 @@ public class ResultFragment extends Fragment {
             case "combo":
                 results = dbAdapter.getCombos();
                 for (int i = 0; i < results.size(); i++) {
-                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters()-1, R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }
                 numResults = resultItemList.size();
                 break;

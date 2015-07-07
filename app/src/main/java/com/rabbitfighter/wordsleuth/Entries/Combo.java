@@ -63,6 +63,6 @@ public class Combo {
 
     public void setNumLetters(int numLetters) {
 
-        this.numLetters = numLetters;
+        this.numLetters = numLetters - 1;
     }
 }

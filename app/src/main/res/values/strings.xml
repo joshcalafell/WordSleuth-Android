@@ -11,7 +11,7 @@
     <string name="txt_title_page4">Word Combinations</string>
     <string name="txt_title_page5">Crosswords and using Wildcards (*)</string>
 
-    <string name="txt_skip_instructions">Swipe for more info, tap to skip...</string>
+    <string name="txt_skip_instructions">Swipe for info, tap to skip...</string>
 
     <string name="txt_instructions_page1">This app is designed to easily help users find anagrams,
         subwords, or word combinations that can be made from a set of letters. You could find an
