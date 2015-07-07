@@ -27,7 +27,7 @@ public class Word {
     public Word(String result) {
         this.word = result.toLowerCase().trim();
         this.wordSorted = sortWord(result);
-        this.numLetters = result.length();
+        this.numLetters = result.replaceAll("/[^a-zA-Z]/", "").length();
     }
 
     /**
@@ -36,16 +36,17 @@ public class Word {
      * @return
      */
     private String sortWord(String result) {
+        StringBuilder sb = new StringBuilder();
         char[] resultCharArray = result.toCharArray();
         Arrays.sort(resultCharArray);
-        String sortedResult = resultCharArray.toString();
-        return sortedResult;
+        for (char c : resultCharArray) sb.append(c);
+        return sb.toString();
     }
 
     /* --- Getters/Setters --- */
 
     public String getWord() {
-        return word;
+        return this.word;
     }
 
     public void setWord(String word) {
@@ -53,7 +54,7 @@ public class Word {
     }
 
     public String getWordSorted() {
-        return wordSorted;
+        return this.wordSorted;
     }
 
     public void setWordSorted(String wordSorted) {
@@ -61,7 +62,7 @@ public class Word {
     }
 
     public int getNumLetters() {
-        return numLetters;
+        return this.numLetters;
     }
 
     public void setNumLetters(int numLetters) {

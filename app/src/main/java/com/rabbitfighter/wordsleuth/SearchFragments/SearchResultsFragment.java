@@ -36,10 +36,6 @@ import java.util.List;
 public class SearchResultsFragment extends Fragment {
 
     public final static String TAG = "SearchResultsFragment";
-    private final static int resultTypeAnagram = 0x0;
-    private final static int resultTypeSubword = 0x1;
-    private final static int resultTypeCombo = 0x2;
-    private final static int[] resultTypes = {resultTypeAnagram, resultTypeSubword, resultTypeCombo};
     private List<ResultTypeItem> resultTypeItemList;
 
     // Query
@@ -130,8 +126,6 @@ public class SearchResultsFragment extends Fragment {
             Log.i(TAG, "getView() called");
 
             // The view passed in may be null, just an F.Y.I.
-
-            Log.i(TAG, "Item view is null!");
             itemView = getActivity().getLayoutInflater().inflate(R.layout.item_result_type, parent, false);
 
             // Find Result Type
@@ -202,7 +196,6 @@ public class SearchResultsFragment extends Fragment {
         if (getView() != null) {
             list = (ListView) getView().findViewById(R.id.lv_results);
             // Assign te list adapter
-
             list.setAdapter(adapter);
         }
 

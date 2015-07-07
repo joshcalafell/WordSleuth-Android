@@ -31,11 +31,10 @@ import static com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter.ResultsDbHe
  * @see 'http://developer.android.com/reference/android/database/sqlite/package-summary.html'
  * @since 0.1
  */
-@SuppressWarnings("unused")
 public class ResultsDbAdapter {
 
     // Debugging tag
-    public final static String TAG = "ResultsDbAdapter";
+    public final static String TAG = "DictionaryDbAdapter";
 
     // Result types
     private static final String RESULT_TYPE_ANAGRAM = "anagram";
@@ -62,7 +61,7 @@ public class ResultsDbAdapter {
         public static final String TAG = "ResultsDbHelper";
 
         // If you change the database schema, you must increment the database version.
-        public static final int DATABASE_VERSION = 34;
+        public static final int DATABASE_VERSION = 55;
         public static final String DATABASE_NAME = "wordsleuth.db";
 
         /* ------------------------------ */

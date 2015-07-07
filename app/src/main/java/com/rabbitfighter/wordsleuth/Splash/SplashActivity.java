@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -11,14 +12,14 @@ import com.rabbitfighter.wordsleuth.Activities.InstructionActivity;
 import com.rabbitfighter.wordsleuth.Activities.SearchActivity;
 import com.rabbitfighter.wordsleuth.R;
 
-
 /**
  * Splash screen
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta)
  * @link https://github.com/rabbitfighter81/WordSleuth-Android
- * @see 'http://developer.android.com/guide/components/loaders.html'
+ * @see 'Splash screens, Async tasks'
  * @since on 2015-05-20.
  */
 @SuppressWarnings("unused")
@@ -26,30 +27,63 @@ public class SplashActivity extends Activity {
 
     private final String TAG = "splashActivity";
 
-    public void startNewActivity() {
-        final boolean isHelpOn = isHelpEnabledOnAppStart();
+    /**
+     * On creation
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate() started");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.splash);
+        new AsyncSplashTask().execute();
+    }
 
-        if(isHelpOn) {
-            Intent instructionStart = new Intent(this, InstructionActivity.class);
+    /**
+     * On pause
+     */
+    @Override
+    protected void onPause() {
+        // Destroy assets
+        super.onPause();
+        finish();
+    }
 
-            // For future use when we need to check if we need to display a dialog.
-            instructionStart.putExtra("isHelpOn", isHelpOn);
-            startActivity(instructionStart);
-        } else {
-            Intent searchStart = new Intent(this, SearchActivity.class);
-            startActivity(searchStart);
+
+    /**
+     * This is to make the searches bound service asynchronous.
+     */
+    private class AsyncSplashTask extends AsyncTask<Void, Void, Void> {
+        /**
+         * 1) Pre execution
+         */
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "Program started.");
+        }
+        /**
+         * 2) Async
+         * @param params
+         * @return
+         */
+        @Override
+        protected Void doInBackground(Void... params) {
+            showSplashScreen();
+            return null;
+        }
+        /**
+         * 3) Post execute
+         * @param result
+         */
+        @Override
+        protected void onPostExecute(Void result) {
+            startNewActivity();
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "splashActivity() started");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash);
-        showSplashScreen();
-
-    }
-
+    /**
+     * Show the splash screen
+     */
     public void showSplashScreen() {
         /*
         Runnable thread for waiting for the splash screen
@@ -67,7 +101,7 @@ public class SplashActivity extends Activity {
                         } catch (Exception e) {
                             // TODO: IDK, handle this some way...
                         } finally {
-                            startNewActivity();
+                            Log.i(TAG, "Splash screen finished");
                         }
                     }
                 }
@@ -76,13 +110,10 @@ public class SplashActivity extends Activity {
         myThread.start();
     }
 
-    @Override
-    protected void onPause() {
-        // Destroy assets
-        super.onPause();
-        finish();
-    }
-
+    /**
+     * Determine if help is enabled (Thanks bro :) )
+     * @return
+     */
     private boolean isHelpEnabledOnAppStart() {
         Context context = SplashActivity.this;
         SharedPreferences sharedPrefs = context.getSharedPreferences(
@@ -95,4 +126,22 @@ public class SplashActivity extends Activity {
         return  userSetting;
     }
 
-}
+    /**
+     * Start the new activity
+     */
+    public void startNewActivity() {
+        final boolean isHelpOn = isHelpEnabledOnAppStart();
+
+        if(isHelpOn) {
+            Intent instructionStart = new Intent(this, InstructionActivity.class);
+
+            // For future use when we need to check if we need to display a dialog.
+            instructionStart.putExtra("isHelpOn", isHelpOn);
+            startActivity(instructionStart);
+        } else {
+            Intent searchStart = new Intent(this, SearchActivity.class);
+            startActivity(searchStart);
+        }
+    }
+
+}//EOF

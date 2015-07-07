@@ -305,12 +305,12 @@ public class SearchActivity extends ActionBarActivity {
 
         @Override
         protected void onPreExecute() {
-            searchService.prepareDictionary(userQuery.length());
+            searchService.prepareDictionary();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            searchService.searchDictionary(userQuery);
+            searchService.search(userQuery);
             return null;
         }
 
@@ -349,6 +349,7 @@ public class SearchActivity extends ActionBarActivity {
      */
     @Override
     protected void onPause() {
+        //unbindService(connection);
         Log.i(TAG, "onPause() called");
         super.onPause();
     }

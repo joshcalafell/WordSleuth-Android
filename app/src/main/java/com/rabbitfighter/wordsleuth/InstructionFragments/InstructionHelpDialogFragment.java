@@ -11,7 +11,14 @@ import android.support.v7.app.AlertDialog;
 import com.rabbitfighter.wordsleuth.R;
 
 /**
- * Created by stephen on 7/5/15.
+ * Instruction dialog fragment
+ *
+ * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
+ * @version 0.1 (pre-beta) 2015-07-17.
+ * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
+ * @see 'http://developer.android.com/reference/android/database/sqlite/package-summary.html'
+ * @since 0.1
  */
 public class InstructionHelpDialogFragment extends DialogFragment {
     @Override
