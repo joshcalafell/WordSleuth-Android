@@ -7,11 +7,13 @@ import android.graphics.Typeface;
  * Roboto fonts loader
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.1 (pre-beta)
  * @link https://github.com/rabbitfighter81/WordSleuth-Android
  * @see 'http://www.google.com/design/spec/style/typography.html#typography-language-categorization'
  * @since on 2015-05-21.
  */
+
 public class RobotoFontsHelper {
 
     // fonts

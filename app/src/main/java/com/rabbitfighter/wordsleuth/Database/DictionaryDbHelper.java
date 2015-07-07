@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
- * SQLite Database. There are many like it but this one is mine...
+ * SQLite Dictionary Database. There are many like it but this one is mine...
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>

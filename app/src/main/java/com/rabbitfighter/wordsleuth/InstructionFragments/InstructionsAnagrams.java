@@ -15,7 +15,14 @@ import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 /**
- * Created by rabbitfighter on 6/12/15.
+ * Instructions for Anagrams
+ *
+ * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
+ * @author Stephen Chavez <stephen.chavez12@gmail.com>
+ * @version 0.1 (pre-beta) 2015-07-17.
+ * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
+ * @see ''
+ * @since 0.1
  */
 public class InstructionsAnagrams extends Fragment {
 

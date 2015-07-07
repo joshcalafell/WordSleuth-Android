@@ -46,4 +46,9 @@
     <string name="REGEX_ACCEPT_LOWER_PLUS_ASTERISK">[^a-z*]</string>
     <string name="regex_line_sperator">line.separator</string>
     <string name="txt_settings_tag">Settings</string>
+    <string name="txt_dialog_yes">Yes</string>
+    <string name="txt_dialog_no">No</string>
+    <string name="txt_dialog_instruction_disable">Do you want to disable help when starting this app?</string>
+    <string name="PREFERENCE_FILE_KEY">com.rabbitfighter.wordsleuth.PREFERENCE_FILE_KEY</string>
+    <string name="app_setting_disable_help">disableHelp</string>
 </resources>
