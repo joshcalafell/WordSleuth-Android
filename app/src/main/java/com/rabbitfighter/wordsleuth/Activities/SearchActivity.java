@@ -31,10 +31,10 @@ import com.rabbitfighter.wordsleuth.Utils.Message;
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
- * @version 0.1 (pre-beta) 2015-06-17.
+ * @version 0.2 (pre-beta)
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'http://developer.android.com/guide/topics/search/search-dialog.html'
- * @since 0.1
+ * @since 0.1 2015-06-17.
  */
 public class SearchActivity extends ActionBarActivity {
     // Debugging TAG
@@ -73,6 +73,7 @@ public class SearchActivity extends ActionBarActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Log.i(TAG, "onCreate() called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);

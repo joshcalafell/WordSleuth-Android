@@ -21,10 +21,10 @@ import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
- * @version 0.1 (pre-beta) 2015-05-23.
+ * @version 0.2 (pre-beta)
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'http://developer.android.com/design/patterns/swipe-views.html'
- * @since 0.1
+ * @since 0.1 2015-05-23.
  */
 public class ResultDetailActivity extends ActionBarActivity {
 

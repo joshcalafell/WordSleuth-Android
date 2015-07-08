@@ -14,10 +14,10 @@ import java.util.Map;
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
- * @version 0.1 (pre-beta) 2015-07-06.
+ * @version 0.2 (pre-beta)
  * @link https://github.com/rabbitfighter81/WordSleuth-Android (Temporary)
  * @see ''
- * @since 0.1
+ * @since 0.1 2015-07-06.
  */
 @SuppressWarnings("unused")
 public class Entry extends Word {

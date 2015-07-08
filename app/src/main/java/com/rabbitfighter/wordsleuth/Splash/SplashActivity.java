@@ -17,7 +17,7 @@ import com.rabbitfighter.wordsleuth.R;
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
- * @version 0.1 (pre-beta)
+ * @version 0.2 (pre-beta)
  * @link https://github.com/rabbitfighter81/WordSleuth-Android
  * @see 'Splash screens, Async tasks'
  * @since on 2015-05-20.

@@ -26,10 +26,10 @@ import static com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter.ResultsDbHe
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
- * @version 0.1 (pre-beta) 2015-06-17.
+ * @version 0.2 (pre-beta)
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'http://developer.android.com/reference/android/database/sqlite/package-summary.html'
- * @since 0.1
+ * @since 0.1 2015-06-17.
  */
 public class ResultsDbAdapter {
 

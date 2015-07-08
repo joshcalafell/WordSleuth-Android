@@ -7,11 +7,11 @@ import java.util.HashMap;
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
- * @version 0.1 (pre-beta) 2015-06-17.
+ * @version 0.2 (pre-beta)
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
  * @see 'https://en.wikipedia.org/wiki/Scrabble_letter_distributions'
  * @see 'https://en.wikipedia.org/wiki/Words_with_Friends'
- * @since 0.1
+ * @since 0.1 2015-06-17.
  */
 @SuppressWarnings("unused")
 public class Result extends Word {
