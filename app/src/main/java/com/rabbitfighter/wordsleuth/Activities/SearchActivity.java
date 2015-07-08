@@ -229,21 +229,33 @@ public class SearchActivity extends ActionBarActivity {
      */
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            query = intent.getStringExtra(SearchManager.QUERY)
-                    .replaceAll("/[^a-zA-Z]/", "") // Remove all non a-zA-Z chars
-                    .replaceAll("\\s","")          // Remove all spaces
-                    .toLowerCase().trim();         // Lowercase
-            // Query may be empty...
-
-            if (query.isEmpty()) {
-                Log.i(TAG, "Query is empty");
-                Message.msgLong(getApplicationContext(), "Query cannot be empty");
-            } else {
-                Log.i(TAG, "Query is: " + query);
-                performSearch(query);
-                // Fixed issue #21
+            try {
+                query = intent.getStringExtra(SearchManager.QUERY)
+                        .replaceAll("/[^a-zA-Z]/", "") // Remove all non a-zA-Z chars
+                        .replaceAll("\\s","")          // Remove all spaces
+                        .toLowerCase().trim();         // Lowercase
+                // Query may be empty...
+                if (query.isEmpty()) {
+                    Log.i(TAG, "Query is empty");
+                    Message.msgLong(getApplicationContext(), "Query cannot be empty");
+                    // Make sure query is under 20 chars
+                } else if (query.length() > 20) {
+                    Log.i(TAG, "20 character limit exceeded");
+                    Message.msgLong(getApplicationContext(), "Cannot exceed 20 letters");
+                } else {
+                    // Perform the search
+                    performSearch(query);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i(TAG, "Something went wrong with search entry");
+            } finally {
+                // Fixed issue #21 -  reset the query field
                 searchView.setQuery("", false);
             }
+
+        } else {
+            Log.i(TAG, "Problem with intent");
         }
     }
 
@@ -281,13 +293,6 @@ public class SearchActivity extends ActionBarActivity {
         // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
         if (!fragment.isAdded()) {
             getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
-        } else { // The fragment is already showing, so just grab the text views.
-            TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
-            TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
-            TextView resultWildCardNum = (TextView)fragment.getView().findViewById(R.id.tv_wildcard_number);
-            resultTV.setText(query);
-            resultLength.setText(String.valueOf(query.length()));
-            resultWildCardNum.setText("not used yet");
         }
     }
 

@@ -116,7 +116,7 @@ public class ResultDetailActivity extends ActionBarActivity {
         } else {
             tv_scrabble_points.setText("N/A");
             tv_words_points.setText("N/A");
-            tv_length.setText(String.valueOf(result.getNumLetters()-1 + " letters"));
+            tv_length.setText(String.valueOf(result.getNumLetters() + " letters"));
         }
 
 

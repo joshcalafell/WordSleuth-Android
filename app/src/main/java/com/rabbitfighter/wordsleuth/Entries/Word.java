@@ -27,7 +27,20 @@ public class Word {
     public Word(String result) {
         this.word = result.toLowerCase().trim();
         this.wordSorted = sortWord(result);
-        this.numLetters = result.replaceAll("/[^a-zA-Z]/", "").length();
+        this.numLetters = determineNumLetters(this.getWord());
+    }
+
+    /**
+     * Determine the length of the word. Subwords will have a space
+     * @param word
+     * @return
+     */
+    private int determineNumLetters(String word) {
+        if (word.contains(" ")) {
+            return word.length()-1;
+        } else {
+            return word.length();
+        }
     }
 
     /**
