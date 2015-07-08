@@ -169,7 +169,7 @@ public class BoundSearchService extends Service  {
                     } else {
                         Log.i(TAG, "Database anagram insertion of " + result.getWord() + " successful :)");
                     }
-                } else {
+                } else if (this.getQuery().getWord().compareToIgnoreCase(result.getWord())!=0) {
                     this.getSubwords().add(result);
                     long id = this.getDbAdapter().insertData(
                             "subword",
