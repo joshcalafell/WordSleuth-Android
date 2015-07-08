@@ -37,7 +37,7 @@ public class Entry extends Word {
     public Entry(String result) {
         // A word has: (Word, Sorted Word, Word Length)
         super(result);
-        this.charMap = new HashMap<Character, Integer>();
+        this.charMap = new HashMap<>();
         // Initialize counts to zero to avoid null pointers
         this.count_A = 0; this.count_B = 0; this.count_C = 0; this.count_D = 0; this.count_E = 0;
         this.count_F = 0; this.count_G = 0; this.count_H = 0; this.count_I = 0; this.count_J = 0;
@@ -119,142 +119,114 @@ public class Entry extends Word {
     }
 
     public Map<Character, Integer> getCharMap() {
-
         return this.charMap;
     }
 
     public int getCount_A() {
-
         return count_A;
     }
 
     public int getCount_B() {
-
         return count_B;
     }
 
     public int getCount_C() {
-
         return count_C;
     }
 
     public int getCount_D() {
-
         return count_D;
     }
 
     public int getCount_E() {
-
         return count_E;
     }
 
     public int getCount_F() {
-
         return count_F;
     }
 
     public int getCount_G() {
-
         return count_G;
     }
 
     public int getCount_H() {
-
         return count_H;
     }
 
     public int getCount_I() {
-
         return count_I;
     }
 
     public int getCount_J() {
-
         return count_J;
     }
 
     public int getCount_K() {
-
         return count_K;
     }
 
     public int getCount_L() {
-
         return count_L;
     }
 
     public int getCount_M() {
-
         return count_M;
     }
 
     public int getCount_N() {
-
         return count_N;
     }
 
     public int getCount_O() {
-
         return count_O;
     }
 
     public int getCount_P() {
-
         return count_P;
     }
 
     public int getCount_Q() {
-
         return count_Q;
     }
 
     public int getCount_R() {
-
         return count_R;
     }
 
     public int getCount_S() {
-
         return count_S;
     }
 
     public int getCount_T() {
-
         return count_T;
     }
 
     public int getCount_U() {
-
         return count_U;
     }
 
     public int getCount_V() {
-
         return count_V;
     }
 
     public int getCount_W() {
-
         return count_W;
     }
 
     public int getCount_X() {
-
         return count_X;
     }
 
     public int getCount_Y() {
-
         return count_Y;
     }
 
     public int getCount_Z() {
-
         return count_Z;
     }
 
     public int getCount_Wildcards() {
-
         return count_Wildcards;
     }
 }

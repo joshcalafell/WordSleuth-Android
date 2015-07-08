@@ -99,7 +99,7 @@ public class SplashActivity extends Activity {
                         try {
                             wait(futureTime-System.currentTimeMillis());
                         } catch (Exception e) {
-                            // TODO: IDK, handle this some way...
+                            Log.i(TAG, "Splash failed...");
                         } finally {
                             Log.i(TAG, "Splash screen finished");
                         }

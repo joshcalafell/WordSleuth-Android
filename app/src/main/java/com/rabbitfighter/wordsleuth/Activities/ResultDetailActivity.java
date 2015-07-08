@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.Utils.Message;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 /**
@@ -108,8 +109,16 @@ public class ResultDetailActivity extends ActionBarActivity {
         tv_result.setText(result.getWord());
         //tv_query.setText("\"" + query + "\"");
         tv_length.setText(String.valueOf(result.getNumLetters() + " letters"));
-        tv_scrabble_points.setText(String.valueOf(score_scrabble) + " raw points");
-        tv_words_points.setText(String.valueOf(score_words) + " raw points");
+        if (resultType.compareToIgnoreCase("combo")!=0) {
+            tv_scrabble_points.setText(String.valueOf(score_scrabble) + " raw points");
+            tv_words_points.setText(String.valueOf(score_words) + " raw points");
+            tv_length.setText(String.valueOf(result.getNumLetters() + " letters"));
+        } else {
+            tv_scrabble_points.setText("N/A");
+            tv_words_points.setText("N/A");
+            tv_length.setText(String.valueOf(result.getNumLetters()-1 + " letters"));
+        }
+
 
         /*
         Keyboard popping up bug fix
@@ -196,6 +205,7 @@ public class ResultDetailActivity extends ActionBarActivity {
                 shareResultIntent.setType("text/plain");
 
                 startActivity(Intent.createChooser(shareResultIntent, getString(R.string.abc_shareactionprovider_share_with)));
+                Message.msgShort(getApplicationContext(), "Message sent");
                 break;
         }
 

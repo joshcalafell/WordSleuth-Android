@@ -38,7 +38,7 @@ import com.rabbitfighter.wordsleuth.Utils.Message;
  */
 public class SearchActivity extends ActionBarActivity {
     // Debugging TAG
-    private static final String TAG = "SearchInputActivity";
+    private static final String TAG = "SearchActivity";
 
     /* ------------ */
     /* --- Vars---- */
@@ -61,6 +61,8 @@ public class SearchActivity extends ActionBarActivity {
 
     String userQuery;
 
+    String query;
+
     /* ------------------------- */
     /* --- @Override methods --- */
     /* ------------------------- */
@@ -76,7 +78,7 @@ public class SearchActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search);
         // Boolean for bound or not
         isBound = false;
-        userQuery = null;
+        //userQuery = null;
         // Orientation change
         if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE) {
@@ -226,7 +228,7 @@ public class SearchActivity extends ActionBarActivity {
      */
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY)
+            query = intent.getStringExtra(SearchManager.QUERY)
                     .replaceAll("/[^a-zA-Z]/", "") // Remove all non a-zA-Z chars
                     .replaceAll("\\s","")          // Remove all spaces
                     .toLowerCase().trim();         // Lowercase
@@ -278,6 +280,13 @@ public class SearchActivity extends ActionBarActivity {
         // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
         if (!fragment.isAdded()) {
             getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
+        } else { // The fragment is already showing, so just grab the text views.
+            TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
+            TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
+            TextView resultWildCardNum = (TextView)fragment.getView().findViewById(R.id.tv_wildcard_number);
+            resultTV.setText(query);
+            resultLength.setText(String.valueOf(query.length()));
+            resultWildCardNum.setText("not used yet");
         }
     }
 
@@ -305,12 +314,13 @@ public class SearchActivity extends ActionBarActivity {
 
         @Override
         protected void onPreExecute() {
-            searchService.prepareDictionary();
+            searchService.prepareSearch(userQuery);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            searchService.search(userQuery);
+            searchService.search();
+            Log.i(TAG, "Got to search start");
             return null;
         }
 
@@ -353,5 +363,7 @@ public class SearchActivity extends ActionBarActivity {
         Log.i(TAG, "onPause() called");
         super.onPause();
     }
+
+
 
 }//EOF

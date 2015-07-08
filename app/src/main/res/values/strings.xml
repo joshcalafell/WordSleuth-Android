@@ -52,5 +52,5 @@
     <string name="app_setting_disable_help">disableHelp</string>
     <string name="txt_share_I_Found">I found</string>
     <string name="txt_share_is_an_anagram">is an anagram for</string>
-    <string name="txt_with_word_sleuth">with WordSleuth(TM)</string>
+    <string name="txt_with_word_sleuth">with WordSleuth(TM) for Android.</string>
 </resources>

@@ -30,9 +30,12 @@ import java.util.ArrayList;
 public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DataBaseHelper";
-    //The Android's default system path of your application database.
+    // The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/com.rabbitfighter.wordsleuth/databases/";
+    // Database name
     private static String DB_NAME = "dictionary.db";
+
+    // Database, and context
     private SQLiteDatabase myDataBase;
     private final Context myContext;
 
@@ -40,9 +43,11 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "dictionary";
     // Table columns
     public static final String UID = "_id";
+    // Word
     public static final String COLUMN_NAME_WORD = "word";
+    // Length
     public static final String COLUMN_NAME_WORD_LENGTH = "length";
-    // For all the letters, yes this is necessary.
+    // For all the letters, A-Z.
     public static final String COLUMN_NAME_COUNT_A = "count_A";
     public static final String COLUMN_NAME_COUNT_B = "count_B";
     public static final String COLUMN_NAME_COUNT_C = "count_C";
@@ -118,13 +123,16 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public void createDataBase() throws IOException{
         if(checkDataBase()){
             //do nothing - database already exist
+            Log.i(TAG, "Database already exists... Nothing to do.");
         }else{
             //By calling this method and empty database will be created into the default system path
             //of your application so we are gonna be able to overwrite that database with our database.
             this.getReadableDatabase();
             try {
                 copyDataBase();
+                Log.i(TAG, "Successfully copied database");
             } catch (IOException e) {
+                Log.i(TAG, "Error copying");
                 throw new Error("Error copying database");
             }
         }
@@ -140,12 +148,15 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
         }catch(SQLiteException e){
-            //database does't exist yet.
+            //database doesn't exist yet.
+            Log.i(TAG, "Database doesn't exist yet");
         }
-
+        // Check for null db
         if(checkDB != null){
             checkDB.close();
+            Log.i(TAG, "Closed dict database");
         }
+        // Return null or not null
         return checkDB != null;
     }
 
@@ -182,10 +193,11 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     @Override
     public synchronized void close() {
-        if(myDataBase != null)
+        if(myDataBase != null) {
+            Log.i(TAG, "Closing dictionary database");
             myDataBase.close();
+        }
         super.close();
-
     }
 
     /* -------------------------- */
@@ -291,4 +303,4 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         // Return the list
         return resultList;
     }
-}
+}//EOF

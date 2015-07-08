@@ -16,6 +16,7 @@ import com.rabbitfighter.wordsleuth.Utils.RoutineTimer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Bound service for searching dictionary asynchronously.
@@ -31,101 +32,132 @@ import java.util.Arrays;
 public class BoundSearchService extends Service  {
 
     private static final String TAG = "BoundSearchService";
-
     /*
     Create an object that is going to be the binder object
     The bridge that connects app to service
     */
     public final IBinder myBinder = new MyLocalBinder();
-
     // Lists to hold results
-    ArrayList<Result> anagrams;
-    ArrayList<Result> subwords;
-    ArrayList<Result> combos;
-    ArrayList<Result> matches;
+    private ArrayList<Result> anagrams;
+    private ArrayList<Result> subwords;
+    private ArrayList<Result> combos;
+    private ArrayList<Result> matches;
+    // Databases
+    private ResultsDbAdapter dbAdapter;
+    private DictionaryDbHelper helper;
+    // Query
+    private Entry query;
 
-    // Database
-    ResultsDbAdapter dbAdapter;
-
-    DictionaryDbHelper helper;
-
+    // Empty constructor
     public BoundSearchService() {
+        this.setAnagrams(new ArrayList<Result>());
+        this.setSubwords(new ArrayList<Result>());
+        this.setCombos(new ArrayList<Result>());
+        this.setMatches(new ArrayList<Result>());
     }
 
     @Override
     public IBinder onBind(Intent intent) throws UnsupportedOperationException {
-        // Database
-        helper = new DictionaryDbHelper(this);
-        dbAdapter = new ResultsDbAdapter(this);
+        // Return binder
         return myBinder;
         // Autogen: TODO: Return the communication channel to the service.
     }
 
-    public boolean prepareDictionary() {
+    /**
+     * Prepare the dictionary
+     * @return
+     */
+    public boolean prepareSearch(String userQuery) {
         // Load the dictionary
         Log.i(TAG, "Loading dictionary...");
-        helper = new DictionaryDbHelper(this);
+        // Start the timer
         RoutineTimer dictionaryTimer = new RoutineTimer();
         dictionaryTimer.start();
+        // Try to prepare the dictionary database
+        try {
+            // Set the query
+            this.setQuery(new Entry(userQuery));
+
+            // Set the helper
+            this.setHelper(new DictionaryDbHelper(this));
+
+            // Create the database
+            try {
+                this.getHelper().createDataBase();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i(TAG, "Unable to create database");
+                throw new Error("Unable to create database");
+            }
+
+            // Open the database
             try {
 
-                // Create the database
-                try {
-                    helper.createDataBase();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.i(TAG, "Unable to create database");
-                    throw new Error("Unable to create database");
-                }
-                // Create the database
-                try {
-                    helper.openDataBase();
-                }catch(SQLException e) {
-                    e.printStackTrace();
-                    Log.i(TAG, "Unable to open database");
-                    throw new Error("Unable to open database");
-                }
-            } catch (SQLiteException e) {
+                this.getHelper().openDataBase();
+                // Get readable database
+                //getHelper().getReadableDatabase();
+            } catch (SQLException e) {
                 e.printStackTrace();
-                Log.i(TAG, "Couldn't prepare dictionary database.");
-                return false;
-            } finally {
-                dictionaryTimer.stop();
-                Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
+                Log.i(TAG, "Unable to open database");
+                throw new Error("Unable to open database");
             }
+
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            Log.i(TAG, "Couldn't prepare dictionary database.");
+            return false;
+        } finally {
+            // Stop timer
+            dictionaryTimer.stop();
+            Log.i(TAG, "Dictionary prepared in " + dictionaryTimer.getTotal() + " milliseconds.");
+        }
         return true;
     }
 
     // Search the dictionary database for matches
-    public void search(String userQuery) {
-        dbAdapter.deleteEntries();
-        anagrams = new ArrayList<>();
-        combos = new ArrayList<>();
-        subwords = new ArrayList<>();
-        Entry query = new Entry(userQuery);
-        if (query.getWord()!=null) {
-            try {
-                matches = new ArrayList<>(helper.getMatches(
-                        query.getCount_A(), query.getCount_B(), query.getCount_C(), query.getCount_D(),
-                        query.getCount_E(), query.getCount_F(), query.getCount_G(), query.getCount_H(),
-                        query.getCount_I(), query.getCount_J(), query.getCount_K(), query.getCount_L(),
-                        query.getCount_M(), query.getCount_N(), query.getCount_O(), query.getCount_P(),
-                        query.getCount_Q(), query.getCount_R(), query.getCount_S(), query.getCount_T(),
-                        query.getCount_U(), query.getCount_V(), query.getCount_W(), query.getCount_X(),
-                        query.getCount_Y(), query.getCount_Z(), query.getCount_Wildcards() // wildcards not in use yet
-                ));
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.i(TAG, "There was an error in the search");
-            } finally {
-                //helper.close();
-            }
+    public void search() {
+        // Set the array lists
+        resetLists();
+        // Set the database adapter for the results
+        this.setDbAdapter(new ResultsDbAdapter(this));
+        // Delete entries
+        this.getDbAdapter().deleteEntries();
+        // Test for query not null
+        if (this.getQuery().getWord() == null) {
+            Log.i(TAG, "query is null");
+        } else {
+            Log.i(TAG, "Query: " + this.getQuery().getWord());
+        }
 
+        Log.i(TAG, "Got to matches");
+        this.setMatches(
+                new ArrayList<>(
+                        this.getHelper().getMatches(
+                                this.getQuery().getCount_A(), this.getQuery().getCount_B(),
+                                this.getQuery().getCount_C(), this.getQuery().getCount_D(),
+                                this.getQuery().getCount_E(), this.getQuery().getCount_F(),
+                                this.getQuery().getCount_G(), this.getQuery().getCount_H(),
+                                this.getQuery().getCount_I(), this.getQuery().getCount_J(),
+                                this.getQuery().getCount_K(), this.getQuery().getCount_L(),
+                                this.getQuery().getCount_M(), this.getQuery().getCount_N(),
+                                this.getQuery().getCount_O(), this.getQuery().getCount_P(),
+                                this.getQuery().getCount_Q(), this.getQuery().getCount_R(),
+                                this.getQuery().getCount_S(), this.getQuery().getCount_T(),
+                                this.getQuery().getCount_U(), this.getQuery().getCount_V(),
+                                this.getQuery().getCount_W(), this.getQuery().getCount_X(),
+                                this.getQuery().getCount_Y(), this.getQuery().getCount_Z(), 666
+                                // wildcards not in use yet
+                        )
+                )
+        );
+        // If matches aren't null and the matches aren't empty
+        if (this.getMatches() != null && !this.getMatches().isEmpty()) {
             // Put anagrams and subwords in the database
-            for (Result result : matches) {
-                if (result.getNumLetters() == query.getNumLetters() && result.getWord().compareToIgnoreCase(userQuery)!=0) {
-                    anagrams.add(result);
-                    long id = dbAdapter.insertData(
+            for (Result result : this.getMatches()) {
+                if (result.getNumLetters() == this.getQuery().getNumLetters()
+                        && this.getQuery().getWord().compareToIgnoreCase(result.getWord())!=0) {
+                    this.getAnagrams().add(result);
+                    long id = this.getDbAdapter().insertData(
                             "anagram",
                             result.getWord(),
                             String.valueOf(result.getNumLetters()),
@@ -138,8 +170,8 @@ public class BoundSearchService extends Service  {
                         Log.i(TAG, "Database anagram insertion of " + result.getWord() + " successful :)");
                     }
                 } else {
-                    subwords.add(result);
-                    long id = dbAdapter.insertData(
+                    this.getSubwords().add(result);
+                    long id = this.getDbAdapter().insertData(
                             "subword",
                             result.getWord(),
                             String.valueOf(result.getNumLetters()),
@@ -154,19 +186,22 @@ public class BoundSearchService extends Service  {
                 }
             }
 
-            if (!subwords.isEmpty()) {
+            /**
+             * Go through the subwords to find the combos
+             */
+            if (!this.getSubwords().isEmpty()) {
                 // Put combos in the database
-                for (int i = 0; i < subwords.size(); i++) {
-                    String foo = subwords.get(i).getWord();
-                    for (int j = 0; j < subwords.size(); j++) {
-                        String bar = subwords.get(j).getWord();
+                for (int i = 0; i < this.getSubwords().size(); i++) {
+                    String foo = this.getSubwords().get(i).getWord();
+                    for (int j = 0; j < this.getSubwords().size(); j++) {
+                        String bar = this.getSubwords().get(j).getWord();
                         String foobar = sorted(String.valueOf("" + foo + bar));
-                        if (isAnagram(query.getWordSorted(), foobar)) {
+                        if (isAnagram(this.getQuery().getWordSorted(), foobar)) {
                             // Get result object
                             Result result = new Result(String.valueOf(foo + " " + bar));
                             // Insert item into database
-                            combos.add(result);
-                            long id = dbAdapter.insertData(
+                           this.getCombos().add(result);
+                            long id = this.getDbAdapter().insertData(
                                     "combo",
                                     result.getWord(),
                                     String.valueOf(result.getNumLetters()),
@@ -181,9 +216,26 @@ public class BoundSearchService extends Service  {
                         }
                     }
                 }
+
             }
+
+        } else {
+            Log.i(TAG, "matches was empty, WTF?");
         }
     }// End search
+
+    /**
+     * Reset the lists
+     */
+    private void resetLists() {
+        List<ArrayList<Result>> lists = new ArrayList<>();
+        lists.add(this.getAnagrams()); lists.add(this.getSubwords());
+        lists.add(this.getMatches());  lists.add(this.getCombos());
+        // Clear lists
+        for (ArrayList<Result> list : lists) {
+            list.clear();
+        }
+    }
 
     /**
      * Returns whether or not a word Lists an anagram
@@ -219,5 +271,61 @@ public class BoundSearchService extends Service  {
         public BoundSearchService getService() {
             return BoundSearchService.this;
         }
+    }
+
+    public ArrayList<Result> getAnagrams() {
+        return anagrams;
+    }
+
+    public void setAnagrams(ArrayList<Result> anagrams) {
+        this.anagrams = anagrams;
+    }
+
+    public ArrayList<Result> getSubwords() {
+        return subwords;
+    }
+
+    public void setSubwords(ArrayList<Result> subwords) {
+        this.subwords = subwords;
+    }
+
+    public ArrayList<Result> getCombos() {
+        return combos;
+    }
+
+    public void setCombos(ArrayList<Result> combos) {
+        this.combos = combos;
+    }
+
+    public ArrayList<Result> getMatches() {
+        return matches;
+    }
+
+    public void setMatches(ArrayList<Result> matches) {
+        this.matches = matches;
+    }
+
+    public ResultsDbAdapter getDbAdapter() {
+        return dbAdapter;
+    }
+
+    public void setDbAdapter(ResultsDbAdapter dbAdapter) {
+        this.dbAdapter = dbAdapter;
+    }
+
+    public DictionaryDbHelper getHelper() {
+        return helper;
+    }
+
+    public void setHelper(DictionaryDbHelper helper) {
+        this.helper = helper;
+    }
+
+    public Entry getQuery() {
+        return query;
+    }
+
+    public void setQuery(Entry query) {
+        this.query = query;
     }
 }
