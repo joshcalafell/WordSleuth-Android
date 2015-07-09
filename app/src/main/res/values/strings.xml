@@ -47,10 +47,11 @@
     <string name="txt_settings_tag">Settings</string>
     <string name="txt_dialog_yes">Yes</string>
     <string name="txt_dialog_no">No</string>
-    <string name="txt_dialog_instruction_disable">Do you want to disable help when starting this app?</string>
+    <string name="txt_dialog_instruction_disable">This help will only show once.</string>
+    <string name="txt_dialog_ok">Ok</string>
     <string name="PREFERENCE_FILE_KEY">com.rabbitfighter.wordsleuth.PREFERENCE_FILE_KEY</string>
     <string name="app_setting_disable_help">disableHelp</string>
     <string name="txt_share_I_Found">I found</string>
     <string name="txt_share_is_an_anagram">is an anagram for</string>
-    <string name="txt_with_word_sleuth">with WordSleuth(TM) for Android.</string>
+    <string name="txt_with_word_sleuth">with WordSleuth(TM)</string>
 </resources>
