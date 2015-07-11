@@ -194,6 +194,7 @@ public class ResultDetailActivity extends ActionBarActivity {
     private void showShareOptions() {
 
         Intent shareResultIntent = new Intent(Intent.ACTION_SEND);
+        shareResultIntent.setType("text/plain");
         switch (resultType.toString()) {
             case "anagram":
                 String userResult = getString(R.string.txt_share_I_Found) +
@@ -201,11 +202,10 @@ public class ResultDetailActivity extends ActionBarActivity {
                         getString(R.string.txt_share_is_an_anagram) + " " +
                         '"' + query.toString() + '"' + " " +
                         getString(R.string.txt_with_word_sleuth);
-                shareResultIntent.putExtra(Intent.EXTRA_TEXT, userResult);
-                shareResultIntent.setType("text/plain");
+                shareResultIntent.putExtra(Intent.EXTRA_TEXT, userResult + " http://aol.com/");
+
 
                 startActivity(Intent.createChooser(shareResultIntent, getString(R.string.abc_shareactionprovider_share_with)));
-                Message.msgShort(getApplicationContext(), "Message sent");
                 break;
         }
 

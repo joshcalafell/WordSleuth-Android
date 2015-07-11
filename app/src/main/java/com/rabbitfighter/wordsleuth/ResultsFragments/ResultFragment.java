@@ -35,14 +35,6 @@ import java.util.ArrayList;
 public class ResultFragment extends Fragment {
     public final static String TAG = "ResultFragment";
 
-    // Result types
-    private final static int resultTypeAnagram = 0x0;
-    private final static int resultTypeSubword = 0x1;
-    private final static int resultTypeCombo = 0x2;
-
-    // Array to hold the result types int values. TODO, if we don't need this get rid of it...
-    private final static int[] resultTypes = {resultTypeAnagram, resultTypeSubword, resultTypeCombo};
-
     // Vars
     String query;
     String resultType;
@@ -71,6 +63,7 @@ public class ResultFragment extends Fragment {
         }
         super.onCreate(savedInstanceState);
     }
+
 
 
 

@@ -133,4 +133,5 @@ public class ResultsListActivity extends ActionBarActivity {
         super.onPause();
     }
 
+
 }//EOF

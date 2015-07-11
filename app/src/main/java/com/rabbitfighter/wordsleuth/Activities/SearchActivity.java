@@ -1,5 +1,6 @@
 package com.rabbitfighter.wordsleuth.Activities;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,6 +26,8 @@ import com.rabbitfighter.wordsleuth.SearchFragments.SearchLoadingFragment;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsFragment;
 import com.rabbitfighter.wordsleuth.Services.BoundSearchService;
 import com.rabbitfighter.wordsleuth.Utils.Message;
+
+import net.dicesoft.net.apprater.AppRater;
 
 /**
  * Search activity. 3 Frags. There are many like it but this one is mine...
@@ -114,7 +117,6 @@ public class SearchActivity extends ActionBarActivity {
         @see 'http://stackoverflow.com/questions/2496901/android-on-screen-keyboard-auto-popping-up'
          */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
     }
 
     /**
@@ -264,7 +266,7 @@ public class SearchActivity extends ActionBarActivity {
     /* ---------------------------- */
 
     /**
-     * Transitions to the results fragment using a fragment manager transition
+     * Transitions to the reults fragment using a fragment manager transition
      * @param query - the user's query
      */
     private void transitionToResultsFragment(String query) {
@@ -332,6 +334,7 @@ public class SearchActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void result) {
+
             transitionToResultsFragment(userQuery);
         }
 
@@ -369,6 +372,8 @@ public class SearchActivity extends ActionBarActivity {
         Log.i(TAG, "onPause() called");
         super.onPause();
     }
+
+
 
 
 

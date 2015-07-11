@@ -10,6 +10,7 @@
           <set>
             <option value="$USER_HOME$/DataMain/srcode/WordSleuth-Android" />
             <option value="$USER_HOME$/DataMain/srcode/WordSleuth-Android/app" />
+            <option value="$USER_HOME$/DataMain/srcode/WordSleuth-Android/apprater" />
           </set>
         </option>
       </GradleProjectSettings>

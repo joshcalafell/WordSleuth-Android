@@ -1,5 +1,6 @@
 package com.rabbitfighter.wordsleuth.SearchFragments;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,8 @@ import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
 import com.rabbitfighter.wordsleuth.ListItems.ResultTypeItem;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
+
+import net.dicesoft.net.apprater.AppRater;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +63,6 @@ public class SearchResultsFragment extends Fragment {
         query =  getArguments().get("query").toString();
         dbAdapter = new ResultsDbAdapter(getActivity());
         resultTypeItemList = new ArrayList<>();
-
         super.onCreate(savedInstanceState);
     }
 
@@ -95,6 +97,25 @@ public class SearchResultsFragment extends Fragment {
          /* Return the root view */
         return rootView;
 
+    }
+
+    private void runAppRater() {
+        AppRater appRater = new AppRater(getActivity());
+        appRater.setDaysBeforePrompt(3);
+        appRater.setLaunchesBeforePrompt(7);
+        appRater.setTargetUri("http://google.com");
+        appRater.setPhrases(
+                R.string.rate_title,
+                R.string.rate_explanation,
+                R.string.rate_now,
+                R.string.rate_later,
+                R.string.rate_never);
+
+        AlertDialog appRateDialog = appRater.getDialog();
+
+        if (appRateDialog != null) {
+            appRateDialog.show();
+        }
     }
 
     /* --------------- */
@@ -262,6 +283,7 @@ public class SearchResultsFragment extends Fragment {
         // Populate the list and list view again, then call super on resume
         populateResultTypeList();
         populateListView();
+        runAppRater();
         super.onStart();
     }
 
