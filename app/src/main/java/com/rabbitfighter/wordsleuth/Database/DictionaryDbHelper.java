@@ -1,6 +1,4 @@
 package com.rabbitfighter.wordsleuth.Database;
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -16,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SQLite Dictionary Database. There are many like it but this one is mine...
@@ -39,15 +39,18 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase myDataBase;
     private final Context myContext;
 
-    // Table name
-    public static final String TABLE_NAME = "dictionary";
+    private static final int WORD_COLUMN = 1;
+
+
+    //String id = cursor.getString( cursor.getColumnIndex(0)); // id is first column in db
+    //String id = cursor.getString( cursor.getColumnIndex("id") ); // id is column name in db
+
     // Table columns
+    public static final String TABLE_NAME = "dictionary";
     public static final String UID = "_id";
-    // Word
     public static final String COLUMN_NAME_WORD = "word";
-    // Length
+    public static final String COLUMN_NAME_WORD_SORTED ="wordSorted";
     public static final String COLUMN_NAME_WORD_LENGTH = "length";
-    // For all the letters, A-Z.
     public static final String COLUMN_NAME_COUNT_A = "count_A";
     public static final String COLUMN_NAME_COUNT_B = "count_B";
     public static final String COLUMN_NAME_COUNT_C = "count_C";
@@ -77,7 +80,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     /**
      * Constructor
-     * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
+     * Takes and keeps a reference of the passed context in order to access to the application
+     * assets and resources.
      * @param context
      */
     public DictionaryDbHelper(Context context) {
@@ -300,6 +304,217 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             resultList.add(new Result(cursor.getString(columnResult)));
         }
         cursor.close();
+        // Return the list
+        return resultList;
+    }
+
+    // Wildcards
+    /**
+     * Get the Anagrams in the database
+     * @return the number of anagrams
+     */
+    @SuppressWarnings("unused")
+    public ArrayList<Result> getBlankTileMatches(
+
+            // Params. Yeah, I know...
+            int count_A, int count_B, int count_C, int count_D, int count_E, int count_F,
+            int count_G, int count_H, int count_I, int count_J, int count_K, int count_L,
+            int count_M, int count_N, int count_O, int count_P, int count_Q, int count_R,
+            int count_S, int count_T, int count_U, int count_V, int count_W, int count_X,
+            int count_Y, int count_Z, int count_WILDCARDS) {
+
+        // Get the database helper to get access to everything...
+        SQLiteDatabase db = this.getWritableDatabase();
+        // List to hold matches
+        ArrayList<Result> resultList = new ArrayList<>();
+
+        // 1) Create a hash map of the words individual letters
+        Map<Character, Integer> valueMap = new HashMap<>();
+        valueMap.put('a', count_A); valueMap.put('b', count_B); valueMap.put('c', count_C);
+        valueMap.put('d', count_D); valueMap.put('e', count_E); valueMap.put('f', count_F);
+        valueMap.put('g', count_G); valueMap.put('h', count_H); valueMap.put('i', count_I);
+        valueMap.put('j', count_A); valueMap.put('k', count_K); valueMap.put('l', count_L);
+        valueMap.put('m', count_M); valueMap.put('n', count_N); valueMap.put('o', count_O);
+        valueMap.put('p', count_P); valueMap.put('q', count_Q); valueMap.put('r', count_R);
+        valueMap.put('s', count_S); valueMap.put('t', count_T); valueMap.put('u', count_U);
+        valueMap.put('v', count_V); valueMap.put('w', count_W); valueMap.put('x', count_X);
+        valueMap.put('y', count_Y); valueMap.put('z', count_Z); valueMap.put('*', count_WILDCARDS);
+
+        // 2) Make an array list of all the letters that have a value greater than zero
+        Map<Character, Integer> chars = new HashMap<>();
+        StringBuilder charString = new StringBuilder();
+
+        // For all pairs in the set...
+        for (Map.Entry<Character, Integer> entry : valueMap.entrySet()) {
+            // If there is one or more, add it to the list of not null chars
+            if (entry.getValue()>0) {
+                chars.put(entry.getKey(), entry.getValue());
+                charString.append(entry.getKey());
+            }
+        }// Good, now we have a list of chars used for our bounding in sql. 'charString'
+
+        // Then we are going to need a string builder for our query
+        StringBuilder dbQuery = new StringBuilder();
+        // A boolean to use for concatenating + signs and other sql stuff.
+        boolean firstIteration = true;
+        // start off the statement
+        dbQuery.append("SELECT * FROM dictionary WHERE");
+        // Add the letters we have in the not null list to the query
+        for (Map.Entry<Character, Integer> entry : chars.entrySet()) {
+            // If there's one or more instances of the character...
+            if (entry.getValue()>0) {
+
+                // Get the next key
+                switch (entry.getKey()) {
+                    case 'a': dbQuery.append(" count_A>="+entry.getValue()+ " AND count_A<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'b': dbQuery.append(" count_B>="+entry.getValue()+ " AND count_B<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'c': dbQuery.append(" count_C>="+entry.getValue()+ " AND count_C<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'd': dbQuery.append(" count_D>="+entry.getValue()+ " AND count_D<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'e': dbQuery.append(" count_E>="+entry.getValue()+ " AND count_E<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'f': dbQuery.append(" count_F>="+entry.getValue()+ " AND count_F<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'g': dbQuery.append(" count_G>="+entry.getValue()+ " AND count_G<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'h': dbQuery.append(" count_H>="+entry.getValue()+ " AND count_H<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'i': dbQuery.append(" count_I>="+entry.getValue()+ " AND count_I<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'j': dbQuery.append(" count_J>="+entry.getValue()+ " AND count_J<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'k': dbQuery.append(" count_K>="+entry.getValue()+ " AND count_K<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'l': dbQuery.append(" count_L>="+entry.getValue()+ " AND count_L<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'm': dbQuery.append(" count_M>="+entry.getValue()+ " AND count_M<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'n': dbQuery.append(" count_N>="+entry.getValue()+ " AND count_N<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'o': dbQuery.append(" count_O>="+entry.getValue()+ " AND count_O<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'p': dbQuery.append(" count_P>="+entry.getValue()+ " AND count_P<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'q': dbQuery.append(" count_Q>="+entry.getValue()+ " AND count_Q<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'r': dbQuery.append(" count_R>="+entry.getValue()+ " AND count_R<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 's': dbQuery.append(" count_S>="+entry.getValue()+ " AND count_S<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 't': dbQuery.append(" count_T>="+entry.getValue()+ " AND count_T<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'u': dbQuery.append(" count_U>="+entry.getValue()+ " AND count_U<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'v': dbQuery.append(" count_V>="+entry.getValue()+ " AND count_V<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'w': dbQuery.append(" count_W>="+entry.getValue()+ " AND count_W<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'x': dbQuery.append(" count_X>="+entry.getValue()+ " AND count_X<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'y': dbQuery.append(" count_Y>="+entry.getValue()+ " AND count_Y<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    case 'z': dbQuery.append(" count_Z>="+entry.getValue()+ " AND count_Z<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
+                    default: Log.i(TAG, "Something went wrong in the switch..."); break;
+                }
+            }
+            if (!firstIteration) {
+                dbQuery.append(" AND ");
+            } else {
+                firstIteration = false;
+            }
+
+        }
+
+        // Add constraints for the second "set"
+        dbQuery.append(" length=");
+
+        // Reset flag
+        firstIteration = true;
+
+        // Append the length clauses
+        for (char c: charString.toString().toCharArray()) {
+            if (c!='*') {
+                if (!firstIteration) {
+                    dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
+                } else {
+                    dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
+                    firstIteration = false;
+                }
+            } else {
+                // TODO: Temporary
+                Log.i(TAG, "Wildcards should not be included in the char iteration. Something went wrong...");
+            }
+        }
+
+        // reset boolean for second query in union statement
+        firstIteration = true;
+
+        // Set 1 Union Set 2
+        dbQuery.append(" UNION SELECT * FROM dictionary WHERE");
+        for (Map.Entry<Character, Integer> entry : chars.entrySet()) {
+
+            // Get the next key
+            switch (entry.getKey()) {
+                case 'a': dbQuery.append(" count_A<="+entry.getValue()); break;
+                case 'b': dbQuery.append(" count_B<="+entry.getValue()); break;
+                case 'c': dbQuery.append(" count_C<="+entry.getValue()); break;
+                case 'd': dbQuery.append(" count_D<="+entry.getValue()); break;
+                case 'e': dbQuery.append(" count_E<="+entry.getValue()); break;
+                case 'f': dbQuery.append(" count_F<="+entry.getValue()); break;
+                case 'g': dbQuery.append(" count_G<="+entry.getValue()); break;
+                case 'h': dbQuery.append(" count_H<="+entry.getValue()); break;
+                case 'i': dbQuery.append(" count_I<="+entry.getValue()); break;
+                case 'j': dbQuery.append(" count_J<="+entry.getValue()); break;
+                case 'k': dbQuery.append(" count_K<="+entry.getValue()); break;
+                case 'l': dbQuery.append(" count_L<="+entry.getValue()); break;
+                case 'm': dbQuery.append(" count_M<="+entry.getValue()); break;
+                case 'n': dbQuery.append(" count_N<="+entry.getValue()); break;
+                case 'o': dbQuery.append(" count_O<="+entry.getValue()); break;
+                case 'p': dbQuery.append(" count_P<="+entry.getValue()); break;
+                case 'q': dbQuery.append(" count_Q<="+entry.getValue()); break;
+                case 'r': dbQuery.append(" count_R<="+entry.getValue()); break;
+                case 's': dbQuery.append(" count_S<="+entry.getValue()); break;
+                case 't': dbQuery.append(" count_T<="+entry.getValue()); break;
+                case 'u': dbQuery.append(" count_U<="+entry.getValue()); break;
+                case 'v': dbQuery.append(" count_V<="+entry.getValue()); break;
+                case 'w': dbQuery.append(" count_W<="+entry.getValue()); break;
+                case 'x': dbQuery.append(" count_X<="+entry.getValue()); break;
+                case 'y': dbQuery.append(" count_Y<="+entry.getValue()); break;
+                case 'z': dbQuery.append(" count_Z<="+entry.getValue()); break;
+                default: Log.i(TAG, "Something went wrong in the switch..."); break;
+            }
+            // Try this...
+            if (!firstIteration) {
+                dbQuery.append(" AND ");
+            } else {
+                firstIteration = false;
+            }
+        }
+
+
+        // Add constraints for the second "set"
+        dbQuery.append(" length=");
+
+        // Reset flag
+        firstIteration = true;
+
+        // Append the length clauses
+        for (char c: charString.toString().toCharArray()) {
+            if (c!='*') {
+                if (!firstIteration) {
+                    dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
+                } else {
+                    dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
+                    firstIteration = false;
+                }
+            } else {
+                // TODO: Temporary
+                Log.i(TAG, "Wildcards should not be included in the char iteration. Something went wrong...");
+            }
+        }
+
+        // Add the count of wildcards to account for blank tiles.
+        dbQuery.append(" + " + count_WILDCARDS);
+        // Order by
+        dbQuery.append(" ORDER BY length;");
+
+        // Query the database
+        Cursor cursor = db.rawQuery(dbQuery.toString(), null);
+
+        // Log
+        Log.i(TAG, dbQuery.toString());
+
+        // Move through the results with a cursor and return the word field
+        while (cursor.moveToNext()) {
+            // Get the word from the cursor
+            String word =  cursor.getString(cursor.getColumnIndex("word"));
+
+            // Add the result to the list to return
+            //Log.i(TAG, word);
+            resultList.add(new Result(word));
+        }
+
+        // Close the cursor
+        cursor.close();
+
         // Return the list
         return resultList;
     }

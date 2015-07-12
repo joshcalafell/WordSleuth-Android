@@ -56,6 +56,8 @@ public class BoundSearchService extends Service  {
         this.setMatches(new ArrayList<Result>());
     }
 
+    private String alphabet = "abcdefghijklmnopqrstuvwxyz";
+
     @Override
     public IBinder onBind(Intent intent) throws UnsupportedOperationException {
         // Return binder
@@ -128,11 +130,17 @@ public class BoundSearchService extends Service  {
         } else {
             Log.i(TAG, "Query: " + this.getQuery().getWord());
         }
+        StringBuilder sb = new StringBuilder(query.getWordSorted());
+
+            for (int j = 0; j < alphabet.length(); j++) {
+                sb.append(alphabet.charAt(j));
+
+            }
 
         Log.i(TAG, "Got to matches");
         this.setMatches(
                 new ArrayList<>(
-                        this.getHelper().getMatches(
+                        this.getHelper().getBlankTileMatches(
                                 this.getQuery().getCount_A(), this.getQuery().getCount_B(),
                                 this.getQuery().getCount_C(), this.getQuery().getCount_D(),
                                 this.getQuery().getCount_E(), this.getQuery().getCount_F(),
@@ -145,7 +153,7 @@ public class BoundSearchService extends Service  {
                                 this.getQuery().getCount_S(), this.getQuery().getCount_T(),
                                 this.getQuery().getCount_U(), this.getQuery().getCount_V(),
                                 this.getQuery().getCount_W(), this.getQuery().getCount_X(),
-                                this.getQuery().getCount_Y(), this.getQuery().getCount_Z(), 666
+                                this.getQuery().getCount_Y(), this.getQuery().getCount_Z(), 1
                                 // wildcards not in use yet
                         )
                 )

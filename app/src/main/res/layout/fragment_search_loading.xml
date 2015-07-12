@@ -12,9 +12,9 @@
         android:id="@+id/progressBar"
         android:elevation="2dp"
         android:padding="30dp"
-        android:progressBackgroundTint="@color/abc_background_cache_hint_selector_material_dark"
+        android:progressBackgroundTint="@android:color/holo_blue_light"
         android:progressBackgroundTintMode="src_over"
-        android:progressTint="@android:color/holo_blue_dark"
+        android:progressTint="@android:color/holo_blue_light"
         android:progressTintMode="src_over"
         android:textAlignment="center"
         android:layout_centerVertical="true" android:layout_centerHorizontal="true"/>
