@@ -16,6 +16,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * SQLite Dictionary Database. There are many like it but this one is mine...
@@ -77,6 +79,9 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NAME_COUNT_X = "count_X";
     public static final String COLUMN_NAME_COUNT_Y = "count_Y";
     public static final String COLUMN_NAME_COUNT_Z = "count_Z";
+
+    // SQL statement constants
+    public static final String UNION = " UNION ";
 
     /**
      * Constructor
@@ -212,109 +217,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
      * Get the Anagrams in the database
      * @return the number of anagrams
      */
-    public ArrayList<Result> getMatches(
-            // Params. Yeah, I know...
-            int count_A, int count_B, int count_C, int count_D, int count_E, int count_F,
-            int count_G, int count_H, int count_I, int count_J, int count_K, int count_L,
-            int count_M, int count_N, int count_O, int count_P, int count_Q, int count_R,
-            int count_S, int count_T, int count_U, int count_V, int count_W, int count_X,
-            int count_Y, int count_Z, int count_WILDCARDS
-    ) {
-        // Get the database helper to get access to everything...
-        SQLiteDatabase db = this.getWritableDatabase();
-        // List to hold matches
-        ArrayList<Result> resultList = new ArrayList<>();
-        // Here are the columns we care about in our search
-        String[] columns = {
-                UID,
-                COLUMN_NAME_WORD,
-                COLUMN_NAME_WORD_LENGTH,
-                COLUMN_NAME_COUNT_A,
-                COLUMN_NAME_COUNT_B,
-                COLUMN_NAME_COUNT_C,
-                COLUMN_NAME_COUNT_D,
-                COLUMN_NAME_COUNT_E,
-                COLUMN_NAME_COUNT_F,
-                COLUMN_NAME_COUNT_G,
-                COLUMN_NAME_COUNT_H,
-                COLUMN_NAME_COUNT_I,
-                COLUMN_NAME_COUNT_J,
-                COLUMN_NAME_COUNT_K,
-                COLUMN_NAME_COUNT_L,
-                COLUMN_NAME_COUNT_M,
-                COLUMN_NAME_COUNT_N,
-                COLUMN_NAME_COUNT_O,
-                COLUMN_NAME_COUNT_P,
-                COLUMN_NAME_COUNT_Q,
-                COLUMN_NAME_COUNT_R,
-                COLUMN_NAME_COUNT_S,
-                COLUMN_NAME_COUNT_T,
-                COLUMN_NAME_COUNT_U,
-                COLUMN_NAME_COUNT_V,
-                COLUMN_NAME_COUNT_W,
-                COLUMN_NAME_COUNT_X,
-                COLUMN_NAME_COUNT_Y,
-                COLUMN_NAME_COUNT_Z,
-        };
-        String[] selectionArgs = null;
-        // The selection (WHERE ...)
-        String selection =
-                COLUMN_NAME_COUNT_A +"<="+ count_A + " AND " +
-                COLUMN_NAME_COUNT_B +"<="+ count_B + " AND " +
-                COLUMN_NAME_COUNT_C +"<="+ count_C + " AND " +
-                COLUMN_NAME_COUNT_D +"<="+ count_D + " AND " +
-                COLUMN_NAME_COUNT_E +"<="+ count_E + " AND " +
-                COLUMN_NAME_COUNT_F +"<="+ count_F + " AND " +
-                COLUMN_NAME_COUNT_G +"<="+ count_G + " AND " +
-                COLUMN_NAME_COUNT_H +"<="+ count_H + " AND " +
-                COLUMN_NAME_COUNT_I +"<="+ count_I + " AND " +
-                COLUMN_NAME_COUNT_J +"<="+ count_J + " AND " +
-                COLUMN_NAME_COUNT_K +"<="+ count_K + " AND " +
-                COLUMN_NAME_COUNT_L +"<="+ count_L + " AND " +
-                COLUMN_NAME_COUNT_M +"<="+ count_M + " AND " +
-                COLUMN_NAME_COUNT_N +"<="+ count_N + " AND " +
-                COLUMN_NAME_COUNT_O +"<="+ count_O + " AND " +
-                COLUMN_NAME_COUNT_P +"<="+ count_P + " AND " +
-                COLUMN_NAME_COUNT_Q +"<="+ count_Q + " AND " +
-                COLUMN_NAME_COUNT_R +"<="+ count_R + " AND " +
-                COLUMN_NAME_COUNT_S +"<="+ count_S + " AND " +
-                COLUMN_NAME_COUNT_T +"<="+ count_T + " AND " +
-                COLUMN_NAME_COUNT_U +"<="+ count_U + " AND " +
-                COLUMN_NAME_COUNT_V +"<="+ count_V + " AND " +
-                COLUMN_NAME_COUNT_W +"<="+ count_W + " AND " +
-                COLUMN_NAME_COUNT_X +"<="+ count_X + " AND " +
-                COLUMN_NAME_COUNT_Y +"<="+ count_Y + " AND " +
-                COLUMN_NAME_COUNT_Z +"<="+ count_Z;
-        String groupBy = null;
-        String having = null;
-        String orderBy = null;
-        // Query the database
-        Cursor cursor = db.query(
-                TABLE_NAME, // Table name
-                columns,         // Columns
-                selection,       // Selection
-                selectionArgs,   // Selection arguments
-                groupBy,         // Group by...
-                having,          // having
-                orderBy          // Order by
-        );
-        while (cursor.moveToNext()) {
-            int columnResult = cursor.getColumnIndex(COLUMN_NAME_WORD);
-            // Add the result to the list to return
-            resultList.add(new Result(cursor.getString(columnResult)));
-        }
-        cursor.close();
-        // Return the list
-        return resultList;
-    }
-
-    // Wildcards
-    /**
-     * Get the Anagrams in the database
-     * @return the number of anagrams
-     */
     @SuppressWarnings("unused")
-    public ArrayList<Result> getBlankTileMatches(
+    public ArrayList<Result> getMatches(
 
             // Params. Yeah, I know...
             int count_A, int count_B, int count_C, int count_D, int count_E, int count_F,
@@ -338,7 +242,8 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         valueMap.put('p', count_P); valueMap.put('q', count_Q); valueMap.put('r', count_R);
         valueMap.put('s', count_S); valueMap.put('t', count_T); valueMap.put('u', count_U);
         valueMap.put('v', count_V); valueMap.put('w', count_W); valueMap.put('x', count_X);
-        valueMap.put('y', count_Y); valueMap.put('z', count_Z); valueMap.put('*', count_WILDCARDS);
+        valueMap.put('y', count_Y); valueMap.put('z', count_Z);
+        valueMap.put('*', count_WILDCARDS);
 
         // 2) Make an array list of all the letters that have a value greater than zero
         Map<Character, Integer> chars = new HashMap<>();
@@ -353,12 +258,56 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             }
         }// Good, now we have a list of chars used for our bounding in sql. 'charString'
 
+        // For the raw SQL query
+        StringBuilder query_set1 = new StringBuilder(constructQuerySet1(chars,count_WILDCARDS));
+        StringBuilder query_set2 = new StringBuilder(constructQuerySet2(chars,count_WILDCARDS));
+        StringBuilder query_whole = new StringBuilder();
+
+        // Whole query
+        query_whole.append(query_set1).append(UNION).append(query_set2).append(" ORDER BY length;");
+
+        // Query the database
+        Cursor cursor = db.rawQuery(query_whole.toString(), null);
+
+        // Log
+        Log.i(TAG, query_whole.toString());
+
+        // Move through the results with a cursor and return the word field
+        while (cursor.moveToNext()) {
+            // Get the word from the cursor
+            String word =  cursor.getString(cursor.getColumnIndex(COLUMN_NAME_WORD));
+
+            // Add the result to the list to return
+            //Log.i(TAG, word);
+            resultList.add(new Result(word));
+        }
+
+        // Close the cursor
+        cursor.close();
+
+        // Return the list
+        return resultList;
+    }
+
+
+    /* -----------------------------------*/
+    /* --- Set 1 of the two set union --- */
+    /* -----------------------------------*/
+
+    /**
+     * Constructs the first set of the query
+     * @param chars
+     * @param count_WILDCARDS
+     * @return
+     */
+    private String constructQuerySet1(Map<Character, Integer> chars, int count_WILDCARDS) {
+
         // Then we are going to need a string builder for our query
         StringBuilder dbQuery = new StringBuilder();
         // A boolean to use for concatenating + signs and other sql stuff.
         boolean firstIteration = true;
         // start off the statement
-        dbQuery.append("SELECT * FROM dictionary WHERE");
+        dbQuery.append(" SELECT * FROM dictionary WHERE ");
         // Add the letters we have in the not null list to the query
         for (Map.Entry<Character, Integer> entry : chars.entrySet()) {
             // If there's one or more instances of the character...
@@ -410,25 +359,36 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         firstIteration = true;
 
         // Append the length clauses
-        for (char c: charString.toString().toCharArray()) {
-            if (c!='*') {
-                if (!firstIteration) {
-                    dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
-                } else {
-                    dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
-                    firstIteration = false;
-                }
+        for (char c: chars.toString().replaceAll("[^a-z]", "").toCharArray()) {
+            if (!firstIteration) {
+                dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
             } else {
-                // TODO: Temporary
-                Log.i(TAG, "Wildcards should not be included in the char iteration. Something went wrong...");
+                dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
+                firstIteration = false;
             }
         }
+        return dbQuery.toString();
 
+    }
+
+    /* -----------------------------------*/
+    /* --- Set 2 of the two set union --- */
+    /* -----------------------------------*/
+
+    /**
+     * Constructs the second set of the query
+     * @param chars
+     * @param count_WILDCARDS
+     * @return
+     */
+    private String constructQuerySet2(Map<Character, Integer> chars, int count_WILDCARDS) {
         // reset boolean for second query in union statement
-        firstIteration = true;
+        boolean firstIteration = true;
+
+        StringBuilder dbQuery = new StringBuilder();
 
         // Set 1 Union Set 2
-        dbQuery.append(" UNION SELECT * FROM dictionary WHERE");
+        dbQuery.append("SELECT * FROM dictionary WHERE");
         for (Map.Entry<Character, Integer> entry : chars.entrySet()) {
 
             // Get the next key
@@ -469,7 +429,6 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
             }
         }
 
-
         // Add constraints for the second "set"
         dbQuery.append(" length=");
 
@@ -477,45 +436,18 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         firstIteration = true;
 
         // Append the length clauses
-        for (char c: charString.toString().toCharArray()) {
-            if (c!='*') {
-                if (!firstIteration) {
-                    dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
-                } else {
-                    dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
-                    firstIteration = false;
-                }
+        for (char c: chars.toString().replaceAll("[^a-z]", "").toCharArray()) {
+            if (!firstIteration) {
+                dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
             } else {
-                // TODO: Temporary
-                Log.i(TAG, "Wildcards should not be included in the char iteration. Something went wrong...");
+                dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
+                firstIteration = false;
             }
         }
 
         // Add the count of wildcards to account for blank tiles.
         dbQuery.append(" + " + count_WILDCARDS);
-        // Order by
-        dbQuery.append(" ORDER BY length;");
 
-        // Query the database
-        Cursor cursor = db.rawQuery(dbQuery.toString(), null);
-
-        // Log
-        Log.i(TAG, dbQuery.toString());
-
-        // Move through the results with a cursor and return the word field
-        while (cursor.moveToNext()) {
-            // Get the word from the cursor
-            String word =  cursor.getString(cursor.getColumnIndex("word"));
-
-            // Add the result to the list to return
-            //Log.i(TAG, word);
-            resultList.add(new Result(word));
-        }
-
-        // Close the cursor
-        cursor.close();
-
-        // Return the list
-        return resultList;
+        return dbQuery.toString();
     }
 }//EOF

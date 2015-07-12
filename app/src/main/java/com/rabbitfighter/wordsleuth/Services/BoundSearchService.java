@@ -12,6 +12,7 @@ import com.rabbitfighter.wordsleuth.Database.DictionaryDbHelper;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
 import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.Entries.Result;
+import com.rabbitfighter.wordsleuth.Utils.Message;
 import com.rabbitfighter.wordsleuth.Utils.RoutineTimer;
 
 import java.util.ArrayList;
@@ -137,99 +138,108 @@ public class BoundSearchService extends Service  {
 
             }
 
-        Log.i(TAG, "Got to matches");
-        this.setMatches(
-                new ArrayList<>(
-                        this.getHelper().getBlankTileMatches(
-                                this.getQuery().getCount_A(), this.getQuery().getCount_B(),
-                                this.getQuery().getCount_C(), this.getQuery().getCount_D(),
-                                this.getQuery().getCount_E(), this.getQuery().getCount_F(),
-                                this.getQuery().getCount_G(), this.getQuery().getCount_H(),
-                                this.getQuery().getCount_I(), this.getQuery().getCount_J(),
-                                this.getQuery().getCount_K(), this.getQuery().getCount_L(),
-                                this.getQuery().getCount_M(), this.getQuery().getCount_N(),
-                                this.getQuery().getCount_O(), this.getQuery().getCount_P(),
-                                this.getQuery().getCount_Q(), this.getQuery().getCount_R(),
-                                this.getQuery().getCount_S(), this.getQuery().getCount_T(),
-                                this.getQuery().getCount_U(), this.getQuery().getCount_V(),
-                                this.getQuery().getCount_W(), this.getQuery().getCount_X(),
-                                this.getQuery().getCount_Y(), this.getQuery().getCount_Z(), 1
-                                // wildcards not in use yet
-                        )
-                )
-        );
-        // If matches aren't null and the matches aren't empty
-        if (this.getMatches() != null && !this.getMatches().isEmpty()) {
-            // Put anagrams and subwords in the database
-            for (Result result : this.getMatches()) {
-                if (result.getNumLetters() == this.getQuery().getNumLetters()
-                        && this.getQuery().getWord().compareToIgnoreCase(result.getWord())!=0) {
-                    this.getAnagrams().add(result);
-                    long id = this.getDbAdapter().insertData(
-                            "anagram",
-                            result.getWord(),
-                            String.valueOf(result.getNumLetters()),
-                            String.valueOf(result.getPointsScrabble()),
-                            String.valueOf(result.getPointsWordsWithFriends())
-                    );
-                    if (id < 0) {
-                        Log.i(TAG, "Database anagram insertion of " + result.getWord() + " unsuccessful :(");
-                    } else {
-                        Log.i(TAG, "Database anagram insertion of " + result.getWord() + " successful :)");
-                    }
-                } else if (this.getQuery().getWord().compareToIgnoreCase(result.getWord())!=0) {
-                    this.getSubwords().add(result);
-                    long id = this.getDbAdapter().insertData(
-                            "subword",
-                            result.getWord(),
-                            String.valueOf(result.getNumLetters()),
-                            String.valueOf(result.getPointsScrabble()),
-                            String.valueOf(result.getPointsWordsWithFriends())
-                    );
-                    if (id < 0) {
-                        Log.i(TAG, "Database subword insertion of " + result.getWord() + " unsuccessful :(");
-                    } else {
-                        Log.i(TAG, "Database subword insertion of " + result.getWord() + " successful :)");
-                    }
-                }
-            }
-
-            /**
-             * Go through the subwords to find the combos
-             */
-            if (!this.getSubwords().isEmpty()) {
-                // Put combos in the database
-                for (int i = 0; i < this.getSubwords().size(); i++) {
-                    String foo = this.getSubwords().get(i).getWord();
-                    for (int j = 0; j < this.getSubwords().size(); j++) {
-                        String bar = this.getSubwords().get(j).getWord();
-                        String foobar = sorted(String.valueOf("" + foo + bar));
-                        if (isAnagram(this.getQuery().getWordSorted(), foobar)) {
-                            // Get result object
-                            Result result = new Result(String.valueOf(foo + " " + bar));
-                            // Insert item into database
-                           this.getCombos().add(result);
-                            long id = this.getDbAdapter().insertData(
-                                    "combo",
-                                    result.getWord(),
-                                    String.valueOf(result.getNumLetters()),
-                                    String.valueOf(result.getPointsScrabble()),
-                                    String.valueOf(result.getPointsWordsWithFriends())
-                            );
-                            if (id < 0) {
-                                Log.i(TAG, "Database combo insertion of " + result.getWord() + " unsuccessful :(");
-                            } else {
-                                Log.i(TAG, "Database combo insertion of " + result.getWord() + " successful :)");
-                            }
+        // Check to see if wildcards are 2 or less
+        if (this.getQuery().getCount_Wildcards()<=2) {
+            Log.i(TAG, "Got to matches");
+            this.setMatches(
+                    new ArrayList<>(
+                            this.getHelper().getMatches(
+                                    this.getQuery().getCount_A(), this.getQuery().getCount_B(),
+                                    this.getQuery().getCount_C(), this.getQuery().getCount_D(),
+                                    this.getQuery().getCount_E(), this.getQuery().getCount_F(),
+                                    this.getQuery().getCount_G(), this.getQuery().getCount_H(),
+                                    this.getQuery().getCount_I(), this.getQuery().getCount_J(),
+                                    this.getQuery().getCount_K(), this.getQuery().getCount_L(),
+                                    this.getQuery().getCount_M(), this.getQuery().getCount_N(),
+                                    this.getQuery().getCount_O(), this.getQuery().getCount_P(),
+                                    this.getQuery().getCount_Q(), this.getQuery().getCount_R(),
+                                    this.getQuery().getCount_S(), this.getQuery().getCount_T(),
+                                    this.getQuery().getCount_U(), this.getQuery().getCount_V(),
+                                    this.getQuery().getCount_W(), this.getQuery().getCount_X(),
+                                    this.getQuery().getCount_Y(), this.getQuery().getCount_Z(),
+                                    this.getQuery().getCount_Wildcards()
+                                    // wildcards not in use yet
+                            )
+                    )
+            );
+            // If matches aren't null and the matches aren't empty
+            if (this.getMatches() != null && !this.getMatches().isEmpty()) {
+                // Put anagrams and subwords in the database
+                for (Result result : this.getMatches()) {
+                    if (result.getNumLetters() == this.getQuery().getNumLetters()
+                            && this.getQuery().getWord().compareToIgnoreCase(result.getWord())!=0) {
+                        this.getAnagrams().add(result);
+                        long id = this.getDbAdapter().insertData(
+                                "anagram",
+                                result.getWord(),
+                                String.valueOf(result.getNumLetters()),
+                                String.valueOf(result.getPointsScrabble()),
+                                String.valueOf(result.getPointsWordsWithFriends())
+                        );
+                        if (id < 0) {
+                            Log.i(TAG, "Database anagram insertion of " + result.getWord() + " unsuccessful :(");
+                        } else {
+                            Log.i(TAG, "Database anagram insertion of " + result.getWord() + " successful :)");
+                        }
+                    } else if (this.getQuery().getWord().compareToIgnoreCase(result.getWord())!=0) {
+                        this.getSubwords().add(result);
+                        long id = this.getDbAdapter().insertData(
+                                "subword",
+                                result.getWord(),
+                                String.valueOf(result.getNumLetters()),
+                                String.valueOf(result.getPointsScrabble()),
+                                String.valueOf(result.getPointsWordsWithFriends())
+                        );
+                        if (id < 0) {
+                            Log.i(TAG, "Database subword insertion of " + result.getWord() + " unsuccessful :(");
+                        } else {
+                            Log.i(TAG, "Database subword insertion of " + result.getWord() + " successful :)");
                         }
                     }
                 }
 
-            }
+                /**
+                 * Go through the subwords to find the combos
+                 */
+                if (!this.getSubwords().isEmpty()) {
+                    // Put combos in the database
+                    for (int i = 0; i < this.getSubwords().size(); i++) {
+                        String foo = this.getSubwords().get(i).getWord();
+                        for (int j = 0; j < this.getSubwords().size(); j++) {
+                            String bar = this.getSubwords().get(j).getWord();
+                            String foobar = sorted(String.valueOf("" + foo + bar));
+                            if (isAnagram(this.getQuery().getWordSorted(), foobar)) {
+                                // Get result object
+                                Result result = new Result(String.valueOf(foo + " " + bar));
+                                // Insert item into database
+                                this.getCombos().add(result);
+                                long id = this.getDbAdapter().insertData(
+                                        "combo",
+                                        result.getWord(),
+                                        String.valueOf(result.getNumLetters()),
+                                        String.valueOf(result.getPointsScrabble()),
+                                        String.valueOf(result.getPointsWordsWithFriends())
+                                );
+                                if (id < 0) {
+                                    Log.i(TAG, "Database combo insertion of " + result.getWord() + " unsuccessful :(");
+                                } else {
+                                    Log.i(TAG, "Database combo insertion of " + result.getWord() + " successful :)");
+                                }
+                            }
+                        }
+                    }
 
+                }
+
+            } else {
+                Log.i(TAG, "matches was empty, WTF?");
+            }
         } else {
-            Log.i(TAG, "matches was empty, WTF?");
+            Log.i(TAG, "Query was " + this.getQuery().getCount_Wildcards());
+            Message.msgLong(getApplicationContext(), "No more than 2 wildcards allowed");
         }
+
+
     }// End search
 
     /**
