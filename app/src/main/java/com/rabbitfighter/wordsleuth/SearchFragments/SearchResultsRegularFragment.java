@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,9 +35,9 @@ import java.util.List;
  * @see 'http://developer.android.com/guide/components/fragments.html'
  * @since 0.1 2015-06-17.
  */
-public class SearchResultsFragment extends Fragment {
+public class SearchResultsRegularFragment extends Fragment {
 
-    public final static String TAG = "SearchResultsFragment";
+    public final static String TAG = "SearchResultsRegularFragment";
     private List<ResultTypeItem> resultTypeItemList;
 
     // Query
@@ -76,9 +75,9 @@ public class SearchResultsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Logger
-        Log.i(TAG, "onCreateView called");
+        Log.i("Regular", "View created");
         // View
-        rootView = inflater.inflate(R.layout.fragment_search_results, container, false);
+        rootView = inflater.inflate(R.layout.fragment_search_regular_results, container, false);
         // Populate the list
         populateResultTypeList();
         // Populate the list view with the list
@@ -132,7 +131,7 @@ public class SearchResultsFragment extends Fragment {
          */
         public ResultTypeListAdapter() {
             super(getActivity(), R.layout.item_result_type, resultTypeItemList);
-            Log.i(TAG, "ResultTypeListAdapter constructor called super");
+            Log.i("Blah", "ResultTypeListAdapter constructor called super");
         }
 
         /**
@@ -144,7 +143,7 @@ public class SearchResultsFragment extends Fragment {
          */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Log.i(TAG, "getView() called");
+            Log.i("Regular", "getView() called");
 
             // The view passed in may be null, just an F.Y.I.
             itemView = getActivity().getLayoutInflater().inflate(R.layout.item_result_type, parent, false);
@@ -204,7 +203,7 @@ public class SearchResultsFragment extends Fragment {
      * Populate the list view.
      */
     private void populateListView() {
-        Log.i(TAG, "populateListView() called");
+        Log.i("Regular", "populateListView() called");
         query =  getArguments().get("query").toString();
         // Vars
         ArrayAdapter<ResultTypeItem> adapter;
@@ -231,7 +230,7 @@ public class SearchResultsFragment extends Fragment {
      * @param rootView - the root view passed in.
      */
     private void registerClickCallback(final View rootView) {
-        Log.i(TAG, "registerClickCallback() called");
+        Log.i("Regular", "registerClickCallback() called");
         ListView list;
         // Assert the view not null
         if (rootView == null) throw new AssertionError();

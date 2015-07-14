@@ -57,6 +57,8 @@ public class Result extends Word {
         pointMap_scrabble.put('x', 8);
         pointMap_scrabble.put('y', 4);
         pointMap_scrabble.put('z', 10);
+        pointMap_scrabble.put('*', 0);
+        pointMap_scrabble.put('-', 0);
     }
 
     // Words With Friends(TM) point map
@@ -88,6 +90,8 @@ public class Result extends Word {
         pointMap_wordsWithFriends.put('x', 8);
         pointMap_wordsWithFriends.put('y', 3);
         pointMap_wordsWithFriends.put('z', 10);
+        pointMap_wordsWithFriends.put('*', 0);
+        pointMap_wordsWithFriends.put('-', 0);
     }
 
     /* -------------------- */

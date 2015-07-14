@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ *
  * SQLite Dictionary Database. There are many like it but this one is mine...
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
@@ -32,6 +33,8 @@ import java.util.regex.Pattern;
 public class DictionaryDbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DataBaseHelper";
+
+
     // The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/com.rabbitfighter.wordsleuth/databases/";
     // Database name
@@ -40,12 +43,6 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     // Database, and context
     private SQLiteDatabase myDataBase;
     private final Context myContext;
-
-    private static final int WORD_COLUMN = 1;
-
-
-    //String id = cursor.getString( cursor.getColumnIndex(0)); // id is first column in db
-    //String id = cursor.getString( cursor.getColumnIndex("id") ); // id is column name in db
 
     // Table columns
     public static final String TABLE_NAME = "dictionary";
@@ -79,10 +76,19 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NAME_COUNT_X = "count_X";
     public static final String COLUMN_NAME_COUNT_Y = "count_Y";
     public static final String COLUMN_NAME_COUNT_Z = "count_Z";
+    public static final String COLUMN_NAME_COUNT_= "count_";
 
     // SQL statement constants
     public static final String UNION = " UNION ";
-
+    private static final String ORDER_BY_LENGTH = " ORDER BY length";
+    private static final String SEMICOLON = "; ";
+    private static final String SELECT_FROM_DICT_WHERE = " SELECT * FROM dictionary WHERE ";
+    private static final String AND = " AND ";
+    private static final String LENGTH_EQUALS = " length=";
+    private static final String PLUS = " + ";
+    private static final String VALID_CHAR_REGEX = "[^a-z]";
+    private static final String WORD_LIKE = " word LIKE ";
+    
     /**
      * Constructor
      * Takes and keeps a reference of the passed context in order to access to the application
@@ -172,7 +178,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
     /**
      * Copies your database from your local assets-folder to the just created empty database in the
      * system folder, from where it can be accessed and handled.
-     * This is done by transfering bytestream.
+     * This is done by transferring byte stream.
      * */
     private void copyDataBase() throws IOException {
         //Open your local db as the input stream
@@ -218,14 +224,15 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
      * @return the number of anagrams
      */
     @SuppressWarnings("unused")
-    public ArrayList<Result> getMatches(
+    public ArrayList<Result> wildcardSearch(
 
             // Params. Yeah, I know...
             int count_A, int count_B, int count_C, int count_D, int count_E, int count_F,
             int count_G, int count_H, int count_I, int count_J, int count_K, int count_L,
             int count_M, int count_N, int count_O, int count_P, int count_Q, int count_R,
             int count_S, int count_T, int count_U, int count_V, int count_W, int count_X,
-            int count_Y, int count_Z, int count_WILDCARDS) {
+            int count_Y, int count_Z, int count_WILDCARDS
+    ) {
 
         // Get the database helper to get access to everything...
         SQLiteDatabase db = this.getWritableDatabase();
@@ -264,7 +271,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         StringBuilder query_whole = new StringBuilder();
 
         // Whole query
-        query_whole.append(query_set1).append(UNION).append(query_set2).append(" ORDER BY length;");
+        query_whole.append(query_set1).append(UNION).append(query_set2).append(ORDER_BY_LENGTH + SEMICOLON);
 
         // Query the database
         Cursor cursor = db.rawQuery(query_whole.toString(), null);
@@ -276,7 +283,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             // Get the word from the cursor
             String word =  cursor.getString(cursor.getColumnIndex(COLUMN_NAME_WORD));
-
+            Log.i(TAG, word);
             // Add the result to the list to return
             //Log.i(TAG, word);
             resultList.add(new Result(word));
@@ -307,12 +314,17 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         // A boolean to use for concatenating + signs and other sql stuff.
         boolean firstIteration = true;
         // start off the statement
-        dbQuery.append(" SELECT * FROM dictionary WHERE ");
+        dbQuery.append(SELECT_FROM_DICT_WHERE);
         // Add the letters we have in the not null list to the query
         for (Map.Entry<Character, Integer> entry : chars.entrySet()) {
             // If there's one or more instances of the character...
             if (entry.getValue()>0) {
 
+                if (!firstIteration && (entry.getKey()!='*' && entry.getKey()!='-')) {
+                    dbQuery.append(AND);
+                } else {
+                    firstIteration = false;
+                }
                 // Get the next key
                 switch (entry.getKey()) {
                     case 'a': dbQuery.append(" count_A>="+entry.getValue()+ " AND count_A<="+Integer.valueOf(entry.getValue() + count_WILDCARDS)); break;
@@ -344,29 +356,24 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                     default: Log.i(TAG, "Something went wrong in the switch..."); break;
                 }
             }
-            if (!firstIteration) {
-                dbQuery.append(" AND ");
-            } else {
-                firstIteration = false;
-            }
-
         }
 
         // Add constraints for the second "set"
-        dbQuery.append(" length=");
+        dbQuery.append(AND + LENGTH_EQUALS);
 
         // Reset flag
         firstIteration = true;
 
         // Append the length clauses
-        for (char c: chars.toString().replaceAll("[^a-z]", "").toCharArray()) {
+        for (char c: chars.toString().replaceAll(VALID_CHAR_REGEX, "").toCharArray()) {
             if (!firstIteration) {
-                dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
+                dbQuery.append(PLUS).append(COLUMN_NAME_COUNT_ + String.valueOf(c).toUpperCase());
             } else {
-                dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
+                dbQuery.append(COLUMN_NAME_COUNT_ + String.valueOf(c).toUpperCase());
                 firstIteration = false;
-            }
+            }    // Try this...
         }
+
         return dbQuery.toString();
 
     }
@@ -388,9 +395,15 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         StringBuilder dbQuery = new StringBuilder();
 
         // Set 1 Union Set 2
-        dbQuery.append("SELECT * FROM dictionary WHERE");
+        dbQuery.append(SELECT_FROM_DICT_WHERE);
         for (Map.Entry<Character, Integer> entry : chars.entrySet()) {
 
+            // Try this...
+            if (!firstIteration && (entry.getKey()!='*' && entry.getKey()!='-')) {
+                dbQuery.append(AND);
+            } else {
+                firstIteration = false;
+            }
             // Get the next key
             switch (entry.getKey()) {
                 case 'a': dbQuery.append(" count_A<="+entry.getValue()); break;
@@ -419,35 +432,68 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
                 case 'x': dbQuery.append(" count_X<="+entry.getValue()); break;
                 case 'y': dbQuery.append(" count_Y<="+entry.getValue()); break;
                 case 'z': dbQuery.append(" count_Z<="+entry.getValue()); break;
-                default: Log.i(TAG, "Something went wrong in the switch..."); break;
+                default: Log.i(TAG, "Non a-z char entered the switch:" + entry.getKey()); break;
             }
-            // Try this...
-            if (!firstIteration) {
-                dbQuery.append(" AND ");
-            } else {
-                firstIteration = false;
-            }
+
         }
 
         // Add constraints for the second "set"
-        dbQuery.append(" length=");
+        dbQuery.append(AND + LENGTH_EQUALS);
 
         // Reset flag
         firstIteration = true;
 
         // Append the length clauses
-        for (char c: chars.toString().replaceAll("[^a-z]", "").toCharArray()) {
+        for (char c: chars.toString().replaceAll(VALID_CHAR_REGEX, "").toCharArray()) {
             if (!firstIteration) {
-                dbQuery.append(" + count_" + String.valueOf(c).toUpperCase());
+                dbQuery.append(PLUS).append(COLUMN_NAME_COUNT_ + String.valueOf(c).toUpperCase());
             } else {
-                dbQuery.append(" count_" + String.valueOf(c).toUpperCase());
+                dbQuery.append(COLUMN_NAME_COUNT_ + String.valueOf(c).toUpperCase());
                 firstIteration = false;
             }
         }
 
         // Add the count of wildcards to account for blank tiles.
-        dbQuery.append(" + " + count_WILDCARDS);
+        dbQuery.append(PLUS + count_WILDCARDS);
 
         return dbQuery.toString();
+    }
+
+    @SuppressWarnings("unused")
+    public ArrayList<Result> crosswordSearch(String query) {
+        // Builder for query
+        StringBuilder dbQuery = new StringBuilder("");
+        dbQuery.append(SELECT_FROM_DICT_WHERE);
+        // Eliminate non a-zA-Z or "-" chars that may have gotten in, although, this isn't where
+        // I want to do validation, that should be done in the Service
+        String searchTerm = query.replaceAll("-", "_");
+
+        Log.i(TAG, searchTerm);
+        // Add to query
+        dbQuery.append(WORD_LIKE);
+
+        dbQuery.append("'"+searchTerm+"'");
+        dbQuery.append(ORDER_BY_LENGTH);
+        // Get the database helper to get access to everything...
+        SQLiteDatabase db = this.getWritableDatabase();
+        // List to hold matches
+        ArrayList<Result> resultList = new ArrayList<>();
+        // Query the database
+        Cursor cursor = db.rawQuery(dbQuery.toString(), null);
+        // Log
+        Log.i(TAG, dbQuery.toString());
+
+        // Move through the results with a cursor and return the word field
+        while (cursor.moveToNext()) {
+            // Get the word from the cursor
+            String word =  cursor.getString(cursor.getColumnIndex(COLUMN_NAME_WORD));
+            // Add the result to the list to return
+            Log.i(TAG, word);
+            resultList.add(new Result(word));
+        }
+        // Close the cursor
+        cursor.close();
+        // Return the list
+        return resultList;
     }
 }//EOF

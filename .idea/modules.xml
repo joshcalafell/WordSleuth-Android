@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WordSleuth-Android.iml" filepath="$PROJECT_DIR$/WordSleuth-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$USER_HOME$/DataMain/srcode/WordSleuth-Android/apprater/apprater.iml" filepath="$USER_HOME$/DataMain/srcode/WordSleuth-Android/apprater/apprater.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apprater/apprater.iml" filepath="$PROJECT_DIR$/apprater/apprater.iml" />
     </modules>
   </component>
 </project>

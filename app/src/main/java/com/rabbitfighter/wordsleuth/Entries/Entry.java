@@ -32,7 +32,7 @@ public class Entry extends Word {
     private int count_M; private int count_N; private int count_O; private int count_P;
     private int count_Q; private int count_R; private int count_S; private int count_T;
     private int count_U; private int count_V; private int count_W; private int count_X;
-    private int count_Y; private int count_Z; private int count_Wildcards;
+    private int count_Y; private int count_Z; private int count_blank_tiles; private int count_wildcards;
 
     public Entry(String result) {
         // A word has: (Word, Sorted Word, Word Length)
@@ -44,7 +44,7 @@ public class Entry extends Word {
         this.count_K = 0; this.count_L = 0; this.count_M = 0; this.count_N = 0; this.count_O = 0;
         this.count_P = 0; this.count_Q = 0; this.count_R = 0; this.count_S = 0; this.count_T = 0;
         this.count_U = 0; this.count_V = 0; this.count_W = 0; this.count_X = 0; this.count_Y = 0;
-        this.count_Z = 0; this.count_Wildcards = 0;
+        this.count_Z = 0; this.count_blank_tiles = 0; this.count_wildcards = 0;
         // Construct the char map
         this.charMap = constructCharMap(result);
     }
@@ -83,7 +83,9 @@ public class Entry extends Word {
                 case 'x': this.count_X++; break;
                 case 'y': this.count_Y++; break;
                 case 'z': this.count_Z++; break;
-                case '*': this.count_Wildcards++; break;
+                case '*': this.count_blank_tiles++; break;
+                case '-': this.count_wildcards++; break;
+                case '_': this.count_wildcards++; break;
                 default: Log.e(TAG, "Something went wrong"); break;
             }
             charMap.put('A', this.getCount_A());
@@ -112,7 +114,9 @@ public class Entry extends Word {
             charMap.put('X', this.getCount_X());
             charMap.put('Y', this.getCount_Y());
             charMap.put('Z', this.getCount_Z());
-            charMap.put('*', this.getCount_Wildcards());
+            charMap.put('*', this.getCount_blank_tiles());
+            charMap.put('-', this.getCount_wildcards());
+            charMap.put('_', this.getCount_wildcards());
 
         }
         return charMap;
@@ -226,7 +230,17 @@ public class Entry extends Word {
         return count_Z;
     }
 
-    public int getCount_Wildcards() {
-        return count_Wildcards;
+    public int getCount_blank_tiles() {
+        return count_blank_tiles;
+    }
+
+    public int getCount_wildcards() {
+
+        return count_wildcards;
+    }
+
+    public void setCount_wildcards(int count_wildcards) {
+
+        this.count_wildcards = count_wildcards;
     }
 }

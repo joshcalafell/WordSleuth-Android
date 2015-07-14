@@ -1,6 +1,5 @@
 package com.rabbitfighter.wordsleuth.SearchFragments;
 
-import android.app.SearchManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -48,7 +47,7 @@ public class SearchInputFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView() called");
         // View
-        View rootView = inflater.inflate(R.layout.fragment_search_input, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_instructions_search_input, container, false);
         // Widgets
         TextView tv_title, tv_content;
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);

@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * @see 'http://developer.android.com/reference/android/database/sqlite/package-summary.html'
  * @since 0.1 2015-06-20.
  */
-public class ResultFragment extends Fragment {
+public class CrosswordResultFragment extends Fragment {
     public final static String TAG = "ResultFragment";
 
     // Vars
@@ -78,12 +78,11 @@ public class ResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView called");
 
-        /* Vars */
-        View rootView;
-        TextView tv_title,  tv_query, tv_results_title, tv_results;
-
         // Inflate layout
-        rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
+
+        // Views
+        TextView tv_title,  tv_query, tv_results_title, tv_results;
 
         // Populate the result type list from database
         populateResultTypeList(resultType);
@@ -121,20 +120,6 @@ public class ResultFragment extends Fragment {
         switch (resultType.toString()) {
             case "anagram":
                 results = dbAdapter.getAnagrams();
-                for (int i = 0; i < results.size(); i++) {
-                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-                }
-                numResults = resultItemList.size();
-                break;
-            case "subword":
-                results = dbAdapter.getSubwords();
-                for (int i = 0; i < results.size(); i++) {
-                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-                }
-                numResults = resultItemList.size();
-                break;
-            case "combo":
-                results = dbAdapter.getCombos();
                 for (int i = 0; i < results.size(); i++) {
                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }

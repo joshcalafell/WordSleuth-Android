@@ -10,7 +10,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.rabbitfighter.wordsleuth.R;
-import com.rabbitfighter.wordsleuth.ResultsFragments.ResultFragment;
+import com.rabbitfighter.wordsleuth.ResultsFragments.RegularResultFragment;
+import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsRegularFragment;
 
 /**
  * Results list activity
@@ -47,7 +48,7 @@ public class ResultsListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-        // The biun
+        // The new bundle
         if (savedInstanceState == null) {
             intent = getIntent();
             bundle = intent.getExtras();
@@ -58,7 +59,8 @@ public class ResultsListActivity extends ActionBarActivity {
         }
 
         // During initial setup, plug in the details fragment.
-        fragment = new ResultFragment();
+
+        fragment = new RegularResultFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
 

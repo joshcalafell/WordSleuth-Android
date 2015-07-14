@@ -1,6 +1,6 @@
 package com.rabbitfighter.wordsleuth.Activities;
 
-import android.app.AlertDialog;
+
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,14 +20,16 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchInputFragment;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchLoadingFragment;
-import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsFragment;
+import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsBlankTileFragment;
+import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsCrosswordFragment;
+import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsRegularFragment;
 import com.rabbitfighter.wordsleuth.Services.BoundSearchService;
 import com.rabbitfighter.wordsleuth.Utils.Message;
 
-import net.dicesoft.net.apprater.AppRater;
 
 /**
  * Search activity. 3 Frags. There are many like it but this one is mine...
@@ -42,6 +44,11 @@ import net.dicesoft.net.apprater.AppRater;
 public class SearchActivity extends ActionBarActivity {
     // Debugging TAG
     private static final String TAG = "SearchActivity";
+
+    private static final int REGULAR_SEARCH = 0;
+    private static final int BLANK_TILE = 1;
+    private static final int CROSSWORD_SEARCH = 2;
+
 
     /* ------------ */
     /* --- Vars---- */
@@ -59,12 +66,10 @@ public class SearchActivity extends ActionBarActivity {
     // Service connection class.
     BoundSearchService searchService;
 
-    // bound or not.
+    // Whether the service is bound or not...
     boolean isBound;
 
-    String userQuery;
-
-    String query;
+    private int searchType;
 
     /* ------------------------- */
     /* --- @Override methods --- */
@@ -89,7 +94,7 @@ public class SearchActivity extends ActionBarActivity {
             // This does virtually nothing except hog room in the memory stack somewhere now...
             // But... if you wanted to do something when the orientation is set to landscape,
             // do it here -->
-            return;
+            //return;
         }
         /* The bundle 'savedInstanceState' should contain the current fragment, but if
          * it is a new activity, it won't, so only start the process if it is indeed null */
@@ -145,7 +150,6 @@ public class SearchActivity extends ActionBarActivity {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
                         Log.i(TAG, "onQueryTextSubmit(" + query + ")");
-
                         return false;
                     }
                     // Text changed --> (i.e. F, FO, FOO, FOOB, FOOBA, FOOBAR)
@@ -216,6 +220,32 @@ public class SearchActivity extends ActionBarActivity {
     /* ---------------------- */
 
     /**
+     * Determines the search type
+     * @return the search type integer
+     */
+    private int determineSearchType(String query) {
+
+        // 1) We already know from our regex that query can only contain a-zA-Z, -, and *
+        // Regular search
+        if (!query.contains("*") && !query.contains("-") && !query.contains("_")) {
+            Log.i(TAG, "Regular search detected");
+            this.setSearchType(REGULAR_SEARCH);
+        }
+        // Wildcard search
+        if (query.contains("*") && !query.contains("-") && !query.contains("_")) {
+            Log.i(TAG, "Blank Tile search detected");
+            this.setSearchType(BLANK_TILE);
+        }
+        // Crossword search
+        if ((query.contains("-") || query.contains("_")) && !query.contains("*")) {
+            Log.i(TAG, "Crossword search detected");
+            this.setSearchType(CROSSWORD_SEARCH);
+        }
+        // Return the search type
+        return this.getSearchType();
+    }
+
+    /**
      * When a new search intent comes in
      * @param intent - the intent passed in
      */
@@ -230,13 +260,19 @@ public class SearchActivity extends ActionBarActivity {
      * @param intent -  the intent passed in
      */
     private void handleIntent(Intent intent) {
+
+        String query = null;
+
+
+
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             try {
                 query = intent.getStringExtra(SearchManager.QUERY)
-                        .replaceAll("/[^a-zA-Z]/", "") // Remove all non a-zA-Z chars
-                        .replaceAll("\\s","")          // Remove all spaces
+                        .replaceAll("/[^a-zA-Z-*]/", "") // Remove all non a-zA-Z or "*" or "-" chars
+                        .replaceAll("\\s", "")          // Remove all spaces
                         .toLowerCase().trim();         // Lowercase
                 // Query may be empty...
+
                 if (query.isEmpty()) {
                     Log.i(TAG, "Query is empty");
                     Message.msgLong(getApplicationContext(), "Query cannot be empty");
@@ -244,8 +280,15 @@ public class SearchActivity extends ActionBarActivity {
                 } else if (query.length() > 20) {
                     Log.i(TAG, "20 character limit exceeded");
                     Message.msgLong(getApplicationContext(), "Cannot exceed 20 letters");
+                } else if ((query.contains("*") && query.contains("-"))) {
+                    Log.i(TAG, "Cannot combine blank tile and crossword searches");
+                    Message.msgLong(getApplicationContext(), "Cannot combine blank tile and crossword searches");
+                } else if ((new Entry(query).getCount_blank_tiles() > 2)) {
+                    Log.i(TAG, "Cannot exceed two blank tiles");
+                    Message.msgLong(getApplicationContext(), "Cannot exceed two blank tiles");
                 } else {
                     // Perform the search
+                    this.setSearchType(determineSearchType(query));
                     performSearch(query);
                 }
             } catch (Exception e) {
@@ -255,6 +298,8 @@ public class SearchActivity extends ActionBarActivity {
                 // Fixed issue #21 -  reset the query field
                 searchView.setQuery("", false);
             }
+
+
 
         } else {
             Log.i(TAG, "Problem with intent");
@@ -266,27 +311,72 @@ public class SearchActivity extends ActionBarActivity {
     /* ---------------------------- */
 
     /**
-     * Transitions to the reults fragment using a fragment manager transition
-     * @param query - the user's query
+     * Transitions to the results fragment using a fragment manager transition
      */
-    private void transitionToResultsFragment(String query) {
-        // Fragment manager stuff
-        fragment = new SearchResultsFragment();
-        // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
-        if (!fragment.isAdded()) {
-            Bundle b = new Bundle();
-            b.putString("query", query);
-            fragment.setArguments(b);
-            getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
+    private void transitionToResultsFragment(String query, int searchType) {
+        // Regular search
+        if (searchType == 0) {
+            Log.i(TAG, "Regular Search type found");
+            // Fragment manager stuff
+            fragment = new SearchResultsRegularFragment();
+            // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
+            if (!fragment.isAdded()) {
+                Bundle b = new Bundle();
+                b.putString("query", query);
+                fragment.setArguments(b);
+                getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
+            }
+            else { // The fragment is already showing, so just grab the text views.
+                TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
+                TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
+
+                resultTV.setText(query);
+                resultLength.setText(String.valueOf(query.length()));
+
+            }
         }
-        else { // The fragment is already showing, so just grab the text views.
-            TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
-            TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
-            TextView resultWildCardNum = (TextView)fragment.getView().findViewById(R.id.tv_wildcard_number);
-            resultTV.setText(query);
-            resultLength.setText(String.valueOf(query.length()));
-            resultWildCardNum.setText("not used yet");
+        // Blank Tile search
+        if (searchType == 1) {
+            Log.i(TAG, "Blank Tile Search type found");
+            // Fragment manager stuff
+            fragment = new SearchResultsBlankTileFragment();
+            // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
+            if (!fragment.isAdded()) {
+                Bundle b = new Bundle();
+                b.putString("query", query);
+                fragment.setArguments(b);
+                getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
+            }
+            else { // The fragment is already showing, so just grab the text views.
+                TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
+                TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
+                TextView resultWildCardNum = (TextView)fragment.getView().findViewById(R.id.tv_wildcard_number);
+                resultTV.setText(query);
+                resultLength.setText(String.valueOf(query.length()));
+                resultWildCardNum.setText("not used yet");
+            }
         }
+        // Crossword search
+        if (searchType == 2) {
+            // Fragment manager stuff
+            fragment = new SearchResultsCrosswordFragment();
+            // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
+            if (!fragment.isAdded()) {
+                Bundle b = new Bundle();
+                b.putString("query", query);
+                fragment.setArguments(b);
+                getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
+            }
+            else { // The fragment is already showing, so just grab the text views.
+                TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
+                TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
+
+                resultTV.setText(query);
+                resultLength.setText(String.valueOf(query.length()));
+
+            }
+        }
+
     }
 
     private void transitionToLoadingFragment() {
@@ -305,39 +395,57 @@ public class SearchActivity extends ActionBarActivity {
     /**
      * Performs the search
      */
-    public void performSearch(String query) {
-        userQuery = query;
+    public void performSearch(String userQuery) {
+
         transitionToLoadingFragment();
         // MSG query
         Message.msgLong(getApplicationContext(), userQuery + " was submitted");
         // Execute the new Async task
-        new AsyncSearchTask().execute();
+        new AsyncSearchTask(userQuery, this.getSearchType()).execute();
 
     }
 
     /**
      * This is to make the searches bound service asynchronous.
      */
-    private class AsyncSearchTask extends AsyncTask<Void, Void, Void> {
+    public class AsyncSearchTask extends AsyncTask<Void, Void, Void> {
 
-        @Override
-        protected void onPreExecute() {
-            searchService.prepareSearch(userQuery);
+        // Query
+        String userQuery;
+        int searchType;
+
+        // constructor
+        public AsyncSearchTask(String userQuery, int searchType) {
+            this.userQuery = userQuery;
+            this.searchType = searchType;
         }
 
+        /**
+         * 1) Pre-Search sets up dictionary
+         */
+        @Override
+        protected void onPreExecute() {
+            searchService.prepareSearch(searchType);
+            Log.i(TAG, this.userQuery);
+        }
+
+        /**
+         * 2) Search searches using the bound service
+         */
         @Override
         protected Void doInBackground(Void... params) {
-            searchService.search();
+            searchService.search(this.userQuery);
             Log.i(TAG, "Got to search start");
             return null;
         }
 
+        /**
+         * 3) Post-Search transitions to the results
+         */
         @Override
         protected void onPostExecute(Void result) {
-
-            transitionToResultsFragment(userQuery);
+            transitionToResultsFragment(this.userQuery, 0);
         }
-
     }
 
     /* ------------------ */
@@ -373,8 +481,15 @@ public class SearchActivity extends ActionBarActivity {
         super.onPause();
     }
 
+    /* --- Getters/Setters */
 
+    public int getSearchType() {
 
+        return searchType;
+    }
 
+    public void setSearchType(int searchType) {
 
+        this.searchType = searchType;
+    }
 }//EOF
