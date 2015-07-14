@@ -6,11 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsBlankTiles;
 import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsWelcome;
 import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsAnagrams;
 import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsSubwords;
 import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsCombos;
-import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsWildcards;
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsCrosswords;
 
 /**
  * InstructionsPagerAdapter Extends FragmentStatePagerAdapter and is the controller for
@@ -25,7 +26,7 @@ import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionsWildcards;
  */
 public class InstructionsPagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final int NUMBER_OF_INTRODUCTION_PAGES = 5;
+    private static final int NUMBER_OF_INTRODUCTION_PAGES = 6;
 
     protected Context myContext;
 
@@ -66,7 +67,12 @@ public class InstructionsPagerAdapter extends FragmentStatePagerAdapter {
                 fragment.setArguments(args);
                 return fragment;
             case 4:
-                fragment = new InstructionsWildcards();
+                fragment = new InstructionsBlankTiles();
+                args.putInt("page_position", position + 1);
+                fragment.setArguments(args);
+                return fragment;
+            case 5:
+                fragment = new InstructionsCrosswords();
                 args.putInt("page_position", position + 1);
                 fragment.setArguments(args);
                 return fragment;

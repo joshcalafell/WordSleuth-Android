@@ -263,10 +263,9 @@ public class SearchActivity extends ActionBarActivity {
 
         String query = null;
 
-
-
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             try {
+                // Get the query
                 query = intent.getStringExtra(SearchManager.QUERY)
                         .replaceAll("/[^a-zA-Z-*]/", "") // Remove all non a-zA-Z or "*" or "-" chars
                         .replaceAll("\\s", "")          // Remove all spaces
@@ -298,9 +297,6 @@ public class SearchActivity extends ActionBarActivity {
                 // Fixed issue #21 -  reset the query field
                 searchView.setQuery("", false);
             }
-
-
-
         } else {
             Log.i(TAG, "Problem with intent");
         }

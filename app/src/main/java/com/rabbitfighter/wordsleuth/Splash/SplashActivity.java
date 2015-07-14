@@ -46,7 +46,7 @@ public class SplashActivity extends Activity {
     protected void onPause() {
         // Destroy assets
         super.onPause();
-        finish();
+        //finish();
     }
 
 

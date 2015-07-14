@@ -24,7 +24,7 @@ import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
  * @see ''
  * @since 0.1 2015-07-17.
  */
-public class InstructionsWildcards extends Fragment {
+public class InstructionsCrosswords extends Fragment {
     TextView tv_title, tv_instructions, tv_page_number;
     Button btn_skip_instruction;
 
@@ -54,7 +54,7 @@ public class InstructionsWildcards extends Fragment {
 
         /* Set the text */
         tv_title.setText(R.string.txt_title_page5);
-        tv_instructions.setText(R.string.txt_instructions_page5);
+        tv_instructions.setText(R.string.txt_instructions_page6);
 
         btn_skip_instruction.setOnClickListener(
                 new View.OnClickListener() {
