@@ -10,8 +10,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.ResultsFragments.BlankTileResultFragment;
+import com.rabbitfighter.wordsleuth.ResultsFragments.CrosswordResultFragment;
 import com.rabbitfighter.wordsleuth.ResultsFragments.RegularResultFragment;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsRegularFragment;
+
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Results list activity
@@ -33,6 +39,7 @@ public class ResultsListActivity extends ActionBarActivity {
     Intent intent;
     String resultType;
     String query;
+    String searchType;
 
     /* ------------------------- */
     /* --- @Override methods --- */
@@ -53,14 +60,24 @@ public class ResultsListActivity extends ActionBarActivity {
             intent = getIntent();
             bundle = intent.getExtras();
             resultType = bundle.get("resultType").toString();
+            searchType = bundle.get("searchType").toString();
             Log.i(TAG, resultType);
             query = bundle.get("query").toString();
             Log.i(TAG, query);
         }
+        Log.i(TAG, "Search type: " + bundle.get("searchType").toString());
 
         // During initial setup, plug in the details fragment.
+        if (searchType.compareTo("regularSearch")==0) {
+            fragment = new RegularResultFragment();
+        } else if (searchType.compareTo("blankTileSearch")==0) {
+            fragment = new BlankTileResultFragment();
+        } else if (searchType.compareTo("crosswordSearch")==0) {
+            fragment = new CrosswordResultFragment();
+        } else {
+            Log.i(TAG, "Something went wrong with the search type bundle info");
+        }
 
-        fragment = new RegularResultFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
 
@@ -91,7 +108,7 @@ public class ResultsListActivity extends ActionBarActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionsItemSelected(MenuItem" + item + ")");
+        Log.i(TAG, "onOptionsItemSelected(MenuItem: " + item + ")");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -99,7 +116,13 @@ public class ResultsListActivity extends ActionBarActivity {
 
         //noinspection Simplifiadid not call through to super.onCreate()bleIfStatement
         if (id == R.id.search_bar) {
+            Log.i(TAG, "search bar clicked");
+
             return true;
+        }
+        if (id == R.id.sort) {
+            // Sort the items
+            Log.i(TAG, "Sort menu item clicked");
         }
         return super.onOptionsItemSelected(item);
     }

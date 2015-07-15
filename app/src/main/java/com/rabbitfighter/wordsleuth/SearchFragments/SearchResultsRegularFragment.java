@@ -90,6 +90,7 @@ public class SearchResultsRegularFragment extends Fragment {
         tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
         tv_number_letters.setText("" + query.length() + " letters");
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
+        tv_title.setText("Standard Search Results");
         // Fonts
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Condensed Bold
 
@@ -179,6 +180,7 @@ public class SearchResultsRegularFragment extends Fragment {
         Bundle b = new Bundle();
         b.putString("query", query);
         b.putString("resultType", resultType);
+        b.putString("searchType", "regularSearch");
         intent.putExtras(b);
         startActivity(intent);
 

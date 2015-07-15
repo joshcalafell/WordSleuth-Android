@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
+import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.ListItems.ResultTypeItem;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
@@ -49,7 +50,7 @@ public class SearchResultsCrosswordFragment extends Fragment {
     // Vars
     View itemView;
     ResultTypeItem resultType;
-    TextView tv_resultType, tv_numMatches, tv_title, tv_query, tv_number_letters;
+    TextView tv_resultType, tv_numMatches, tv_title, tv_query, tv_number_letters, tv_count_wildcards;
     View rootView;
 
     /**
@@ -86,13 +87,14 @@ public class SearchResultsCrosswordFragment extends Fragment {
         registerClickCallback(rootView);
         // Set component info
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
+        tv_count_wildcards = (TextView) rootView.findViewById(R.id.tv_wildcard_number);
         tv_query.setText("\"" +query+ "\"");
         tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
         tv_number_letters.setText("" + query.length() + " letters");
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         // Fonts
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Condensed Bold
-
+        tv_count_wildcards.setText(String.valueOf(new Entry(query).getCount_wildcards()));
          /* Return the root view */
         return rootView;
 
@@ -152,7 +154,7 @@ public class SearchResultsCrosswordFragment extends Fragment {
             resultType = resultTypeItemList.get(position);
 
             // Result type
-            String rt = resultType.getResultType().substring(0, 1).toUpperCase() + resultType.getResultType().substring(1) + " Results";
+            String rt = "Crossword Results";
             tv_resultType = (TextView) itemView.findViewById(R.id.tv_resultType);
             tv_resultType.setText(rt);
             // Number of matches
@@ -179,6 +181,7 @@ public class SearchResultsCrosswordFragment extends Fragment {
         Bundle b = new Bundle();
         b.putString("query", query);
         b.putString("resultType", resultType);
+        b.putString("searchType", "crosswordSearch");
         intent.putExtras(b);
         startActivity(intent);
 
@@ -189,13 +192,9 @@ public class SearchResultsCrosswordFragment extends Fragment {
      */
     public void populateResultTypeList() {
         if (resultTypeItemList == null || resultTypeItemList.isEmpty()) {
-            resultTypeItemList.add(new ResultTypeItem("anagram", dbAdapter.getNumberAnagrams(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-            resultTypeItemList.add(new ResultTypeItem("subword", dbAdapter.getNumberSubwords(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-            resultTypeItemList.add(new ResultTypeItem("combo", dbAdapter.getNumberCombos(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+            resultTypeItemList.add(new ResultTypeItem("matche", dbAdapter.getNumberAnagrams(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
         } else {
             resultTypeItemList.get(0).setNumMatches(dbAdapter.getNumberAnagrams());
-            resultTypeItemList.get(1).setNumMatches(dbAdapter.getNumberSubwords());
-            resultTypeItemList.get(2).setNumMatches(dbAdapter.getNumberCombos());
         }
     }
 

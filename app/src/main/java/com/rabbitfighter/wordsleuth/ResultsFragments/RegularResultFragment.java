@@ -144,6 +144,38 @@ public class RegularResultFragment extends Fragment {
     }
 
     /**
+     * Populate the result types list from database calls.
+     */
+    private void populateResultTypeByScoreScrabble(String resultType) {
+        Log.i(TAG, "populateResultTypeList() called");
+        results = new ArrayList<>();
+        switch (resultType.toString()) {
+            case "anagram":
+                results = dbAdapter.getAnagramsByScoreScrabble();
+                for (int i = 0; i < results.size(); i++) {
+                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+                }
+                numResults = resultItemList.size();
+                break;
+            case "subword":
+                results = dbAdapter.getSubwordsByScoreScrabble();
+                for (int i = 0; i < results.size(); i++) {
+                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+                }
+                numResults = resultItemList.size();
+                break;
+            case "combo":
+                results = dbAdapter.getCombosByScoreScrabble();
+                for (int i = 0; i < results.size(); i++) {
+                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+                }
+                numResults = resultItemList.size();
+                break;
+        }
+
+    }
+
+    /**
      * Populate the list view.
      * @param rootView - The view passed in
      */

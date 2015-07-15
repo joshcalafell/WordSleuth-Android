@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
+import com.rabbitfighter.wordsleuth.Entries.Entry;
+import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.ListItems.ResultTypeItem;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
@@ -49,7 +51,7 @@ public class SearchResultsBlankTileFragment extends Fragment {
     // Vars
     View itemView;
     ResultTypeItem resultType;
-    TextView tv_resultType, tv_numMatches, tv_title, tv_query, tv_number_letters;
+    TextView tv_resultType, tv_numMatches, tv_title, tv_query, tv_number_letters, tv_blank_tiles;
     View rootView;
 
     /**
@@ -86,13 +88,16 @@ public class SearchResultsBlankTileFragment extends Fragment {
         registerClickCallback(rootView);
         // Set component info
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
+        tv_blank_tiles = (TextView) rootView.findViewById(R.id.tv_wildcard_number);
+
         tv_query.setText("\"" +query+ "\"");
         tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
         tv_number_letters.setText("" + query.length() + " letters");
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
+        tv_title.setText("Blank Tile Search Results");
         // Fonts
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Condensed Bold
-
+        tv_blank_tiles.setText(String.valueOf(new Entry(query).getCount_blank_tiles()));
          /* Return the root view */
         return rootView;
 
@@ -179,6 +184,7 @@ public class SearchResultsBlankTileFragment extends Fragment {
         Bundle b = new Bundle();
         b.putString("query", query);
         b.putString("resultType", resultType);
+        b.putString("searchType", "blankTileSearch");
         intent.putExtras(b);
         startActivity(intent);
 

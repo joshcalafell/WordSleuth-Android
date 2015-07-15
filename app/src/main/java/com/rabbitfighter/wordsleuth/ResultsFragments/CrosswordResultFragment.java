@@ -118,7 +118,7 @@ public class CrosswordResultFragment extends Fragment {
         Log.i(TAG, "populateResultTypeList() called");
         results = new ArrayList<>();
         switch (resultType.toString()) {
-            case "anagram":
+            case "matche":
                 results = dbAdapter.getAnagrams();
                 for (int i = 0; i < results.size(); i++) {
                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));

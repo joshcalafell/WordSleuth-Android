@@ -66,6 +66,9 @@ public class SearchActivity extends ActionBarActivity {
     // Service connection class.
     BoundSearchService searchService;
 
+    // Search intent for service connection
+    Intent searchIntent;
+
     // Whether the service is bound or not...
     boolean isBound;
 
@@ -112,10 +115,16 @@ public class SearchActivity extends ActionBarActivity {
         // Handle the intent
         handleIntent(getIntent());
 
-        // Bound service intent, different that received intent
-        Intent searchIntent = new Intent(this, BoundSearchService.class);
-        // We want to bind to this. Params: (Intent, ServiceConnection, How to bind it)
-        bindService(searchIntent, connection, Context.BIND_AUTO_CREATE);
+        if (!isBound) {
+            // Bound service intent, different that received intent
+            searchIntent = new Intent(this, BoundSearchService.class);
+            // We want to bind to this. Params: (Intent, ServiceConnection, How to bind it)
+            bindService(searchIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.i(TAG, "Service is bound from on create");
+        } else {
+            Log.i(TAG, "Service was already bound. Nothing to do...");
+        }
+
 
         /*
         Keyboard popping up bug fix
@@ -229,17 +238,17 @@ public class SearchActivity extends ActionBarActivity {
         // Regular search
         if (!query.contains("*") && !query.contains("-") && !query.contains("_")) {
             Log.i(TAG, "Regular search detected");
-            this.setSearchType(REGULAR_SEARCH);
+            this.setSearchType(0);
         }
         // Wildcard search
         if (query.contains("*") && !query.contains("-") && !query.contains("_")) {
             Log.i(TAG, "Blank Tile search detected");
-            this.setSearchType(BLANK_TILE);
+            this.setSearchType(1);
         }
         // Crossword search
         if ((query.contains("-") || query.contains("_")) && !query.contains("*")) {
             Log.i(TAG, "Crossword search detected");
-            this.setSearchType(CROSSWORD_SEARCH);
+            this.setSearchType(2);
         }
         // Return the search type
         return this.getSearchType();
@@ -261,18 +270,17 @@ public class SearchActivity extends ActionBarActivity {
      */
     private void handleIntent(Intent intent) {
 
-        String query = null;
-
-
+        String query;
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             try {
+                // Get the query
                 query = intent.getStringExtra(SearchManager.QUERY)
                         .replaceAll("/[^a-zA-Z-*]/", "") // Remove all non a-zA-Z or "*" or "-" chars
                         .replaceAll("\\s", "")          // Remove all spaces
                         .toLowerCase().trim();         // Lowercase
                 // Query may be empty...
-
+                this.setSearchType(determineSearchType(query));
                 if (query.isEmpty()) {
                     Log.i(TAG, "Query is empty");
                     Message.msgLong(getApplicationContext(), "Query cannot be empty");
@@ -288,7 +296,6 @@ public class SearchActivity extends ActionBarActivity {
                     Message.msgLong(getApplicationContext(), "Cannot exceed two blank tiles");
                 } else {
                     // Perform the search
-                    this.setSearchType(determineSearchType(query));
                     performSearch(query);
                 }
             } catch (Exception e) {
@@ -298,9 +305,6 @@ public class SearchActivity extends ActionBarActivity {
                 // Fixed issue #21 -  reset the query field
                 searchView.setQuery("", false);
             }
-
-
-
         } else {
             Log.i(TAG, "Problem with intent");
         }
@@ -323,6 +327,7 @@ public class SearchActivity extends ActionBarActivity {
             if (!fragment.isAdded()) {
                 Bundle b = new Bundle();
                 b.putString("query", query);
+                b.putString("searchType", "regularSearch");
                 fragment.setArguments(b);
                 getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
             }
@@ -344,6 +349,7 @@ public class SearchActivity extends ActionBarActivity {
             if (!fragment.isAdded()) {
                 Bundle b = new Bundle();
                 b.putString("query", query);
+                b.putString("searchType", "blankTileSearch");
                 fragment.setArguments(b);
                 getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
             }
@@ -358,12 +364,14 @@ public class SearchActivity extends ActionBarActivity {
         }
         // Crossword search
         if (searchType == 2) {
+            Log.i(TAG, "Crossword Search type found");
             // Fragment manager stuff
             fragment = new SearchResultsCrosswordFragment();
             // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
             if (!fragment.isAdded()) {
                 Bundle b = new Bundle();
                 b.putString("query", query);
+                b.putString("searchType", "crosswordSearch");
                 fragment.setArguments(b);
                 getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
             }
@@ -425,7 +433,8 @@ public class SearchActivity extends ActionBarActivity {
          */
         @Override
         protected void onPreExecute() {
-            searchService.prepareSearch(searchType);
+            searchService.prepareSearch(this.searchType);
+            Log.i(TAG, String.valueOf(this.searchType));
             Log.i(TAG, this.userQuery);
         }
 
@@ -444,13 +453,13 @@ public class SearchActivity extends ActionBarActivity {
          */
         @Override
         protected void onPostExecute(Void result) {
-            transitionToResultsFragment(this.userQuery, 0);
+            transitionToResultsFragment(this.userQuery, this.searchType);
         }
     }
 
-    /* ------------------ */
-    /* ----- States ----- */
-    /* ------------------ */
+    /* ---------------------------- */
+    /* ----- Lifecycle States ----- */
+    /* ---------------------------- */
 
     /**
      * When the activity is started
@@ -458,6 +467,15 @@ public class SearchActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         Log.i(TAG, "onStart() called");
+        if (!isBound) {
+            // Bound service intent, different that received intent
+            searchIntent = new Intent(this, BoundSearchService.class);
+            // We want to bind to this. Params: (Intent, ServiceConnection, How to bind it)
+            bindService(searchIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.i(TAG, "Service is bound from on create");
+        } else {
+            Log.i(TAG, "Service was already bound. Nothing to do...");
+        }
         super.onStart();
     }
 
@@ -467,6 +485,15 @@ public class SearchActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         Log.i(TAG, "onResume() called");
+        if (!isBound) {
+            // Bound service intent, different that received intent
+            searchIntent = new Intent(this, BoundSearchService.class);
+            // We want to bind to this. Params: (Intent, ServiceConnection, How to bind it)
+            bindService(searchIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.i(TAG, "Service is bound from on create");
+        } else {
+            Log.i(TAG, "Service was already bound. Nothing to do...");
+        }
         super.onResume();
     }
 
@@ -476,9 +503,28 @@ public class SearchActivity extends ActionBarActivity {
      */
     @Override
     protected void onPause() {
-        //unbindService(connection);
         Log.i(TAG, "onPause() called");
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "onStop() called");
+        super.onStop();
+    }
+
+    // Unbind service if activity is destroyed. Hopefully fixes stephen's UN-TICKETED BUG!
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy called");
+        if (isBound) {
+            unbindService(connection);
+            Log.i(TAG, "Service was unbound from onDestroy");
+            isBound = false;
+        } else {
+            Log.i(TAG, "Service is bound");
+        }
+        super.onDestroy();
     }
 
     /* --- Getters/Setters */
