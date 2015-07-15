@@ -47,7 +47,7 @@
     <string name="txt_settings_tag">Settings</string>
     <string name="txt_dialog_yes">Yes</string>
     <string name="txt_dialog_no">No</string>
-    <string name="txt_dialog_instruction_disable">This help will only show once.</string>
+    <string name="txt_dialog_instruction_disable">Would you like to disable introduction help on app start?</string>
     <string name="txt_dialog_ok">Ok</string>
     <string name="PREFERENCE_FILE_KEY">com.rabbitfighter.wordsleuth.PREFERENCE_FILE_KEY</string>
     <string name="app_setting_disable_help">disableHelp</string>

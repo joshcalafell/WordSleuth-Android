@@ -26,10 +26,15 @@ public class InstructionHelpDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.txt_dialog_instruction_disable)
-                .setPositiveButton(R.string.txt_dialog_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.txt_dialog_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!
                         disableHelpOnStart();
+                    }
+                }).setNegativeButton(R.string.txt_dialog_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int id) {
+
                     }
                 });
         // Create the AlertDialog object and return it

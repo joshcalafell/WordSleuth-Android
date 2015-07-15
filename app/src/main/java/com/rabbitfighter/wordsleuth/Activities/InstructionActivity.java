@@ -2,7 +2,6 @@ package com.rabbitfighter.wordsleuth.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -37,14 +36,6 @@ public class InstructionActivity extends ActionBarActivity {
         Log.i(TAG, "onCreate() called ");
         super.onCreate(savedInstanceState);
 
-        Intent in = getIntent();
-        Bundle b = in.getExtras();
-
-        boolean isHelpOn = b.getBoolean("isHelpOn");
-
-        if (isHelpOn) {
-            showDisableHelpDialog();
-        }
 
         setContentView(R.layout.activity_instructions);
 
@@ -83,15 +74,7 @@ public class InstructionActivity extends ActionBarActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void showDisableHelpDialog() {
-        DialogFragment helpDisableDialog = new InstructionHelpDialogFragment();
 
-        // The second argument, "helpDisableInstructionsDialog", is a unique tag name that the
-        // system uses to save and restore the fragment state when necessary. The tag also allows
-        // you to get a handle to the fragment by calling findFragmentByTag().
-        helpDisableDialog.show(getSupportFragmentManager(), "helpDisableInstructionsDialog");
-
-    }
 
     /**
      * Item selected

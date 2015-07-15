@@ -1,7 +1,11 @@
 package com.rabbitfighter.wordsleuth.SearchFragments;
 
+import android.app.FragmentManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionHelpDialogFragment;
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.Utils.HelpDialogUtil;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 /**
@@ -34,6 +40,7 @@ public class SearchInputFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreate() called");
+        showHelpDialog();
         super.onCreate(savedInstanceState);
     }
 
@@ -71,4 +78,18 @@ public class SearchInputFragment extends Fragment {
         Log.i(TAG, "onPause() called");
         super.onPause();
     }
+    public void showHelpDialog() {
+        boolean isHelpOn = HelpDialogUtil.isHelpEnabledOnAppStart(this.getActivity());
+
+        if (isHelpOn) {
+            DialogFragment helpDisableDialog = new InstructionHelpDialogFragment();
+
+            // The second argument, "helpDisableInstructionsDialog", is a unique tag name that the
+            // system uses to save and restore the fragment state when necessary. The tag also allows
+            // you to get a handle to the fragment by calling findFragmentByTag().
+            helpDisableDialog.show(getFragmentManager(), "helpDisableInstructionsDialog");
+        }
+    }
+
+
 }
