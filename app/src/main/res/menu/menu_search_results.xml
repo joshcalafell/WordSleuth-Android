@@ -9,7 +9,7 @@
 
     <item android:id="@+id/sort"
           android:icon="@mipmap/ic_action_sort_by_size"
-          android:title="About"
+          android:title="Sort By"
           app:showAsAction="always"/>
 
 

@@ -49,6 +49,26 @@ public class SplashActivity extends Activity {
         //finish();
     }
 
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume() called");
+        setContentView(R.layout.splash);
+        new AsyncSplashTask().execute();
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onResume() called");
+        setContentView(R.layout.splash);
+        new AsyncSplashTask().execute();
+        super.onRestart();
+    }
+    @Override
+    protected void onDestroy() {
+        finish();
+        super.onDestroy();
+    }
 
     /**
      * This is to make the searches bound service asynchronous.

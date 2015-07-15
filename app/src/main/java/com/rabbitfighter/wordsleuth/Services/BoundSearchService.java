@@ -308,6 +308,9 @@ public class BoundSearchService extends Service  {
                 /**
                  * Go through the subwords to find the combos
                  */
+                /**
+                 * Go through the subwords to find the combos
+                 */
                 if (!this.getSubwords().isEmpty()) {
                     // Put combos in the database
                     for (int i = 0; i < this.getSubwords().size(); i++) {
@@ -387,6 +390,9 @@ public class BoundSearchService extends Service  {
                     }
                 }
 
+                /**
+                 * Go through the subwords to find the combos
+                 */
                 /**
                  * Go through the subwords to find the combos
                  */

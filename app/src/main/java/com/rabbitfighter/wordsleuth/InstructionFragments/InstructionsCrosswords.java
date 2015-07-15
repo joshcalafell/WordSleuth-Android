@@ -53,7 +53,7 @@ public class InstructionsCrosswords extends Fragment {
         btn_skip_instruction.setTypeface(RobotoFontsHelper.getTypeface(context, RobotoFontsHelper.roboto_medium_italic));
 
         /* Set the text */
-        tv_title.setText(R.string.txt_title_page5);
+        tv_title.setText(R.string.txt_title_page6);
         tv_instructions.setText(R.string.txt_instructions_page6);
 
         btn_skip_instruction.setOnClickListener(

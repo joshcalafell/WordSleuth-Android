@@ -49,6 +49,282 @@ public class ResultsDbAdapter {
         helper = new ResultsDbHelper(context);
     }
 
+    /* ----------------------------------------- */
+    /* --- Get matches by Scrabble(TM) score --- */
+    /* ----------------------------------------- */
+    /**
+     * Gets the list of anagrams, sorted by highest to lowest scrabble score
+     * @return the list
+     */
+    public ArrayList<Result> getAnagramsByScoreScrabble() {
+
+        // Array list to hold results
+        ArrayList<Result> resultList = new ArrayList<>();
+        // Get writable database
+        SQLiteDatabase db = helper.getWritableDatabase();
+        // Designate the columns
+        String[] columns = {
+                UID,
+                COLUMN_NAME_RESULT_TYPE,
+                COLUMN_NAME_WORD,
+                COLUMN_NAME_WORD_LENGTH,
+        };
+        String[] selectionArgs = null;
+        // Result type = 'anagram'
+        String selection = COLUMN_NAME_RESULT_TYPE + " = '" +RESULT_TYPE_ANAGRAM+ "'";
+        String groupBy = null;
+        String having = null;
+        // Order by
+        String orderBy = COLUMN_NAME_SCRABBLE_POINTS;
+        // Cursor
+        Cursor cursor = db.query(
+                TABLE_NAME, // Table name
+                columns,         // Columns
+                selection,       // Selection
+                selectionArgs,   // Selection arguments
+                groupBy,         // Group by...
+                having,          // having
+                orderBy          // Order by
+        );
+        while (cursor.moveToNext()) {
+            int columnResult = cursor.getColumnIndex(ResultsDbHelper.ResultsDbContract.ResultEntry.COLUMN_NAME_WORD);
+            // Add the result to the list to return
+            resultList.add(new Result(cursor.getString(columnResult)));
+        }
+        cursor.close();
+        // Return the list
+        return resultList;
+
+    }
+
+    /**
+     * Gets the list of subwords, sorted by highest to lowest scrabble score
+     * @return the list
+     */
+    public ArrayList<Result> getSubwordsByScoreScrabble() {
+
+        // Array list to hold results
+        ArrayList<Result> resultList = new ArrayList<>();
+        // Get writable database
+        SQLiteDatabase db = helper.getWritableDatabase();
+        // Designate the columns
+        String[] columns = {
+                UID,
+                COLUMN_NAME_RESULT_TYPE,
+                COLUMN_NAME_WORD,
+                COLUMN_NAME_WORD_LENGTH,
+        };
+        String[] selectionArgs = null;
+        // Result type = 'anagram'
+        String selection = COLUMN_NAME_RESULT_TYPE + " = '" +RESULT_TYPE_SUBWORD+ "'";
+        String groupBy = null;
+        String having = null;
+        // Order by
+        String orderBy = COLUMN_NAME_SCRABBLE_POINTS;
+        // Cursor
+        Cursor cursor = db.query(
+                TABLE_NAME, // Table name
+                columns,         // Columns
+                selection,       // Selection
+                selectionArgs,   // Selection arguments
+                groupBy,         // Group by...
+                having,          // having
+                orderBy          // Order by
+        );
+        while (cursor.moveToNext()) {
+            int columnResult = cursor.getColumnIndex(ResultsDbHelper.ResultsDbContract.ResultEntry.COLUMN_NAME_WORD);
+            // Add the result to the list to return
+            resultList.add(new Result(cursor.getString(columnResult)));
+        }
+        cursor.close();
+        // Return the list
+        return resultList;
+
+    }
+
+    /**
+     * Gets the list of combos, sorted by highest to lowest scrabble score
+     * @return the list
+     */
+    public ArrayList<Result> getCombosByScoreScrabble() {
+
+        // Array list to hold results
+        ArrayList<Result> resultList = new ArrayList<>();
+        // Get writable database
+        SQLiteDatabase db = helper.getWritableDatabase();
+        // Designate the columns
+        String[] columns = {
+                UID,
+                COLUMN_NAME_RESULT_TYPE,
+                COLUMN_NAME_WORD,
+                COLUMN_NAME_WORD_LENGTH,
+        };
+        String[] selectionArgs = null;
+        // Result type = 'anagram'
+        String selection = COLUMN_NAME_RESULT_TYPE + " = '" +RESULT_TYPE_COMBO+ "'";
+        String groupBy = null;
+        String having = null;
+        // Order by
+        String orderBy = COLUMN_NAME_SCRABBLE_POINTS;
+        // Cursor
+        Cursor cursor = db.query(
+                TABLE_NAME, // Table name
+                columns,         // Columns
+                selection,       // Selection
+                selectionArgs,   // Selection arguments
+                groupBy,         // Group by...
+                having,          // having
+                orderBy          // Order by
+        );
+        while (cursor.moveToNext()) {
+            int columnResult = cursor.getColumnIndex(ResultsDbHelper.ResultsDbContract.ResultEntry.COLUMN_NAME_WORD);
+            // Add the result to the list to return
+            resultList.add(new Result(cursor.getString(columnResult)));
+        }
+        cursor.close();
+        // Return the list
+        return resultList;
+
+    }
+
+    /* --------------------------------------------------- */
+    /* --- Get matches by Words With Friends(TM) score --- */
+    /* --------------------------------------------------- */
+    /**
+     * Gets the list of anagrams, sorted by highest to lowest scrabble score
+     * @return the list
+     */
+    public ArrayList<Result> getAnagramsByScoreWWF() {
+
+        // Array list to hold results
+        ArrayList<Result> resultList = new ArrayList<>();
+        // Get writable database
+        SQLiteDatabase db = helper.getWritableDatabase();
+        // Designate the columns
+        String[] columns = {
+                UID,
+                COLUMN_NAME_RESULT_TYPE,
+                COLUMN_NAME_WORD,
+                COLUMN_NAME_WORD_LENGTH,
+        };
+        String[] selectionArgs = null;
+        // Result type = 'anagram'
+        String selection = COLUMN_NAME_RESULT_TYPE + " = '" +RESULT_TYPE_ANAGRAM+ "'";
+        String groupBy = null;
+        String having = null;
+        // Order by
+        String orderBy = COLUMN_NAME_WORDS_WITH_FRIENDS_POINTS;
+        // Cursor
+        Cursor cursor = db.query(
+                TABLE_NAME, // Table name
+                columns,         // Columns
+                selection,       // Selection
+                selectionArgs,   // Selection arguments
+                groupBy,         // Group by...
+                having,          // having
+                orderBy          // Order by
+        );
+        while (cursor.moveToNext()) {
+            int columnResult = cursor.getColumnIndex(ResultsDbHelper.ResultsDbContract.ResultEntry.COLUMN_NAME_WORD);
+            // Add the result to the list to return
+            resultList.add(new Result(cursor.getString(columnResult)));
+        }
+        cursor.close();
+        // Return the list
+        return resultList;
+
+    }
+
+    /**
+     * Gets the list of subwords, sorted by highest to lowest scrabble score
+     * @return the list
+     */
+    public ArrayList<Result> getSubwordsByScoreWWF() {
+
+        // Array list to hold results
+        ArrayList<Result> resultList = new ArrayList<>();
+        // Get writable database
+        SQLiteDatabase db = helper.getWritableDatabase();
+        // Designate the columns
+        String[] columns = {
+                UID,
+                COLUMN_NAME_RESULT_TYPE,
+                COLUMN_NAME_WORD,
+                COLUMN_NAME_WORD_LENGTH,
+        };
+        String[] selectionArgs = null;
+        // Result type = 'anagram'
+        String selection = COLUMN_NAME_RESULT_TYPE + " = '" +RESULT_TYPE_SUBWORD+ "'";
+        String groupBy = null;
+        String having = null;
+        // Order by
+        String orderBy = COLUMN_NAME_WORDS_WITH_FRIENDS_POINTS;
+        // Cursor
+        Cursor cursor = db.query(
+                TABLE_NAME, // Table name
+                columns,         // Columns
+                selection,       // Selection
+                selectionArgs,   // Selection arguments
+                groupBy,         // Group by...
+                having,          // having
+                orderBy          // Order by
+        );
+        while (cursor.moveToNext()) {
+            int columnResult = cursor.getColumnIndex(ResultsDbHelper.ResultsDbContract.ResultEntry.COLUMN_NAME_WORD);
+            // Add the result to the list to return
+            resultList.add(new Result(cursor.getString(columnResult)));
+        }
+        cursor.close();
+        // Return the list
+        return resultList;
+
+    }
+
+    /**
+     * Gets the list of combos, sorted by highest to lowest scrabble score
+     * @return the list
+     */
+    public ArrayList<Result> getCombosByScoreWWF() {
+
+        // Array list to hold results
+        ArrayList<Result> resultList = new ArrayList<>();
+        // Get writable database
+        SQLiteDatabase db = helper.getWritableDatabase();
+        // Designate the columns
+        String[] columns = {
+                UID,
+                COLUMN_NAME_RESULT_TYPE,
+                COLUMN_NAME_WORD,
+                COLUMN_NAME_WORD_LENGTH,
+        };
+        String[] selectionArgs = null;
+        // Result type = 'anagram'
+        String selection = COLUMN_NAME_RESULT_TYPE + " = '" +RESULT_TYPE_COMBO+ "'";
+        String groupBy = null;
+        String having = null;
+        // Order by
+        String orderBy = COLUMN_NAME_WORDS_WITH_FRIENDS_POINTS;
+        // Cursor
+        Cursor cursor = db.query(
+                TABLE_NAME, // Table name
+                columns,         // Columns
+                selection,       // Selection
+                selectionArgs,   // Selection arguments
+                groupBy,         // Group by...
+                having,          // having
+                orderBy          // Order by
+        );
+        while (cursor.moveToNext()) {
+            int columnResult = cursor.getColumnIndex(ResultsDbHelper.ResultsDbContract.ResultEntry.COLUMN_NAME_WORD);
+            // Add the result to the list to return
+            resultList.add(new Result(cursor.getString(columnResult)));
+        }
+        cursor.close();
+        // Return the list
+        return resultList;
+
+    }
+
     /* -------------- */
     /* --- Helper --- */
     /* -------------- */
@@ -56,7 +332,7 @@ public class ResultsDbAdapter {
     /**
      * SQLite open helper class
      */
-     static class ResultsDbHelper extends SQLiteOpenHelper {
+    static class ResultsDbHelper extends SQLiteOpenHelper {
 
         public static final String TAG = "ResultsDbHelper";
 
@@ -109,13 +385,13 @@ public class ResultsDbAdapter {
                 // Table creation
                 private static final String SQL_CREATE_ENTRIES =
                         CREATE_TABLE + TABLE_NAME + PARENTHESIS_LEFT +             // Create table
-                            UID + ID_INCREMENT + COMMA_SEP +                       // _id
-                            COLUMN_NAME_RESULT_TYPE + TEXT_TYPE + COMMA_SEP +      // result type
-                            COLUMN_NAME_WORD + TEXT_TYPE + COMMA_SEP +             // word
-                            COLUMN_NAME_WORD_LENGTH + TEXT_TYPE + COMMA_SEP +      // word length
-                            COLUMN_NAME_SCRABBLE_POINTS + TEXT_TYPE + COMMA_SEP +  // sc points
-                            COLUMN_NAME_WORDS_WITH_FRIENDS_POINTS + TEXT_TYPE +    // wwf points
-                        PARENTHESIS_RIGHT;
+                                UID + ID_INCREMENT + COMMA_SEP +                       // _id
+                                COLUMN_NAME_RESULT_TYPE + TEXT_TYPE + COMMA_SEP +      // result type
+                                COLUMN_NAME_WORD + TEXT_TYPE + COMMA_SEP +             // word
+                                COLUMN_NAME_WORD_LENGTH + TEXT_TYPE + COMMA_SEP +      // word length
+                                COLUMN_NAME_SCRABBLE_POINTS + TEXT_TYPE + COMMA_SEP +  // sc points
+                                COLUMN_NAME_WORDS_WITH_FRIENDS_POINTS + TEXT_TYPE +    // wwf points
+                                PARENTHESIS_RIGHT;
                 // Table deletion
                 private static final String SQL_DELETE_ENTRIES = DROP_TABLE + TABLE_NAME;
                 private static final String SQL_DELETE_ALL_ENTRIES = DROP_TABLE + TABLE_NAME;
