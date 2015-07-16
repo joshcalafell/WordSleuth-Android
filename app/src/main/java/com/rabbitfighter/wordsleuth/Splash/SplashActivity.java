@@ -1,9 +1,7 @@
 package com.rabbitfighter.wordsleuth.Splash;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +9,7 @@ import android.util.Log;
 import com.rabbitfighter.wordsleuth.Activities.InstructionActivity;
 import com.rabbitfighter.wordsleuth.Activities.SearchActivity;
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.Utils.HelpDialogUtil;
 
 /**
  * Splash screen
@@ -130,33 +129,17 @@ public class SplashActivity extends Activity {
         myThread.start();
     }
 
-    /**
-     * Determine if help is enabled (Thanks bro :) )
-     * @return
-     */
-    private boolean isHelpEnabledOnAppStart() {
-        Context context = SplashActivity.this;
-        SharedPreferences sharedPrefs = context.getSharedPreferences(
-                getString(R.string.PREFERENCE_FILE_KEY), Context.MODE_PRIVATE);
-        boolean defaultSetting = true;
 
-        // this will return true if the user wants help on app start
-        boolean userSetting = sharedPrefs.getBoolean(
-                getString(R.string.app_setting_disable_help), defaultSetting);
-        return  userSetting;
-    }
 
     /**
      * Start the new activity
      */
     public void startNewActivity() {
-        final boolean isHelpOn = isHelpEnabledOnAppStart();
+
+        final boolean isHelpOn = HelpDialogUtil.isHelpEnabledOnAppStart(this);
 
         if(isHelpOn) {
             Intent instructionStart = new Intent(this, InstructionActivity.class);
-
-            // For future use when we need to check if we need to display a dialog.
-            instructionStart.putExtra("isHelpOn", isHelpOn);
             startActivity(instructionStart);
         } else {
             Intent searchStart = new Intent(this, SearchActivity.class);
