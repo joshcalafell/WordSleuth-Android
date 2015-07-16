@@ -192,15 +192,19 @@ public class BlankTileResultFragment extends Fragment {
             TextView tv_numLetters = (TextView) itemView.findViewById(R.id.tv_numLetters);
             TextView tv_result = (TextView) itemView.findViewById(R.id.tv_result);
 
+
             // Set resources
             imageView1.setImageResource(r.getIconID());
 
             // Set text
             tv_result.setText(String.valueOf(r.getResult()));
+
             tv_numLetters.setText(String.valueOf(r.getLength() + " letters"));
 
             // Set fonts
-            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), 0x7));
+            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_regular));
+            tv_numLetters.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_light)); // Light
+
 
             // Return the view
             return itemView;

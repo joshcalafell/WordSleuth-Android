@@ -43,8 +43,6 @@ public class ResultDetailActivity extends ActionBarActivity {
     TextView tv_title,
              tv_result_title,
              tv_result,
-             //tv_query_title,
-             //tv_query,
              tv_length_title,
              tv_length,
              tv_scrabble_title,
@@ -78,6 +76,7 @@ public class ResultDetailActivity extends ActionBarActivity {
 
         /* --- View stuff --- */
 
+
         // Title
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_result_title = (TextView) findViewById(R.id.tv_result_title);
@@ -101,17 +100,15 @@ public class ResultDetailActivity extends ActionBarActivity {
         tv_words_title.setTypeface(RobotoFontsHelper.getTypeface(getApplicationContext(), RobotoFontsHelper.roboto_regular));
         tv_words_points.setTypeface(RobotoFontsHelper.getTypeface(getApplicationContext(), RobotoFontsHelper.roboto_regular));
 
-        // This is a hack to change "anagram" to "Anagrams" for display without changing other stuff
-        String rt = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + " Result";
 
         /* Set text */
-        tv_title.setText(rt);
+        tv_title.setText("Result Detail");
         tv_result.setText(result.getWord());
         //tv_query.setText("\"" + query + "\"");
         tv_length.setText(String.valueOf(result.getNumLetters() + " letters"));
         if (resultType.compareToIgnoreCase("combo")!=0) {
-            tv_scrabble_points.setText(String.valueOf(score_scrabble) + " raw points");
-            tv_words_points.setText(String.valueOf(score_words) + " raw points");
+            tv_scrabble_points.setText(String.valueOf(score_scrabble) + " points");
+            tv_words_points.setText(String.valueOf(score_words) + " points");
             tv_length.setText(String.valueOf(result.getNumLetters() + " letters"));
         } else {
             tv_scrabble_points.setText("N/A");

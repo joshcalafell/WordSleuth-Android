@@ -43,23 +43,23 @@ public class BoundSearchService extends Service  {
     private ArrayList<Result> subwords;
     private ArrayList<Result> combos;
     private ArrayList<Result> matches;
-    // Databases
+    // Results DB
     private ResultsDbAdapter dbAdapter;
+    // Dictionary DB
     private DictionaryDbHelper helper;
     // Query
     private Entry query;
+    // Search type (regular, blank-tile, crossword)
     private int searchType;
 
 
-    // Empty constructor
+    // Constructor
     public BoundSearchService() {
         this.setAnagrams(new ArrayList<Result>());
         this.setSubwords(new ArrayList<Result>());
         this.setCombos(new ArrayList<Result>());
         this.setMatches(new ArrayList<Result>());
     }
-
-    private String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
     @Override
     public IBinder onBind(Intent intent) throws UnsupportedOperationException {

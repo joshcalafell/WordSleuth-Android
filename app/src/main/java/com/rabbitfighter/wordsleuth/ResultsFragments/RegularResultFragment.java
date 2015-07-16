@@ -82,7 +82,7 @@ public class RegularResultFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
 
         // Views
-        TextView tv_title,  tv_query, tv_results_title, tv_results;
+        TextView tv_title,  tv_query, tv_results_title, tv_results, tv_query_title;
 
         // Populate the result type list from database
         populateResultTypeList(resultType);
@@ -96,7 +96,15 @@ public class RegularResultFragment extends Fragment {
         // Set components
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
+        tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
+        tv_results_title = (TextView) rootView.findViewById(R.id.tv_results_title);
+
+        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
+        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
 
         // Set text
         String output = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
@@ -232,7 +240,8 @@ public class RegularResultFragment extends Fragment {
             tv_numLetters.setText(String.valueOf(r.getLength() + " letters"));
 
             // Set fonts
-            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), 0x7));
+            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_regular));
+            tv_numLetters.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_light)); // Light
 
             // Return the view
             return itemView;

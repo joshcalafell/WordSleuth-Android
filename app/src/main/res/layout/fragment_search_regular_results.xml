@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Search Rsults"
+        android:text="Standard Search Results"
         android:id="@+id/tv_title"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"

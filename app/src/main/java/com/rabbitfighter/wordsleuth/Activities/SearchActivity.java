@@ -321,7 +321,7 @@ public class SearchActivity extends ActionBarActivity {
         // Regular search
         if (searchType == 0) {
             Log.i(TAG, "Regular Search type found");
-            // Fragment manager stuff
+            // Get the fragment we want to go to...
             fragment = new SearchResultsRegularFragment();
             // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
             if (!fragment.isAdded()) {
@@ -343,7 +343,7 @@ public class SearchActivity extends ActionBarActivity {
         // Blank Tile search
         if (searchType == 1) {
             Log.i(TAG, "Blank Tile Search type found");
-            // Fragment manager stuff
+            // Get the fragment
             fragment = new SearchResultsBlankTileFragment();
             // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
             if (!fragment.isAdded()) {
@@ -365,7 +365,7 @@ public class SearchActivity extends ActionBarActivity {
         // Crossword search
         if (searchType == 2) {
             Log.i(TAG, "Crossword Search type found");
-            // Fragment manager stuff
+            // Get the fragment
             fragment = new SearchResultsCrosswordFragment();
             // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
             if (!fragment.isAdded()) {
@@ -378,10 +378,8 @@ public class SearchActivity extends ActionBarActivity {
             else { // The fragment is already showing, so just grab the text views.
                 TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
                 TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
-
                 resultTV.setText(query);
                 resultLength.setText(String.valueOf(query.length()));
-
             }
         }
 

@@ -51,7 +51,7 @@ public class SearchResultsBlankTileFragment extends Fragment {
     // Vars
     View itemView;
     ResultTypeItem resultType;
-    TextView tv_resultType, tv_numMatches, tv_title, tv_query, tv_number_letters, tv_blank_tiles;
+    TextView tv_result_type, tv_title, tv_query, tv_query_title, tv_num_letters_title, tv_number_letters, tv_blank_tiles, tv_blank_tiles_title, tv_num_matches, tv_num_matches_title;
     View rootView;
 
     /**
@@ -86,18 +86,32 @@ public class SearchResultsBlankTileFragment extends Fragment {
         populateListView();
         // Control the callbacks from item clicks
         registerClickCallback(rootView);
-        // Set component info
+        // Set components
+        //--tv_title, --tv_query, --tv_query_title, tv_number_letters_title, tv_number_letters;
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
-        tv_blank_tiles = (TextView) rootView.findViewById(R.id.tv_wildcard_number);
-
-        tv_query.setText("\"" +query+ "\"");
-        tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
-        tv_number_letters.setText("" + query.length() + " letters");
+        tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
-        tv_title.setText("Blank Tile Search Results");
-        // Fonts
-        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Condensed Bold
+        tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
+        tv_num_letters_title = (TextView) rootView.findViewById(R.id.tv_length_title);
+        tv_blank_tiles_title = (TextView) rootView.findViewById(R.id.tv_count_wildcard_title);
+        tv_blank_tiles= (TextView) rootView.findViewById(R.id.tv_wildcard_number);
+
+
+        // Set the text fields for query && num letters
+        tv_query.setText("\"" +query+ "\"");
+        tv_number_letters.setText(query.length() + " letters");
         tv_blank_tiles.setText(String.valueOf(new Entry(query).getCount_blank_tiles()));
+
+        // Fonts
+
+        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
+        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_num_letters_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_number_letters.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_blank_tiles.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_blank_tiles_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+
          /* Return the root view */
         return rootView;
 
@@ -157,12 +171,22 @@ public class SearchResultsBlankTileFragment extends Fragment {
             resultType = resultTypeItemList.get(position);
 
             // Result type
-            String rt = resultType.getResultType().substring(0, 1).toUpperCase() + resultType.getResultType().substring(1) + " Results";
-            tv_resultType = (TextView) itemView.findViewById(R.id.tv_resultType);
-            tv_resultType.setText(rt);
-            // Number of matches
-            tv_numMatches = (TextView) itemView.findViewById(R.id.tv_numMatches);
-            tv_numMatches.setText(String.valueOf(resultType.getNumMatches()) + " results found");
+            tv_result_type = (TextView) itemView.findViewById(R.id.tv_resultType);
+            tv_num_matches = (TextView) itemView.findViewById(R.id.tv_numMatches);
+            tv_num_matches.setText(String.valueOf(resultType.getNumMatches()) + " results found");
+
+            if (position == 0) {
+                tv_result_type.setText("Anagrams");
+            } else if (position == 1) {
+                tv_result_type.setText("Subwords");
+            } else if (position == 3) {
+                tv_result_type.setText("Combinations");
+            } else {
+                Log.i("BlankTile", "Type not found");
+            }
+
+            tv_num_matches.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Light
+            tv_result_type.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black));
 
             // Return the view
             return itemView;

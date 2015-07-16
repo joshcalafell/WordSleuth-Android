@@ -82,7 +82,7 @@ public class CrosswordResultFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
 
         // Views
-        TextView tv_title,  tv_query, tv_results_title, tv_results;
+        TextView tv_title, tv_query_title,  tv_query, tv_results_title, tv_results;
 
         // Populate the result type list from database
         populateResultTypeList(resultType);
@@ -96,7 +96,9 @@ public class CrosswordResultFragment extends Fragment {
         // Set components
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
+        tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
+        tv_results_title = (TextView) rootView.findViewById(R.id.tv_results_title);
 
         // Set text
         String output = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
@@ -106,6 +108,10 @@ public class CrosswordResultFragment extends Fragment {
 
         // Set typefaces
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black)); // Bold
+        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
+        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
+        tv_results.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
+        tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
 
         // Return the root view
         return rootView;
@@ -118,6 +124,7 @@ public class CrosswordResultFragment extends Fragment {
         Log.i(TAG, "populateResultTypeList() called");
         results = new ArrayList<>();
         switch (resultType.toString()) {
+            // TODO: Find a better way of doing this.
             case "matche":
                 results = dbAdapter.getAnagrams();
                 for (int i = 0; i < results.size(); i++) {
@@ -186,7 +193,8 @@ public class CrosswordResultFragment extends Fragment {
             tv_numLetters.setText(String.valueOf(r.getLength() + " letters"));
 
             // Set fonts
-            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), 0x7));
+            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_regular));
+            tv_numLetters.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_light)); // Light
 
             // Return the view
             return itemView;
@@ -227,7 +235,7 @@ public class CrosswordResultFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), ResultDetailActivity.class);
                         Bundle b = new Bundle();
                         b.putString("query", query);
-                        b.putString("resultType", resultType);
+                        b.putString("resultType", "anagram");
                         b.putString("result", item.getResult().toString());
                         intent.putExtras(b);
                         startActivity(intent);
