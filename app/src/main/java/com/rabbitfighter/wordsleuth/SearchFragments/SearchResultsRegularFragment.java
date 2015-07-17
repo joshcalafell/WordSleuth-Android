@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
+import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.ListItems.ResultTypeItem;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
@@ -49,7 +50,7 @@ public class SearchResultsRegularFragment extends Fragment {
     // Vars
     View itemView;
     ResultTypeItem resultType;
-    TextView tv_resultType, tv_numMatches, tv_title, tv_query, tv_number_letters;
+    TextView tv_num_matches,tv_num_matches_title, tv_result_type, tv_title, tv_query_title, tv_query, tv_num_letters_title, tv_number_letters;
     View rootView;
 
     /**
@@ -84,15 +85,23 @@ public class SearchResultsRegularFragment extends Fragment {
         populateListView();
         // Control the callbacks from item clicks
         registerClickCallback(rootView);
-        // Set component info
+
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
-        tv_query.setText("\"" +query+ "\"");
-        tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
-        tv_number_letters.setText("" + query.length() + " letters");
+        tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
-        tv_title.setText("Standard Search Results");
+        tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
+        tv_num_letters_title = (TextView) rootView.findViewById(R.id.tv_length_title);
+
+        // Set the text fields for query && num letters
+        tv_query.setText("\"" + query + "\"");
+        tv_number_letters.setText(query.length() + " letters");
+
         // Fonts
-        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Condensed Bold
+        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
+        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_num_letters_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
+        tv_number_letters.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
 
          /* Return the root view */
         return rootView;
@@ -153,12 +162,22 @@ public class SearchResultsRegularFragment extends Fragment {
             resultType = resultTypeItemList.get(position);
 
             // Result type
-            String rt = resultType.getResultType().substring(0, 1).toUpperCase() + resultType.getResultType().substring(1) + " Results";
-            tv_resultType = (TextView) itemView.findViewById(R.id.tv_resultType);
-            tv_resultType.setText(rt);
-            // Number of matches
-            tv_numMatches = (TextView) itemView.findViewById(R.id.tv_numMatches);
-            tv_numMatches.setText(String.valueOf(resultType.getNumMatches()) + " results found");
+            tv_result_type = (TextView) itemView.findViewById(R.id.tv_resultType);
+            tv_num_matches = (TextView) itemView.findViewById(R.id.tv_numMatches);
+            tv_num_matches.setText(String.valueOf(resultType.getNumMatches()) + " results found");
+
+            if (position == 0) {
+                tv_result_type.setText("Anagrams");
+            } else if (position == 1) {
+                tv_result_type.setText("Subwords");
+            } else if (position == 2) {
+                tv_result_type.setText("Combinations");
+            } else {
+                Log.i("Regular", "Type not found");
+            }
+
+            tv_num_matches.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Light
+            tv_result_type.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black));
 
             // Return the view
             return itemView;

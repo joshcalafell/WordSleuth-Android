@@ -34,8 +34,6 @@ public class InstructionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate() called ");
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_instructions);
 
         // Setting up the ViewPager
@@ -67,8 +65,6 @@ public class InstructionActivity extends ActionBarActivity {
         Log.i(TAG, "onCreateOptionsMenu() called");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-
-        // Do menu stuff here..
 
         return super.onCreateOptionsMenu(menu);
     }

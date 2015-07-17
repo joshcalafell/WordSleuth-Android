@@ -46,11 +46,6 @@ public class SearchActivity extends ActionBarActivity {
     // Debugging TAG
     private static final String TAG = "SearchActivity";
 
-    private static final int REGULAR_SEARCH = 0;
-    private static final int BLANK_TILE = 1;
-    private static final int CROSSWORD_SEARCH = 2;
-
-
     /* ------------ */
     /* --- Vars---- */
     /* ------------ */
@@ -245,17 +240,17 @@ public class SearchActivity extends ActionBarActivity {
         // Regular search
         if (!query.contains("*") && !query.contains("-") && !query.contains("_")) {
             Log.i(TAG, "Regular search detected");
-            this.setSearchType(0);
+            this.setSearchType(BoundSearchService.REGULAR_SEARCH);
         }
         // Wildcard search
         if (query.contains("*") && !query.contains("-") && !query.contains("_")) {
             Log.i(TAG, "Blank Tile search detected");
-            this.setSearchType(1);
+            this.setSearchType(BoundSearchService.BLANK_TILE_SEARCH);
         }
         // Crossword search
         if ((query.contains("-") || query.contains("_")) && !query.contains("*")) {
             Log.i(TAG, "Crossword search detected");
-            this.setSearchType(2);
+            this.setSearchType(BoundSearchService.CROSSWORD_SEARCH);
         }
         // Return the search type
         return this.getSearchType();
@@ -301,6 +296,11 @@ public class SearchActivity extends ActionBarActivity {
                 } else if ((new Entry(query).getCount_blank_tiles() > 2)) {
                     Log.i(TAG, "Cannot exceed two blank tiles");
                     Message.msgLong(getApplicationContext(), "Cannot exceed two blank tiles");
+                } else if (((new Entry(query).getCount_blank_tiles()) <= 2
+                        && (new Entry(query).getCount_blank_tiles() > 0))
+                        && query.length() > 12) {
+                    Log.i(TAG, "Cannot exceed twelve letters in a blank tile search");
+                    Message.msgLong(getApplicationContext(), "Cannot exceed twelve letters in a blank tile search");
                 } else {
                     // Perform the search
                     performSearch(query);
@@ -328,7 +328,7 @@ public class SearchActivity extends ActionBarActivity {
         // Regular search
         if (searchType == 0) {
             Log.i(TAG, "Regular Search type found");
-            // Fragment manager stuff
+            // Get the fragment we want to go to...
             fragment = new SearchResultsRegularFragment();
             // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
             if (!fragment.isAdded()) {
@@ -350,7 +350,7 @@ public class SearchActivity extends ActionBarActivity {
         // Blank Tile search
         if (searchType == 1) {
             Log.i(TAG, "Blank Tile Search type found");
-            // Fragment manager stuff
+            // Get the fragment
             fragment = new SearchResultsBlankTileFragment();
             // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
             if (!fragment.isAdded()) {
@@ -372,7 +372,7 @@ public class SearchActivity extends ActionBarActivity {
         // Crossword search
         if (searchType == 2) {
             Log.i(TAG, "Crossword Search type found");
-            // Fragment manager stuff
+            // Get the fragment
             fragment = new SearchResultsCrosswordFragment();
             // @NOTE: This solved a bug 'java.lang.IllegalStateException: Fragment already active'
             if (!fragment.isAdded()) {
@@ -385,10 +385,8 @@ public class SearchActivity extends ActionBarActivity {
             else { // The fragment is already showing, so just grab the text views.
                 TextView resultTV = (TextView)fragment.getView().findViewById(R.id.tv_query);
                 TextView resultLength = (TextView)fragment.getView().findViewById(R.id.tv_length);
-
                 resultTV.setText(query);
                 resultLength.setText(String.valueOf(query.length()));
-
             }
         }
 

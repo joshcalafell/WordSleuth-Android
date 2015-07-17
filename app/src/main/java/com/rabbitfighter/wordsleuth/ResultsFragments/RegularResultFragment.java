@@ -64,9 +64,6 @@ public class RegularResultFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-
-
-
     /**
      * When the view gets created
      * @param inflater - the LayoutInflater object
@@ -76,16 +73,17 @@ public class RegularResultFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView called");
+        Log.i(TAG, "Regular Result onCreateView() called");
 
         // Inflate layout
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
 
         // Views
-        TextView tv_title,  tv_query, tv_results_title, tv_results;
+        TextView tv_title,  tv_query, tv_results_title, tv_results, tv_query_title;
 
         // Populate the result type list from database
         populateResultTypeList(resultType);
+        Log.i(TAG, "ResultType: " + resultType);
 
         // Populate the list view from resultType list
         populateListView(rootView);
@@ -96,7 +94,15 @@ public class RegularResultFragment extends Fragment {
         // Set components
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
+        tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
+        tv_results_title = (TextView) rootView.findViewById(R.id.tv_results_title);
+
+        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
+        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
 
         // Set text
         String output = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
@@ -207,13 +213,10 @@ public class RegularResultFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-
-            Log.i(TAG, "getView() called");
             // Get a handle for the view that we can change without changing the convertView
             View itemView = convertView;
             // The view passed in may be null, just an F.Y.I.
             if (itemView == null) {
-                Log.i(TAG, "Item view is null!");
                 itemView = getActivity().getLayoutInflater().inflate(R.layout.item_result, parent, false);
             }
             // Find Result Type
@@ -230,9 +233,6 @@ public class RegularResultFragment extends Fragment {
             // Set text
             tv_result.setText(String.valueOf(r.getResult()));
             tv_numLetters.setText(String.valueOf(r.getLength() + " letters"));
-
-            // Set fonts
-            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), 0x7));
 
             // Return the view
             return itemView;

@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * @since 0.1 2015-06-20.
  */
 public class BlankTileResultFragment extends Fragment {
-    public final static String TAG = "ResultFragment";
+    public final static String TAG = "ResultBlankTileFragment";
 
     // Vars
     String query;
@@ -65,8 +65,6 @@ public class BlankTileResultFragment extends Fragment {
     }
 
 
-
-
     /**
      * When the view gets created
      * @param inflater - the LayoutInflater object
@@ -76,37 +74,27 @@ public class BlankTileResultFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView called");
-
         // Inflate layout
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
-
         // Views
         TextView tv_title,  tv_query, tv_results_title, tv_results;
-
         // Populate the result type list from database
         populateResultTypeList(resultType);
-
         // Populate the list view from resultType list
         populateListView(rootView);
-
         // Control the callbacks from item clicks
         registerClickCallback(rootView);
-
         // Set components
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
-
         // Set text
         String output = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
         tv_query.setText("\"" + query + "\"");
         tv_title.setText(output);
         tv_results.setText(String.valueOf(numResults));
-
         // Set typefaces
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black)); // Bold
-
         // Return the root view
         return rootView;
     }
@@ -140,7 +128,6 @@ public class BlankTileResultFragment extends Fragment {
                 numResults = resultItemList.size();
                 break;
         }
-
     }
 
     /**
@@ -174,37 +161,29 @@ public class BlankTileResultFragment extends Fragment {
          */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-
             Log.i(TAG, "getView() called");
             // Get a handle for the view that we can change without changing the convertView
             View itemView = convertView;
             // The view passed in may be null, just an F.Y.I.
             if (itemView == null) {
-                Log.i(TAG, "Item view is null!");
                 itemView = getActivity().getLayoutInflater().inflate(R.layout.item_result, parent, false);
             }
             // Find Result Type
             ResultItem r = resultItemList.get(position);
-
             // Set components
             ImageView imageView1 = (ImageView) itemView.findViewById(R.id.iv_ic_success);
             TextView tv_numLetters = (TextView) itemView.findViewById(R.id.tv_numLetters);
             TextView tv_result = (TextView) itemView.findViewById(R.id.tv_result);
-
             // Set resources
             imageView1.setImageResource(r.getIconID());
-
             // Set text
             tv_result.setText(String.valueOf(r.getResult()));
             tv_numLetters.setText(String.valueOf(r.getLength() + " letters"));
-
             // Set fonts
-            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), 0x7));
-
+            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_regular));
+            tv_numLetters.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_light)); // Light
             // Return the view
             return itemView;
-
         }
     }
 
@@ -250,4 +229,5 @@ public class BlankTileResultFragment extends Fragment {
                 }
         );
     }
+
 }

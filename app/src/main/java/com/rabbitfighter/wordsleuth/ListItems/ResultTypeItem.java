@@ -47,12 +47,9 @@ public class ResultTypeItem {
     }
 
     // Unused for now, but here if we need it.
-
     public int getIconID() {
         return iconID;
     }
-
-
     public int getIconExpandID() {
         return iconExpandID;
     }
