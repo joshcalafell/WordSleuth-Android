@@ -64,9 +64,6 @@ public class RegularResultFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-
-
-
     /**
      * When the view gets created
      * @param inflater - the LayoutInflater object
@@ -76,7 +73,7 @@ public class RegularResultFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView called");
+        Log.i(TAG, "Regular Result onCreateView() called");
 
         // Inflate layout
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
@@ -86,6 +83,7 @@ public class RegularResultFragment extends Fragment {
 
         // Populate the result type list from database
         populateResultTypeList(resultType);
+        Log.i(TAG, "ResultType: " + resultType);
 
         // Populate the list view from resultType list
         populateListView(rootView);
@@ -215,13 +213,10 @@ public class RegularResultFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-
-            Log.i(TAG, "getView() called");
             // Get a handle for the view that we can change without changing the convertView
             View itemView = convertView;
             // The view passed in may be null, just an F.Y.I.
             if (itemView == null) {
-                Log.i(TAG, "Item view is null!");
                 itemView = getActivity().getLayoutInflater().inflate(R.layout.item_result, parent, false);
             }
             // Find Result Type
@@ -238,10 +233,6 @@ public class RegularResultFragment extends Fragment {
             // Set text
             tv_result.setText(String.valueOf(r.getResult()));
             tv_numLetters.setText(String.valueOf(r.getLength() + " letters"));
-
-            // Set fonts
-            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_regular));
-            tv_numLetters.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_light)); // Light
 
             // Return the view
             return itemView;

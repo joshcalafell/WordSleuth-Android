@@ -78,6 +78,10 @@ public class SearchInputFragment extends Fragment {
         Log.i(TAG, "onPause() called");
         super.onPause();
     }
+
+    /**
+     * Shows the help dialog if enabled
+     */
     public void showHelpDialog() {
         boolean isHelpOn = HelpDialogUtil.isHelpEnabledOnAppStart(this.getActivity());
 

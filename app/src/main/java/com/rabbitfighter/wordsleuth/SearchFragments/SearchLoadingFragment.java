@@ -2,6 +2,7 @@ package com.rabbitfighter.wordsleuth.SearchFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,36 +27,29 @@ public class SearchLoadingFragment extends Fragment {
 
     private final static String TAG = "SearchLoadingFragment";
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        Log.i(TAG, "Search Loading Fragment called");
         super.onCreate(savedInstanceState);
     }
 
     /*
-        The system calls this when it's time for the fragment to draw its user interface
-        for the FIRST TIME. To draw a UI for your fragment, you must return a View from this
-        method that is the root of your fragment's layout. You can return null if the fragment
-        does not provide a UI.
-        */
+    The system calls this when it's time for the fragment to draw its user interface
+    for the FIRST TIME. To draw a UI for your fragment, you must return a View from this
+    method that is the root of your fragment's layout. You can return null if the fragment
+    does not provide a UI.
+    */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // View
         View rootView = inflater.inflate(R.layout.fragment_search_loading, container, false);
-
         // Widgets
-
-        ProgressBar progressBar;
-
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-
+        ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         // Progress bar
         progressBar.setVisibility(ProgressBar.VISIBLE);
-
         // Return the view
         return rootView;
-
     }
 
 }

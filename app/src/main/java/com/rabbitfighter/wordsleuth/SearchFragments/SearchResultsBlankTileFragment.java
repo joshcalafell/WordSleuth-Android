@@ -40,6 +40,8 @@ import java.util.List;
 public class SearchResultsBlankTileFragment extends Fragment {
 
     public final static String TAG = "SearchResultsBlankTileFragment";
+
+    // Result type item list
     private List<ResultTypeItem> resultTypeItemList;
 
     // Query
@@ -51,7 +53,8 @@ public class SearchResultsBlankTileFragment extends Fragment {
     // Vars
     View itemView;
     ResultTypeItem resultType;
-    TextView tv_result_type, tv_title, tv_query, tv_query_title, tv_num_letters_title, tv_number_letters, tv_blank_tiles, tv_blank_tiles_title, tv_num_matches, tv_num_matches_title;
+    TextView tv_result_type, tv_title, tv_query, tv_query_title, tv_num_letters_title,
+             tv_number_letters, tv_blank_tiles, tv_blank_tiles_title, tv_num_matches;
     View rootView;
 
     /**
@@ -96,14 +99,12 @@ public class SearchResultsBlankTileFragment extends Fragment {
         tv_blank_tiles_title = (TextView) rootView.findViewById(R.id.tv_count_wildcard_title);
         tv_blank_tiles= (TextView) rootView.findViewById(R.id.tv_wildcard_number);
 
-
         // Set the text fields for query && num letters
         tv_query.setText("\"" +query+ "\"");
         tv_number_letters.setText(query.length() + " letters");
         tv_blank_tiles.setText(String.valueOf(new Entry(query).getCount_blank_tiles()));
 
         // Fonts
-
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
         tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
         tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
@@ -179,7 +180,7 @@ public class SearchResultsBlankTileFragment extends Fragment {
                 tv_result_type.setText("Anagrams");
             } else if (position == 1) {
                 tv_result_type.setText("Subwords");
-            } else if (position == 3) {
+            } else if (position == 2) {
                 tv_result_type.setText("Combinations");
             } else {
                 Log.i("BlankTile", "Type not found");

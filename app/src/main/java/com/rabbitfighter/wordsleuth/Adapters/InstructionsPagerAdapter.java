@@ -35,7 +35,6 @@ public class InstructionsPagerAdapter extends FragmentStatePagerAdapter {
         myContext = context;
     }
 
-
     /**
      * Returns the fragment associated with the specified position.
      */

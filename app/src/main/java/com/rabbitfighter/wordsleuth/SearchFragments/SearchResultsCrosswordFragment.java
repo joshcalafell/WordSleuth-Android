@@ -113,7 +113,6 @@ public class SearchResultsCrosswordFragment extends Fragment {
         tv_count_wildcards.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
         tv_count_wildcards_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
 
-
          /* Return the root view */
         return rootView;
 

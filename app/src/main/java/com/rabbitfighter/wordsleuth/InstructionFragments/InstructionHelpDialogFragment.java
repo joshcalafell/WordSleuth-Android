@@ -17,7 +17,7 @@ import com.rabbitfighter.wordsleuth.R;
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
  * @version 0.2 (pre-beta)
  * @link https://github.com/rabbitfighter81/SwipeNavExample (Temporary)
- * @see 'http://developer.android.com/reference/android/database/sqlite/package-summary.html'
+ * @see 'Help dialogs'
  * @since 0.1 2015-07-17.
  */
 public class InstructionHelpDialogFragment extends DialogFragment {

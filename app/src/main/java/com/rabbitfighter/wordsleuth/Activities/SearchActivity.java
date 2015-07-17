@@ -45,11 +45,6 @@ public class SearchActivity extends ActionBarActivity {
     // Debugging TAG
     private static final String TAG = "SearchActivity";
 
-    private static final int REGULAR_SEARCH = 0;
-    private static final int BLANK_TILE = 1;
-    private static final int CROSSWORD_SEARCH = 2;
-
-
     /* ------------ */
     /* --- Vars---- */
     /* ------------ */
@@ -238,17 +233,17 @@ public class SearchActivity extends ActionBarActivity {
         // Regular search
         if (!query.contains("*") && !query.contains("-") && !query.contains("_")) {
             Log.i(TAG, "Regular search detected");
-            this.setSearchType(0);
+            this.setSearchType(BoundSearchService.REGULAR_SEARCH);
         }
         // Wildcard search
         if (query.contains("*") && !query.contains("-") && !query.contains("_")) {
             Log.i(TAG, "Blank Tile search detected");
-            this.setSearchType(1);
+            this.setSearchType(BoundSearchService.BLANK_TILE_SEARCH);
         }
         // Crossword search
         if ((query.contains("-") || query.contains("_")) && !query.contains("*")) {
             Log.i(TAG, "Crossword search detected");
-            this.setSearchType(2);
+            this.setSearchType(BoundSearchService.CROSSWORD_SEARCH);
         }
         // Return the search type
         return this.getSearchType();
@@ -294,6 +289,11 @@ public class SearchActivity extends ActionBarActivity {
                 } else if ((new Entry(query).getCount_blank_tiles() > 2)) {
                     Log.i(TAG, "Cannot exceed two blank tiles");
                     Message.msgLong(getApplicationContext(), "Cannot exceed two blank tiles");
+                } else if (((new Entry(query).getCount_blank_tiles()) <= 2
+                        && (new Entry(query).getCount_blank_tiles() > 0))
+                        && query.length() > 12) {
+                    Log.i(TAG, "Cannot exceed twelve letters in a blank tile search");
+                    Message.msgLong(getApplicationContext(), "Cannot exceed twelve letters in a blank tile search");
                 } else {
                     // Perform the search
                     performSearch(query);

@@ -92,14 +92,11 @@ public class SearchResultsRegularFragment extends Fragment {
         tv_number_letters = (TextView) rootView.findViewById(R.id.tv_length);
         tv_num_letters_title = (TextView) rootView.findViewById(R.id.tv_length_title);
 
-
         // Set the text fields for query && num letters
         tv_query.setText("\"" + query + "\"");
         tv_number_letters.setText(query.length() + " letters");
 
-
         // Fonts
-
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
         tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
         tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); // Light
@@ -173,7 +170,7 @@ public class SearchResultsRegularFragment extends Fragment {
                 tv_result_type.setText("Anagrams");
             } else if (position == 1) {
                 tv_result_type.setText("Subwords");
-            } else if (position == 3) {
+            } else if (position == 2) {
                 tv_result_type.setText("Combinations");
             } else {
                 Log.i("Regular", "Type not found");

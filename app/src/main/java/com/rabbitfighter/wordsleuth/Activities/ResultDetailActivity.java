@@ -64,8 +64,7 @@ public class ResultDetailActivity extends ActionBarActivity {
          Orientation change (TODO for other devs: for now, don't worry about orientation stuff.)
          -- It's just here in case we need it.
          -- If you wanted to do something when the orientation is set to landscape, do it here -->
-          */
-
+        */
         if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE) {
             return;
@@ -75,8 +74,6 @@ public class ResultDetailActivity extends ActionBarActivity {
         handleIntent();
 
         /* --- View stuff --- */
-
-
         // Title
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_result_title = (TextView) findViewById(R.id.tv_result_title);
@@ -100,7 +97,6 @@ public class ResultDetailActivity extends ActionBarActivity {
         tv_words_title.setTypeface(RobotoFontsHelper.getTypeface(getApplicationContext(), RobotoFontsHelper.roboto_regular));
         tv_words_points.setTypeface(RobotoFontsHelper.getTypeface(getApplicationContext(), RobotoFontsHelper.roboto_regular));
 
-
         /* Set text */
         tv_title.setText("Result Detail");
         tv_result.setText(result.getWord());
@@ -115,7 +111,6 @@ public class ResultDetailActivity extends ActionBarActivity {
             tv_words_points.setText("N/A");
             tv_length.setText(String.valueOf(result.getNumLetters() + " letters"));
         }
-
 
         /*
         Keyboard popping up bug fix
