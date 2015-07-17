@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.rabbitfighter.wordsleuth.AboutScreen.AboutActivity;
 import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchInputFragment;
@@ -175,8 +176,7 @@ public class SearchActivity extends ActionBarActivity {
 
     /**
      * Menu items selected
-     * @param item - The me
-    }nu item passed in.
+     * @param item - The menu item passed in.
      * @return false to allow normal menu processing to
      *         proceed, true to consume it here.
      *         <- From the notes in superclass' docs.
@@ -189,11 +189,18 @@ public class SearchActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.search_bar) {
-            return true;
+        // Handle item selection
+        switch (id) {
+            case R.id.about_option:
+                // Josh this is your favorite list stuff.
+                Intent aboutIntent = new Intent(this, AboutActivity.class);
+
+                startActivity(aboutIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     /* ---------------- */

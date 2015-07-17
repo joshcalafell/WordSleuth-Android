@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.rabbitfighter.wordsleuth.Adapters.InstructionsPagerAdapter;
-import com.rabbitfighter.wordsleuth.InstructionFragments.InstructionHelpDialogFragment;
 import com.rabbitfighter.wordsleuth.R;
 
 /**

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.rabbitfighter.wordsleuth.Activities.InstructionActivity;
@@ -16,7 +17,7 @@ import com.rabbitfighter.wordsleuth.Utils.HelpDialogUtil;
  *
  * @author Joshua Michael Waggoner <rabbitfighter@cryptolab.net>
  * @author Stephen Chavez <stephen.chavez12@gmail.com>
- * @version 0.2 (pre-beta)
+ * @version 0.3 (pre-beta)
  * @link https://github.com/rabbitfighter81/WordSleuth-Android
  * @see 'Splash screens, Async tasks'
  * @since on 2015-05-20.
@@ -45,33 +46,41 @@ public class SplashActivity extends Activity {
     protected void onPause() {
         // Destroy assets
         super.onPause();
-        //finish();
-    }
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume() called");
-        setContentView(R.layout.splash);
-        new AsyncSplashTask().execute();
-        super.onResume();
-    }
-
-    @Override
-    protected void onRestart() {
-        Log.d(TAG, "onResume() called");
-        setContentView(R.layout.splash);
-        new AsyncSplashTask().execute();
-        super.onRestart();
-    }
-    @Override
-    protected void onDestroy() {
         finish();
-        super.onDestroy();
     }
 
     /**
-     * This is to make the searches bound service asynchronous.
+     * Show the splash screen
      */
+    public void showSplashScreen() {
+
+                        try {
+                            SystemClock.sleep(2000);
+                        } catch (Exception e) {
+                            Log.i(TAG, "Splash failed...");
+                        } finally {
+                            Log.i(TAG, "Splash screen finished");
+                        }
+    }
+
+    /**
+     * Start the new activity
+     */
+    public void startNewActivity() {
+        final boolean isHelpOn = HelpDialogUtil.isHelpEnabledOnAppStart(this);
+
+        if(isHelpOn) {
+            Intent instructionStart = new Intent(this, InstructionActivity.class);
+
+            // For future use when we need to check if we need to display a dialog.
+            instructionStart.putExtra("isHelpOn", isHelpOn);
+            startActivity(instructionStart);
+        } else {
+            Intent searchStart = new Intent(this, SearchActivity.class);
+            startActivity(searchStart);
+        }
+    }
+
     private class AsyncSplashTask extends AsyncTask<Void, Void, Void> {
         /**
          * 1) Pre execution
@@ -97,53 +106,6 @@ public class SplashActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             startNewActivity();
-        }
-    }
-
-    /**
-     * Show the splash screen
-     */
-    public void showSplashScreen() {
-        /*
-        Runnable thread for waiting for the splash screen
-        while not hogging resources.
-         */
-        Thread myThread;
-        myThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                long futureTime = System.currentTimeMillis() + 2000; // 2 seconds
-                while (System.currentTimeMillis() < futureTime) {
-                    synchronized (this) {
-                        try {
-                            wait(futureTime-System.currentTimeMillis());
-                        } catch (Exception e) {
-                            Log.i(TAG, "Splash failed...");
-                        } finally {
-                            Log.i(TAG, "Splash screen finished");
-                        }
-                    }
-                }
-            }
-        });
-        myThread.start();
-    }
-
-
-
-    /**
-     * Start the new activity
-     */
-    public void startNewActivity() {
-
-        final boolean isHelpOn = HelpDialogUtil.isHelpEnabledOnAppStart(this);
-
-        if(isHelpOn) {
-            Intent instructionStart = new Intent(this, InstructionActivity.class);
-            startActivity(instructionStart);
-        } else {
-            Intent searchStart = new Intent(this, SearchActivity.class);
-            startActivity(searchStart);
         }
     }
 
