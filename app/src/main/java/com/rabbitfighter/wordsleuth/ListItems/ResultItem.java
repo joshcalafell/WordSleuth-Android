@@ -57,11 +57,9 @@ public class ResultItem {
     public void setIconID(int iconID) {
         this.iconID = iconID;
     }
-
     public int getIconExpandID() {
         return iconExpandID;
     }
-
     public void setIconExpandID(int iconExpandID) {
         this.iconExpandID = iconExpandID;
     }
