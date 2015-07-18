@@ -3,6 +3,8 @@ package com.rabbitfighter.wordsleuth.AboutScreen;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 
 import android.media.AudioManager;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 import java.io.IOException;
 
@@ -31,6 +34,8 @@ import java.io.IOException;
 public class AboutActivity extends ActionBarActivity {
     public final static String TAG = "AboutActivity";
     private MediaPlayer mp;
+    String outText = "";
+    TextView tv_names;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +51,28 @@ public class AboutActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
 
+        tv_names = (TextView)findViewById(R.id.Names);
+
+        /* Set typefaces */
+        tv_names.setTypeface(RobotoFontsHelper.getTypeface(this, RobotoFontsHelper.roboto_regular));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart() called");
-        startMusic();
+        startMusicThread();
+        startAnim();
+    }
+
+    private void startMusicThread() {
+        MusicThread musicThread = new MusicThread();
+        musicThread.start();
+    }
+
+    private void startAnim() {
+        AnimThread animWork = new AnimThread();
+        animWork.start();
     }
 
     @Override
@@ -72,24 +92,68 @@ public class AboutActivity extends ActionBarActivity {
         super.onStop();
     }
 
-    private void startAnim() {
-        String names = "ertgd";
-        TextView txtview1 = (TextView)findViewById(R.id.Names);
+    private void updateResults(CharSequence cs) {
+        tv_names.append(cs);
     }
 
-    private void startMusic() {
-        mp = new MediaPlayer();
-        try {
-            AssetFileDescriptor descriptor = getAssets().openFd("music/tatu-dangerous_and_moving.mid");
-            mp.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
-            descriptor.close();
+    public class MusicThread extends Thread {
+        private static final String TAG = "MusicThread";
 
-            mp.prepare();
-            mp.setVolume(1f, 1f);
-            mp.setLooping(true);
-            mp.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+        @Override
+        public void run() {
+            Log.v(TAG, "Music Thread");
+
+            startMusic();
+        }
+
+        private void startMusic() {
+            mp = new MediaPlayer();
+            try {
+                AssetFileDescriptor descriptor = getAssets().openFd("music/tatu-dangerous_and_moving.mid");
+                mp.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+                descriptor.close();
+
+                mp.prepare();
+                mp.setVolume(1f, 1f);
+                mp.setLooping(true);
+                mp.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public class AnimThread extends Thread {
+        private static final String TAG = "AnimThread";
+        private final String names = "Coded by Stephen Chavez and Josh\n This is a test of brain power..." +
+                "\n\n\n\n" +
+                "....................";
+        private CharSequence inWorkText;
+
+        @Override
+        public void run() {
+            Log.v(TAG, "doing work in Anim Thread");
+            for (int i = 0; i < names.length(); i++) {
+
+
+                inWorkText = names.substring(i, i + 1);
+
+                publishProgress(inWorkText);
+                SystemClock.sleep(250);
+            }
+        }
+
+        private void publishProgress(final CharSequence newCS) {
+            Log.v(TAG, "reporting back from the Anim Thread");
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    updateResults(newCS);
+                }
+            });
         }
     }
+
 } // EOF

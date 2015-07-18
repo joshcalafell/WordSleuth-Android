@@ -29,6 +29,7 @@ public class SplashActivity extends Activity {
 
     /**
      * On creation
+     *
      * @param savedInstanceState
      */
     @Override
@@ -54,13 +55,13 @@ public class SplashActivity extends Activity {
      */
     public void showSplashScreen() {
 
-                        try {
-                            SystemClock.sleep(2000);
-                        } catch (Exception e) {
-                            Log.i(TAG, "Splash failed...");
-                        } finally {
-                            Log.i(TAG, "Splash screen finished");
-                        }
+        try {
+            SystemClock.sleep(2000);
+        } catch (Exception e) {
+            Log.i(TAG, "Splash failed...");
+        } finally {
+            Log.i(TAG, "Splash screen finished");
+        }
     }
 
     /**
@@ -69,7 +70,7 @@ public class SplashActivity extends Activity {
     public void startNewActivity() {
         final boolean isHelpOn = HelpDialogUtil.isHelpEnabledOnAppStart(this);
 
-        if(isHelpOn) {
+        if (isHelpOn) {
             Intent instructionStart = new Intent(this, InstructionActivity.class);
 
             // For future use when we need to check if we need to display a dialog.
@@ -89,8 +90,10 @@ public class SplashActivity extends Activity {
         protected void onPreExecute() {
             Log.i(TAG, "Program started.");
         }
+
         /**
          * 2) Async
+         *
          * @param params
          * @return
          */
@@ -99,8 +102,10 @@ public class SplashActivity extends Activity {
             showSplashScreen();
             return null;
         }
+
         /**
          * 3) Post execute
+         *
          * @param result
          */
         @Override
