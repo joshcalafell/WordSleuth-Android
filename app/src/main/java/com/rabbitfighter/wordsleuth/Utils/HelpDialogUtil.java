@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.rabbitfighter.wordsleuth.R;
-import com.rabbitfighter.wordsleuth.SearchFragments.SearchInputFragment;
-import com.rabbitfighter.wordsleuth.Splash.SplashActivity;
 
 /**
  * Created by stephen on 7/14/15.

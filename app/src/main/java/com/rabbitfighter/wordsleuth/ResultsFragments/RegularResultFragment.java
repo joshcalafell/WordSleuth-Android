@@ -21,6 +21,8 @@ import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SQLite Database. There are many like it but this one is mine...
@@ -43,6 +45,9 @@ public class RegularResultFragment extends Fragment {
     ArrayList<ResultItem> resultItemList;
     Bundle bundle;
     int numResults;
+    int sortType;
+
+    //int searchType;
 
     /**
      * On create
@@ -53,15 +58,22 @@ public class RegularResultFragment extends Fragment {
         // Get query from bundle
         if (savedInstanceState == null) {
             bundle = getArguments();
-            dbAdapter = new ResultsDbAdapter(getActivity());
-            query =  bundle.getString("query").toString();
-            Log.i(TAG, query);
-            resultType = bundle.getString("resultType").toString();
-            Log.i(TAG, resultType);
             resultItemList = new ArrayList<>();
+            dbAdapter = new ResultsDbAdapter(getActivity());
+            query = bundle.getString("query").toString();
+            resultType = bundle.getString("resultType").toString();
+            sortType = bundle.getInt("sortType");
+            numResults = 0;
+        } else {
+            bundle = savedInstanceState;
+            resultItemList = new ArrayList<>();
+            dbAdapter = new ResultsDbAdapter(getActivity());
+            query = bundle.getString("query").toString();
+            resultType = bundle.getString("resultType").toString();
+            sortType = bundle.getInt("sortType");
             numResults = 0;
         }
-        super.onCreate(savedInstanceState);
+        super.onCreate(bundle);
     }
 
     /**
@@ -82,7 +94,8 @@ public class RegularResultFragment extends Fragment {
         TextView tv_title,  tv_query, tv_results_title, tv_results, tv_query_title;
 
         // Populate the result type list from database
-        populateResultTypeList(resultType);
+        populateResultItemList(resultType, sortType);
+
         Log.i(TAG, "ResultType: " + resultType);
 
         // Populate the list view from resultType list
@@ -105,9 +118,7 @@ public class RegularResultFragment extends Fragment {
         tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
 
         // Set text
-        String output = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
         tv_query.setText("\"" + query + "\"");
-        tv_title.setText(output);
         tv_results.setText(String.valueOf(numResults));
 
         // Set typefaces
@@ -118,60 +129,29 @@ public class RegularResultFragment extends Fragment {
     }
 
     /**
-     * Populate the result types list from database calls.
+     * Populate the result item lists.
+     * @param sortType - the sortType
      */
-    private void populateResultTypeList(String resultType) {
+    private void populateResultItemList(String resultType, int sortType) {
         Log.i(TAG, "populateResultTypeList() called");
         results = new ArrayList<>();
         switch (resultType.toString()) {
             case "anagram":
-                results = dbAdapter.getAnagrams();
+                results = dbAdapter.getAnagrams(sortType);
                 for (int i = 0; i < results.size(); i++) {
                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }
                 numResults = resultItemList.size();
                 break;
             case "subword":
-                results = dbAdapter.getSubwords();
+                results = dbAdapter.getSubwords(sortType);
                 for (int i = 0; i < results.size(); i++) {
                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }
                 numResults = resultItemList.size();
                 break;
             case "combo":
-                results = dbAdapter.getCombos();
-                for (int i = 0; i < results.size(); i++) {
-                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-                }
-                numResults = resultItemList.size();
-                break;
-        }
-
-    }
-
-    /**
-     * Populate the result types list from database calls.
-     */
-    private void populateResultTypeByScoreScrabble(String resultType) {
-        Log.i(TAG, "populateResultTypeList() called");
-        results = new ArrayList<>();
-        switch (resultType.toString()) {
-            case "anagram":
-                results = dbAdapter.getAnagramsByScoreScrabble();
-                for (int i = 0; i < results.size(); i++) {
-                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-                }
-                numResults = resultItemList.size();
-                break;
-            case "subword":
-                results = dbAdapter.getSubwordsByScoreScrabble();
-                for (int i = 0; i < results.size(); i++) {
-                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-                }
-                numResults = resultItemList.size();
-                break;
-            case "combo":
-                results = dbAdapter.getCombosByScoreScrabble();
+                results = dbAdapter.getCombos(sortType);
                 for (int i = 0; i < results.size(); i++) {
                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }
@@ -282,4 +262,39 @@ public class RegularResultFragment extends Fragment {
                 }
         );
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+    }
+
+    /* --- Getters/Setters --- */
+
+
+
+
 }

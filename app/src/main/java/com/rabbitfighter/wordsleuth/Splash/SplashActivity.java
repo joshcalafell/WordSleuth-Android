@@ -56,7 +56,7 @@ public class SplashActivity extends Activity {
     public void showSplashScreen() {
 
         try {
-            SystemClock.sleep(2000);
+            SystemClock.sleep(3000);
         } catch (Exception e) {
             Log.i(TAG, "Splash failed...");
         } finally {

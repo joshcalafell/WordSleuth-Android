@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
 import com.rabbitfighter.wordsleuth.Entries.Entry;
-import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.ListItems.ResultTypeItem;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
@@ -180,10 +179,6 @@ public class SearchResultsBlankTileFragment extends Fragment {
                 tv_result_type.setText("Anagrams");
             } else if (position == 1) {
                 tv_result_type.setText("Subwords");
-            } else if (position == 2) {
-                tv_result_type.setText("Combinations");
-            } else {
-                Log.i("BlankTile", "Type not found");
             }
 
             tv_num_matches.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Light
@@ -209,7 +204,8 @@ public class SearchResultsBlankTileFragment extends Fragment {
         Bundle b = new Bundle();
         b.putString("query", query);
         b.putString("resultType", resultType);
-        b.putString("searchType", "blankTileSearch");
+        b.putString("searchType", "regularSearch");
+        b.putInt("sortType", 0);
         intent.putExtras(b);
         startActivity(intent);
 
@@ -222,11 +218,9 @@ public class SearchResultsBlankTileFragment extends Fragment {
         if (resultTypeItemList == null || resultTypeItemList.isEmpty()) {
             resultTypeItemList.add(new ResultTypeItem("anagram", dbAdapter.getNumberAnagrams(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
             resultTypeItemList.add(new ResultTypeItem("subword", dbAdapter.getNumberSubwords(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-            resultTypeItemList.add(new ResultTypeItem("combo", dbAdapter.getNumberCombos(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
         } else {
             resultTypeItemList.get(0).setNumMatches(dbAdapter.getNumberAnagrams());
             resultTypeItemList.get(1).setNumMatches(dbAdapter.getNumberSubwords());
-            resultTypeItemList.get(2).setNumMatches(dbAdapter.getNumberCombos());
         }
     }
 

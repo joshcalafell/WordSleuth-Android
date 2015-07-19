@@ -1,24 +1,17 @@
 package com.rabbitfighter.wordsleuth.AboutScreen;
 
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
-
-import java.io.IOException;
 
 /**
  * App instructions. Five fragments

@@ -85,7 +85,6 @@ public class Entry extends Word {
                 case 'z': this.count_Z++; break;
                 case '*': this.count_blank_tiles++; break;
                 case '-': this.count_wildcards++; break;
-                case '_': this.count_wildcards++; break;
                 default: Log.e(TAG, "Something went wrong"); break;
             }
             charMap.put('A', this.getCount_A());
@@ -116,7 +115,6 @@ public class Entry extends Word {
             charMap.put('Z', this.getCount_Z());
             charMap.put('*', this.getCount_blank_tiles());
             charMap.put('-', this.getCount_wildcards());
-            charMap.put('_', this.getCount_wildcards());
 
         }
         return charMap;

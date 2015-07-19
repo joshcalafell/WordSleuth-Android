@@ -102,7 +102,7 @@ public class SearchResultsCrosswordFragment extends Fragment {
         // Set the text fields for query && num letters
         tv_query.setText("\"" +query+ "\"");
         tv_number_letters.setText(query.length() + " letters");
-        tv_count_wildcards.setText(String.valueOf(new Entry(query).getCount_wildcards()));
+        tv_count_wildcards.setText(String.valueOf(new Entry(query).getCount_blank_tiles()));
 
         // Fonts
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
@@ -205,6 +205,7 @@ public class SearchResultsCrosswordFragment extends Fragment {
         b.putString("query", query);
         b.putString("resultType", resultType);
         b.putString("searchType", "crosswordSearch");
+        b.putInt("sortType", 0);
         intent.putExtras(b);
         startActivity(intent);
 

@@ -125,7 +125,6 @@ public class BoundSearchService extends Service  {
     }
 
     /**
-     * TODO: Search nneds to be rewritten!
      * @param query -  the query passed in, which has been sanitized already.
      */
     public void search(String query) {
@@ -138,6 +137,7 @@ public class BoundSearchService extends Service  {
 
         // Set the query
         this.setQuery(new Entry(query));
+
 
         // Set the array lists
         resetLists();
@@ -157,13 +157,11 @@ public class BoundSearchService extends Service  {
             } else if (this.getSearchType()==BLANK_TILE_SEARCH) {
                 Log.i(TAG, "Blank Tile Search results are being processed...");
             }
-
             // Reset matches
             this.setMatches(null);
-            // This will give us all subwords. The anagrams will just be subwords that have the
-            // length as the query...
             /**
-             * Start the db query
+             * Start the db query. This will give us all subwords. The anagrams will just
+             * be subwords that have the length as the query...
              */
             this.setMatches(
                     this.getHelper().wildcardSearch(
@@ -180,20 +178,19 @@ public class BoundSearchService extends Service  {
                             this.getQuery().getCount_U(), this.getQuery().getCount_V(),
                             this.getQuery().getCount_W(), this.getQuery().getCount_X(),
                             this.getQuery().getCount_Y(), this.getQuery().getCount_Z(),
-                            this.getQuery().getCount_wildcards()
+                            this.getQuery().getCount_blank_tiles()
                     )
 
             );
-
             // Make a copy of the matches
             this.setMatchesCopy(this.getMatches());
-
             /**
              * Get the subwords and anagrams
              */
             for (Result result : this.getMatches()) {
                 // If it's the same length as the query, it's an anagram
-                if (result.getNumLetters() == this.getQuery().getNumLetters() && !result.getWord().equals(this.getQuery().getWord())) {
+                if (result.getNumLetters() == this.getQuery().getNumLetters()       // 7==7
+                        && !result.getWord().equals(this.getQuery().getWord())) {   // word != query
                     this.getAnagrams().add(result);
                     long id = this.getDbAdapter().insertData(
                             "anagram",
@@ -213,7 +210,7 @@ public class BoundSearchService extends Service  {
                 // --- 1) It must be less length
                 // --- 2) it must be a subword
                 // ------------------------------------
-                } else {
+                } else if (this.getQuery().getNumLetters() > result.getNumLetters()){
                     this.getSubwords().add(result);
                     long id = this.getDbAdapter().insertData(
                             "subword",
@@ -300,8 +297,7 @@ public class BoundSearchService extends Service  {
     private void resetLists() {
         List<ArrayList<Result>> lists = new ArrayList<>();
         lists.add(this.getAnagrams()); lists.add(this.getSubwords());
-        lists.add(this.getMatches());
-        lists.add(this.getCombos());
+        lists.add(this.getMatches());  lists.add(this.getCombos());
         // Clear lists
         for (ArrayList<Result> list : lists) {
             list.clear();
@@ -344,6 +340,9 @@ public class BoundSearchService extends Service  {
         }
     }
 
+    /* ----------------------- */
+    /* --- Getters/Setters --- */
+    /* ----------------------- */
     public ArrayList<Result> getAnagrams() {
         return anagrams;
     }

@@ -1,5 +1,9 @@
 package com.rabbitfighter.wordsleuth.ResultsFragments;
 
+/**
+ * Created by rabbitfighter on 7/19/15.
+ */
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,8 +19,8 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Activities.ResultDetailActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
-import com.rabbitfighter.wordsleuth.ListItems.ResultItem;
 import com.rabbitfighter.wordsleuth.Entries.Result;
+import com.rabbitfighter.wordsleuth.ListItems.ResultItem;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
@@ -33,7 +37,7 @@ import java.util.ArrayList;
  * @since 0.1 2015-06-20.
  */
 public class CrosswordResultFragment extends Fragment {
-    public final static String TAG = "ResultCrosswordFragment";
+    public final static String TAG = "ResultFragment";
 
     // Vars
     String query;
@@ -43,6 +47,9 @@ public class CrosswordResultFragment extends Fragment {
     ArrayList<ResultItem> resultItemList;
     Bundle bundle;
     int numResults;
+    int sortType;
+
+    //int searchType;
 
     /**
      * On create
@@ -53,15 +60,24 @@ public class CrosswordResultFragment extends Fragment {
         // Get query from bundle
         if (savedInstanceState == null) {
             bundle = getArguments();
-            dbAdapter = new ResultsDbAdapter(getActivity());
-            query =  bundle.getString("query").toString();
-            Log.i(TAG, query);
-            resultType = bundle.getString("resultType").toString();
-            Log.i(TAG, resultType);
             resultItemList = new ArrayList<>();
+            dbAdapter = new ResultsDbAdapter(getActivity());
+            query = bundle.getString("query").toString();
+            resultType = bundle.getString("resultType").toString();
+            sortType = bundle.getInt("sortType");
             numResults = 0;
+            super.onCreate(savedInstanceState);
+        } else {
+            bundle = savedInstanceState;
+            resultItemList = new ArrayList<>();
+            dbAdapter = new ResultsDbAdapter(getActivity());
+            query = bundle.getString("query").toString();
+            resultType = bundle.getString("resultType").toString();
+            sortType = bundle.getInt("sortType");
+            numResults = 0;
+            super.onCreate(bundle);
         }
-        super.onCreate(savedInstanceState);
+
     }
 
     /**
@@ -73,54 +89,80 @@ public class CrosswordResultFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "Crossword Result Fragment onCreateView() called");
+        Log.i(TAG, "Regular Result onCreateView() called");
+
         // Inflate layout
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
+
         // Views
-        TextView tv_title, tv_query_title,  tv_query, tv_results_title, tv_results;
+        TextView tv_title,  tv_query, tv_results_title, tv_results, tv_query_title;
+
         // Populate the result type list from database
-        populateResultTypeList(resultType);
+        populateResultItemList(resultType, sortType);
+
+        Log.i(TAG, "ResultType: " + resultType);
+
         // Populate the list view from resultType list
         populateListView(rootView);
+
         // Control the callbacks from item clicks
         registerClickCallback(rootView);
+
         // Set components
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
         tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
         tv_results_title = (TextView) rootView.findViewById(R.id.tv_results_title);
+
+        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
+        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+
         // Set text
-        String output = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
         tv_query.setText("\"" + query + "\"");
-        tv_title.setText(output);
         tv_results.setText(String.valueOf(numResults));
+
         // Set typefaces
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black)); // Bold
-        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
-        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
-        tv_results.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
-        tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_light)); // Bold
+
         // Return the root view
         return rootView;
     }
 
     /**
-     * Populate the result types list from database calls.
+     * Populate the result item lists.
+     * @param sortType - the sortType
      */
-    private void populateResultTypeList(String resultType) {
+    private void populateResultItemList(String resultType, int sortType) {
         Log.i(TAG, "populateResultTypeList() called");
         results = new ArrayList<>();
         switch (resultType.toString()) {
-            // TODO: Find a better way of doing this.
-            case "matche":
-                results = dbAdapter.getAnagrams();
+            case "anagram":
+                results = dbAdapter.getAnagrams(sortType);
+                for (int i = 0; i < results.size(); i++) {
+                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+                }
+                numResults = resultItemList.size();
+                break;
+            case "subword":
+                results = dbAdapter.getSubwords(sortType);
+                for (int i = 0; i < results.size(); i++) {
+                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+                }
+                numResults = resultItemList.size();
+                break;
+            case "combo":
+                results = dbAdapter.getCombos(sortType);
                 for (int i = 0; i < results.size(); i++) {
                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }
                 numResults = resultItemList.size();
                 break;
         }
+
     }
 
     /**
@@ -154,6 +196,7 @@ public class CrosswordResultFragment extends Fragment {
          */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             // Get a handle for the view that we can change without changing the convertView
             View itemView = convertView;
             // The view passed in may be null, just an F.Y.I.
@@ -162,20 +205,22 @@ public class CrosswordResultFragment extends Fragment {
             }
             // Find Result Type
             ResultItem r = resultItemList.get(position);
+
             // Set components
             ImageView imageView1 = (ImageView) itemView.findViewById(R.id.iv_ic_success);
             TextView tv_numLetters = (TextView) itemView.findViewById(R.id.tv_numLetters);
             TextView tv_result = (TextView) itemView.findViewById(R.id.tv_result);
+
             // Set resources
             imageView1.setImageResource(r.getIconID());
+
             // Set text
             tv_result.setText(String.valueOf(r.getResult()));
             tv_numLetters.setText(String.valueOf(r.getLength() + " letters"));
-            // Set fonts
-            tv_result.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_regular));
-            tv_numLetters.setTypeface(RobotoFontsHelper.getTypeface(getContext(), RobotoFontsHelper.roboto_light)); // Light
+
             // Return the view
             return itemView;
+
         }
     }
 
@@ -221,4 +266,39 @@ public class CrosswordResultFragment extends Fragment {
                 }
         );
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+    }
+
+    /* --- Getters/Setters --- */
+
+
+
+
 }

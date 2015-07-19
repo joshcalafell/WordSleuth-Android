@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
-import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.ListItems.ResultTypeItem;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
@@ -200,6 +199,7 @@ public class SearchResultsRegularFragment extends Fragment {
         b.putString("query", query);
         b.putString("resultType", resultType);
         b.putString("searchType", "regularSearch");
+        b.putInt("sortType", 0);
         intent.putExtras(b);
         startActivity(intent);
 

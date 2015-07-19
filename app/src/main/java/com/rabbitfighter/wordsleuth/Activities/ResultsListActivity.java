@@ -13,10 +13,9 @@ import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.ResultsFragments.BlankTileResultFragment;
 import com.rabbitfighter.wordsleuth.ResultsFragments.CrosswordResultFragment;
 import com.rabbitfighter.wordsleuth.ResultsFragments.RegularResultFragment;
-import com.rabbitfighter.wordsleuth.SearchFragments.SearchResultsRegularFragment;
+import com.rabbitfighter.wordsleuth.Utils.Message;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -35,11 +34,25 @@ public class ResultsListActivity extends ActionBarActivity {
 
     // Vars
     Fragment fragment;
+    Fragment f;
     Bundle bundle;
     Intent intent;
     String resultType;
     String query;
     String searchType;
+    int sortType;
+    public static Map<Integer, String> sortMap;
+    static {
+        sortMap = new HashMap<>();
+        sortMap.put(0, "Ordered by length (low to high)");    // length ASC
+        sortMap.put(1, "Ordered by length (high to low)");    // length DESC
+        sortMap.put(2, "Ordered by Scrabble(TM) points (low to high)");  // ...
+        sortMap.put(3, "Ordered by Scrabble(TM) points (high to low)");
+        sortMap.put(4, "Ordered by Words(TM) points (low to high)");
+        sortMap.put(5, "Ordered by Words(TM) points (high to low)");
+    }
+
+
 
     /* ------------------------- */
     /* --- @Override methods --- */
@@ -59,13 +72,48 @@ public class ResultsListActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             intent = getIntent();
             bundle = intent.getExtras();
-            resultType = bundle.get("resultType").toString();
-            searchType = bundle.get("searchType").toString();
-            Log.i(TAG, resultType);
             query = bundle.get("query").toString();
-            Log.i(TAG, query);
+            searchType = bundle.get("searchType").toString();
+            resultType = bundle.get("resultType").toString();
+            sortType = Integer.valueOf(bundle.get("sortType").toString());
+        } else {
+            bundle = savedInstanceState;
+            query = bundle.get("query").toString();
+            searchType = bundle.get("searchType").toString();
+            resultType = bundle.get("resultType").toString();
+            sortType = Integer.valueOf(bundle.get("sortType").toString());
         }
-        Log.i(TAG, "Search type: " + bundle.get("searchType").toString());
+
+        /*
+        Intent i = new Intent();
+        Bundle b = new Bundle();
+        b.putString("query", query);
+        b.putString("searchType", searchType);
+        b.putString("resultType", resultType);
+        b.putInt("sortType", sortType);
+        i.putExtras(b);
+        // Transition to results fragment
+        */
+        transitionToResultFragment(getIntent());
+
+        // Action bar stuff
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.icon);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+    }
+
+
+    /**
+     * Transition to the correct results fragment
+     */
+    private void transitionToResultFragment(Intent i) {
+        bundle = i.getExtras();
+        query = bundle.get("query").toString();
+        searchType = bundle.get("searchType").toString();
+        resultType = bundle.get("resultType").toString();
+        sortType = Integer.valueOf(bundle.get("sortType").toString());
+
+        Log.i(TAG, searchType + " " + resultType + " " + sortType);
 
         // During initial setup, plug in the details fragment.
         if (searchType.compareTo("regularSearch")==0) {
@@ -81,10 +129,7 @@ public class ResultsListActivity extends ActionBarActivity {
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
 
-        // Action bar stuff
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.icon);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
     }
 
     /**
@@ -117,12 +162,54 @@ public class ResultsListActivity extends ActionBarActivity {
         //noinspection Simplifiadid not call through to super.onCreate()bleIfStatement
         if (id == R.id.search_bar) {
             Log.i(TAG, "search bar clicked");
-
             return true;
         }
+
+        /**
+         * When the sort button is clicked
+         */
         if (id == R.id.sort) {
             // Sort the items
             Log.i(TAG, "Sort menu item clicked");
+
+            // Switch to next sort type
+            sortType = (sortType+1)%sortMap.size(); // This will let us create a circular array
+
+            Intent i = new Intent();
+            Bundle b = new Bundle();
+            b.putString("query", query);
+            b.putString("searchType", searchType);
+            b.putString("resultType", resultType);
+            b.putInt("sortType", sortType);
+            i.putExtras(b);
+            // Transition to results fragment
+            transitionToResultFragment(i);
+
+            // Message the user
+            switch (sortType) {
+                case 0:
+                    Message.msgShort(getApplicationContext(), "Ordered by length (low to high)");
+                    break;
+                case 1:
+                    Message.msgShort(getApplicationContext(), "Ordered by length (high to low)");
+                    break;
+                case 2:
+                    Message.msgShort(getApplicationContext(), "Ordered by Scrabble(TM) points (low to high)");
+                    break;
+                case 3:
+                    Message.msgShort(getApplicationContext(), "Ordered by Scrabble(TM) points (high to low)");
+                    break;
+                case 4:
+                    Message.msgShort(getApplicationContext(), "Ordered by Words(TM) points (low to high)");
+                    break;
+                case 5:
+                    Message.msgShort(getApplicationContext(), "Ordered by Words(TM) points (high to low)");
+                    break;
+                default:
+                    Message.msgShort(getApplicationContext(), "Something went wrong");
+                    break;
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,22 +218,6 @@ public class ResultsListActivity extends ActionBarActivity {
     /* ----- States ----- */
     /* ------------------ */
 
-    /**
-     * When the activity is started
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    /**
-     * Resume
-     */
-    @Override
-    protected void onResume() {
-        Log.i(TAG, "onResume() called");
-        super.onResume();
-    }
 
     /**
      * On pause.
@@ -157,6 +228,5 @@ public class ResultsListActivity extends ActionBarActivity {
         Log.i(TAG, "onPause() called");
         super.onPause();
     }
-
 
 }//EOF

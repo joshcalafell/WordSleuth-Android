@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.R;
-import com.rabbitfighter.wordsleuth.Utils.Message;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 /**

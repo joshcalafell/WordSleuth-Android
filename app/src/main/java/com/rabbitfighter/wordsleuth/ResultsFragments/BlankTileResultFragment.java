@@ -21,6 +21,8 @@ import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SQLite Database. There are many like it but this one is mine...
@@ -37,12 +39,15 @@ public class BlankTileResultFragment extends Fragment {
 
     // Vars
     String query;
-    String resultType;
     ResultsDbAdapter dbAdapter;
     ArrayList<Result> results;
     ArrayList<ResultItem> resultItemList;
     Bundle bundle;
     int numResults;
+
+
+    private String resultType;
+    private int sortType;
 
     /**
      * On create
@@ -53,15 +58,22 @@ public class BlankTileResultFragment extends Fragment {
         // Get query from bundle
         if (savedInstanceState == null) {
             bundle = getArguments();
-            dbAdapter = new ResultsDbAdapter(getActivity());
-            query =  bundle.getString("query").toString();
-            Log.i(TAG, query);
-            resultType = bundle.getString("resultType").toString();
-            Log.i(TAG, resultType);
             resultItemList = new ArrayList<>();
+            dbAdapter = new ResultsDbAdapter(getActivity());
+            query = bundle.getString("query").toString();
+            resultType = bundle.getString("resultType").toString();
+            sortType = bundle.getInt("sortType");
+            numResults = 0;
+        } else {
+            bundle = savedInstanceState;
+            resultItemList = new ArrayList<>();
+            dbAdapter = new ResultsDbAdapter(getActivity());
+            query = bundle.getString("query").toString();
+            resultType = bundle.getString("resultType").toString();
+            sortType = bundle.getInt("sortType");
             numResults = 0;
         }
-        super.onCreate(savedInstanceState);
+        super.onCreate(bundle);
     }
 
 
@@ -77,9 +89,9 @@ public class BlankTileResultFragment extends Fragment {
         // Inflate layout
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
         // Views
-        TextView tv_title,  tv_query, tv_results_title, tv_results;
+        TextView tv_title,  tv_query, tv_results;
         // Populate the result type list from database
-        populateResultTypeList(resultType);
+        populateResultItemList(this.getResultType(), this.getSortType());
         // Populate the list view from resultType list
         populateListView(rootView);
         // Control the callbacks from item clicks
@@ -89,45 +101,40 @@ public class BlankTileResultFragment extends Fragment {
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
         // Set text
-        String output = resultType.substring(0, 1).toUpperCase() + resultType.substring(1) + "s";
         tv_query.setText("\"" + query + "\"");
-        tv_title.setText(output);
         tv_results.setText(String.valueOf(numResults));
         // Set typefaces
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black)); // Bold
+
         // Return the root view
         return rootView;
     }
 
     /**
-     * Populate the result types list from database calls.
+     * Populate the result item lists.
+     * @param sortType - the sortType
      */
-    private void populateResultTypeList(String resultType) {
+    private void populateResultItemList(String resultType, int sortType) {
         Log.i(TAG, "populateResultTypeList() called");
         results = new ArrayList<>();
         switch (resultType.toString()) {
             case "anagram":
-                results = dbAdapter.getAnagrams();
+                results = dbAdapter.getAnagrams(sortType);
                 for (int i = 0; i < results.size(); i++) {
-                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }
                 numResults = resultItemList.size();
                 break;
             case "subword":
-                results = dbAdapter.getSubwords();
+                results = dbAdapter.getSubwords(sortType);
                 for (int i = 0; i < results.size(); i++) {
                     resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
                 }
                 numResults = resultItemList.size();
                 break;
-            case "combo":
-                results = dbAdapter.getCombos();
-                for (int i = 0; i < results.size(); i++) {
-                    resultItemList.add(new ResultItem(results.get(i).getWord(), results.get(i).getNumLetters(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
-                }
-                numResults = resultItemList.size();
-                break;
+
         }
+
     }
 
     /**
@@ -215,12 +222,11 @@ public class BlankTileResultFragment extends Fragment {
                      * Opens the results list activity with query and result type bundled in intent
                      * @param item - the result item to lookup
                      */
-
                     private void openResultDetailFragment(ResultItem item) {
                         Intent intent = new Intent(getActivity(), ResultDetailActivity.class);
                         Bundle b = new Bundle();
                         b.putString("query", query);
-                        b.putString("resultType", resultType);
+                        b.putString("resultType", getResultType());
                         b.putString("result", item.getResult().toString());
                         intent.putExtras(b);
                         startActivity(intent);
@@ -230,4 +236,23 @@ public class BlankTileResultFragment extends Fragment {
         );
     }
 
+    public String getResultType() {
+
+        return resultType;
+    }
+
+    public void setResultType(String resultType) {
+
+        this.resultType = resultType;
+    }
+
+    public int getSortType() {
+
+        return sortType;
+    }
+
+    public void setSortType(int sortType) {
+
+        this.sortType = sortType;
+    }
 }

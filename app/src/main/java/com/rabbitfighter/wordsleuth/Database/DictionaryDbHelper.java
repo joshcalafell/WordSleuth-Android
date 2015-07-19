@@ -16,8 +16,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -266,7 +264,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         }// Good, now we have a list of chars used for our bounding in sql. 'charString'
 
         // For the raw SQL query
-        StringBuilder query_set1 = new StringBuilder(constructQuerySet1(chars,count_WILDCARDS));
+        StringBuilder query_set1 = new StringBuilder(constructQuerySet1(chars,count_WILDCARDS, chars.size()));
         StringBuilder query_set2 = new StringBuilder(constructQuerySet2(chars,count_WILDCARDS));
         StringBuilder query_whole = new StringBuilder();
 
@@ -307,7 +305,7 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
      * @param count_WILDCARDS
      * @return
      */
-    private String constructQuerySet1(Map<Character, Integer> chars, int count_WILDCARDS) {
+    private String constructQuerySet1(Map<Character, Integer> chars, int count_WILDCARDS, int length) {
 
         // Then we are going to need a string builder for our query
         StringBuilder dbQuery = new StringBuilder();
@@ -359,20 +357,9 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         }
 
         // Add constraints for the second "set"
-        dbQuery.append(AND + LENGTH_EQUALS);
+        dbQuery.append(AND + "length <=" + length);
 
-        // Reset flag
-        firstIteration = true;
 
-        // Append the length clauses
-        for (char c: chars.toString().replaceAll(VALID_CHAR_REGEX, "").toCharArray()) {
-            if (!firstIteration) {
-                dbQuery.append(PLUS).append(COLUMN_NAME_COUNT_ + String.valueOf(c).toUpperCase());
-            } else {
-                dbQuery.append(COLUMN_NAME_COUNT_ + String.valueOf(c).toUpperCase());
-                firstIteration = false;
-            }    // Try this...
-        }
 
         return dbQuery.toString();
 
