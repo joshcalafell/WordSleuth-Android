@@ -457,7 +457,6 @@ public class ResultsDbAdapter {
         return count;
     }
 
-    /* --- */
 
     /**
      * Returns the sort order string to use in SQLite query.
@@ -466,8 +465,7 @@ public class ResultsDbAdapter {
      */
     private String getSortOrderString(int sortOrder) {
         // String Builder guy
-        StringBuilder sort = null;
-        sort = new StringBuilder("");
+        StringBuilder sort = new StringBuilder();
         // Sort order is determined here
         switch (sortOrder) {
             // By word length, ascending
@@ -480,20 +478,14 @@ public class ResultsDbAdapter {
                 break;
             // By scrabble(TM) points, ascending
             case 2:
-                sort.append(COLUMN_NAME_SCRABBLE_POINTS).append(ASCENDING);
+                sort.append(COLUMN_NAME_SCRABBLE_POINTS).append(DESCENDING);
                 break;
             // By scrabble(TM) descending
             case 3:
-                sort.append(COLUMN_NAME_SCRABBLE_POINTS).append(DESCENDING);
-                break;
-            // By words With Friends(TM) points ascending
-            case 4:
-                sort.append(COLUMN_NAME_WORDS_WITH_FRIENDS_POINTS).append(ASCENDING);
-                break;
-            // By Words With Friends(TM) score, descending
-            case 5:
                 sort.append(COLUMN_NAME_WORDS_WITH_FRIENDS_POINTS).append(DESCENDING);
                 break;
+            // By words With Friends(TM) points ascending
+
             default:
                 Log.i(TAG, "Something went wrong with sortOrder in getAnagrams("+sortOrder+")");
                 break;

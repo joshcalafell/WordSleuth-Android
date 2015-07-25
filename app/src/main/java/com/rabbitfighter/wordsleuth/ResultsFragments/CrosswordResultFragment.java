@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Activities.ResultDetailActivity;
+import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
 import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.ListItems.ResultItem;
@@ -41,15 +42,13 @@ public class CrosswordResultFragment extends Fragment {
 
     // Vars
     String query;
-    String resultType;
     ResultsDbAdapter dbAdapter;
     ArrayList<Result> results;
     ArrayList<ResultItem> resultItemList;
     Bundle bundle;
+    String resultType;
     int numResults;
     int sortType;
-
-    //int searchType;
 
     /**
      * On create
@@ -95,7 +94,7 @@ public class CrosswordResultFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
 
         // Views
-        TextView tv_title,  tv_query, tv_results_title, tv_results, tv_query_title;
+        TextView tv_title, tv_query_title, tv_query, tv_results_title, tv_results, tv_sort_by_title, tv_sort_by;
 
         // Populate the result type list from database
         populateResultItemList(resultType, sortType);
@@ -114,20 +113,20 @@ public class CrosswordResultFragment extends Fragment {
         tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
         tv_results_title = (TextView) rootView.findViewById(R.id.tv_results_title);
+        tv_sort_by_title = (TextView) rootView.findViewById(R.id.tv_sort_by_title);
+        tv_sort_by= (TextView) rootView.findViewById(R.id.tv_sort_by);
 
         tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
         tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
         tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
         tv_results.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
         tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
-
+        tv_sort_by_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light));
+        tv_sort_by.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light));
         // Set text
         tv_query.setText("\"" + query + "\"");
         tv_results.setText(String.valueOf(numResults));
-
-        // Set typefaces
-        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black)); // Bold
-
+        tv_sort_by.setText(String.valueOf(ResultsListActivity.sortMap.get(sortType)));
         // Return the root view
         return rootView;
     }
@@ -189,9 +188,6 @@ public class CrosswordResultFragment extends Fragment {
 
         /**
          * This is where the view gets set, components, et all...
-         * @param position -  the list item position
-         * @param convertView -  ???
-         * @param parent - ???
          * @return the item view. There is one for each list item
          */
         @Override
@@ -220,7 +216,6 @@ public class CrosswordResultFragment extends Fragment {
 
             // Return the view
             return itemView;
-
         }
     }
 
@@ -236,10 +231,6 @@ public class CrosswordResultFragment extends Fragment {
                 new AdapterView.OnItemClickListener() {
                     /**
                      * When an item is clicked
-                     * @param parent
-                     * @param viewClicked
-                     * @param position
-                     * @param id
                      */
                     @Override
                     public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
@@ -254,6 +245,7 @@ public class CrosswordResultFragment extends Fragment {
                      */
 
                     private void openResultDetailFragment(ResultItem item) {
+
                         Intent intent = new Intent(getActivity(), ResultDetailActivity.class);
                         Bundle b = new Bundle();
                         b.putString("query", query);
@@ -262,43 +254,8 @@ public class CrosswordResultFragment extends Fragment {
                         intent.putExtras(b);
                         startActivity(intent);
                     }
-
                 }
         );
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-
-        super.onPause();
-    }
-
-    /* --- Getters/Setters --- */
-
-
-
 
 }

@@ -43,7 +43,6 @@ public class AboutActivity extends ActionBarActivity {
         getSupportActionBar().setLogo(R.drawable.icon);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-
         tv_names = (TextView)findViewById(R.id.Names);
 
         /* Set typefaces */

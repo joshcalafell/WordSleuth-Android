@@ -216,7 +216,7 @@ public class SearchResultsCrosswordFragment extends Fragment {
      */
     public void populateResultTypeList() {
         if (resultTypeItemList == null || resultTypeItemList.isEmpty()) {
-            resultTypeItemList.add(new ResultTypeItem("matche", dbAdapter.getNumberAnagrams(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
+            resultTypeItemList.add(new ResultTypeItem("anagram", dbAdapter.getNumberAnagrams(), R.mipmap.ic_action_good, R.mipmap.ic_action_new));
         } else {
             resultTypeItemList.get(0).setNumMatches(dbAdapter.getNumberAnagrams());
         }

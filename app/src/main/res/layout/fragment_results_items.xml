@@ -71,7 +71,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingTop="10dp"
-        android:layout_below="@+id/tv_results_title"/>
+        android:layout_below="@+id/tv_sort_by_title"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -90,15 +90,33 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="0"
         android:id="@+id/tv_numResults"
-        android:layout_above="@+id/lv_results"
-        android:layout_toRightOf="@+id/tv_results_title"
-        android:layout_toEndOf="@+id/tv_results_title"
         android:paddingLeft="10dp"
+        android:textColor="@android:color/white"
+        android:layout_alignBottom="@+id/tv_results_title"
+        android:layout_toRightOf="@+id/tv_results_title"
+        android:layout_toEndOf="@+id/tv_results_title"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Sort by:"
+        android:id="@+id/tv_sort_by_title" android:layout_below="@+id/tv_results_title"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:paddingLeft="30dp" android:paddingTop="10dp"
         android:textColor="@android:color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Length (low to high)"
+        android:id="@+id/tv_sort_by" android:layout_below="@+id/tv_results_title"
+        android:layout_toRightOf="@+id/tv_results_title"
+        android:layout_toEndOf="@+id/tv_results_title" android:textColor="@android:color/white"
+        android:paddingTop="10dp"/>
     android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="30dp"
-        android:paddingTop="10dp"
-        android:textColor="@android:color/white"/>
+    android:layout_alignParentStart="true"
+    android:paddingLeft="30dp"
+    android:paddingTop="10dp"
+    android:textColor="@android:color/white"/>
 
 </RelativeLayout>

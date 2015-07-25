@@ -296,11 +296,16 @@ public class SearchActivity extends ActionBarActivity {
                 } else if ((new Entry(query).getCount_blank_tiles() > 2)) {
                     Log.i(TAG, "Cannot exceed two blank tiles");
                     Message.msgLong(getApplicationContext(), "Cannot exceed two blank tiles");
-                } else if (((new Entry(query).getCount_blank_tiles()) <= 2
+                } else if (((new Entry(query).getCount_blank_tiles()) == 2
                         && (new Entry(query).getCount_blank_tiles() > 0))
-                        && query.length() > 12) {
-                    Log.i(TAG, "Cannot exceed twelve letters in a blank tile search");
-                    Message.msgLong(getApplicationContext(), "Cannot exceed twelve letters in a blank tile search");
+                        && query.length() > 8) {
+                    Log.i(TAG, "Cannot exceed eight letters in a double blank tile search");
+                    Message.msgLong(getApplicationContext(), "Cannot exceed eight letters in a double blank tile search");
+                } else if (((new Entry(query).getCount_blank_tiles()) == 1
+                        && (new Entry(query).getCount_blank_tiles() > 0))
+                        && query.length() > 10) {
+                    Log.i(TAG, "Cannot exceed ten letters in a single blank tile search");
+                    Message.msgLong(getApplicationContext(), "Cannot exceed twelve letters in a single blank tile search");
                 } else {
                     // Perform the search
                     performSearch(query);

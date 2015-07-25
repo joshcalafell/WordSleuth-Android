@@ -68,8 +68,6 @@ public class InstructionActivity extends ActionBarActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
-
     /**
      * Item selected
      *

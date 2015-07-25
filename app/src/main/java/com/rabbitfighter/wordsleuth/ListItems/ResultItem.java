@@ -53,14 +53,4 @@ public class ResultItem {
         return iconID;
     }
 
-    // Unused for now, but there if we need it.
-    public void setIconID(int iconID) {
-        this.iconID = iconID;
-    }
-    public int getIconExpandID() {
-        return iconExpandID;
-    }
-    public void setIconExpandID(int iconExpandID) {
-        this.iconExpandID = iconExpandID;
-    }
 }

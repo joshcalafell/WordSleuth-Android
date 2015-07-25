@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Activities.ResultDetailActivity;
+import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
 import com.rabbitfighter.wordsleuth.ListItems.ResultItem;
 import com.rabbitfighter.wordsleuth.Entries.Result;
@@ -43,11 +44,9 @@ public class BlankTileResultFragment extends Fragment {
     ArrayList<Result> results;
     ArrayList<ResultItem> resultItemList;
     Bundle bundle;
+    String resultType;
     int numResults;
-
-
-    private String resultType;
-    private int sortType;
+    int sortType;
 
     /**
      * On create
@@ -89,22 +88,34 @@ public class BlankTileResultFragment extends Fragment {
         // Inflate layout
         View rootView = inflater.inflate(R.layout.fragment_results_items, container, false);
         // Views
-        TextView tv_title,  tv_query, tv_results;
+        TextView tv_title, tv_query_title, tv_query, tv_results_title, tv_results, tv_sort_by_title, tv_sort_by;
         // Populate the result type list from database
-        populateResultItemList(this.getResultType(), this.getSortType());
+        populateResultItemList(resultType, sortType);
         // Populate the list view from resultType list
         populateListView(rootView);
         // Control the callbacks from item clicks
         registerClickCallback(rootView);
+
         // Set components
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         tv_query = (TextView) rootView.findViewById(R.id.tv_query);
+        tv_query_title = (TextView) rootView.findViewById(R.id.tv_query_title);
         tv_results = (TextView) rootView.findViewById(R.id.tv_numResults);
+        tv_results_title = (TextView) rootView.findViewById(R.id.tv_results_title);
+        tv_sort_by_title = (TextView) rootView.findViewById(R.id.tv_sort_by_title);
+        tv_sort_by= (TextView) rootView.findViewById(R.id.tv_sort_by);
+
+        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_black)); // Black
+        tv_query.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_query_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_results_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light)); //
+        tv_sort_by_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light));
+        tv_sort_by.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext().getApplicationContext(), RobotoFontsHelper.roboto_light));
         // Set text
         tv_query.setText("\"" + query + "\"");
         tv_results.setText(String.valueOf(numResults));
-        // Set typefaces
-        tv_title.setTypeface(RobotoFontsHelper.getTypeface(rootView.getContext(), RobotoFontsHelper.roboto_black)); // Bold
+        tv_sort_by.setText(String.valueOf(ResultsListActivity.sortMap.get(sortType)));
 
         // Return the root view
         return rootView;
@@ -132,7 +143,6 @@ public class BlankTileResultFragment extends Fragment {
                 }
                 numResults = resultItemList.size();
                 break;
-
         }
 
     }
@@ -161,9 +171,6 @@ public class BlankTileResultFragment extends Fragment {
 
         /**
          * This is where the view gets set, components, et all...
-         * @param position -  the list item position
-         * @param convertView -  ???
-         * @param parent - ???
          * @return the item view. There is one for each list item
          */
         @Override
@@ -194,7 +201,6 @@ public class BlankTileResultFragment extends Fragment {
         }
     }
 
-
     /**
      * Callback for item clicks.
      * @param rootView - the root view passed in.
@@ -206,10 +212,6 @@ public class BlankTileResultFragment extends Fragment {
                 new AdapterView.OnItemClickListener() {
                     /**
                      * When an item is clicked
-                     * @param parent
-                     * @param viewClicked
-                     * @param position
-                     * @param id
                      */
                     @Override
                     public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
@@ -226,7 +228,7 @@ public class BlankTileResultFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), ResultDetailActivity.class);
                         Bundle b = new Bundle();
                         b.putString("query", query);
-                        b.putString("resultType", getResultType());
+                        b.putString("resultType", resultType);
                         b.putString("result", item.getResult().toString());
                         intent.putExtras(b);
                         startActivity(intent);
@@ -236,23 +238,5 @@ public class BlankTileResultFragment extends Fragment {
         );
     }
 
-    public String getResultType() {
 
-        return resultType;
-    }
-
-    public void setResultType(String resultType) {
-
-        this.resultType = resultType;
-    }
-
-    public int getSortType() {
-
-        return sortType;
-    }
-
-    public void setSortType(int sortType) {
-
-        this.sortType = sortType;
-    }
 }

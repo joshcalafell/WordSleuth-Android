@@ -54,7 +54,6 @@ public class SplashActivity extends Activity {
      * Show the splash screen
      */
     public void showSplashScreen() {
-
         try {
             SystemClock.sleep(3000);
         } catch (Exception e) {

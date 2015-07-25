@@ -296,8 +296,10 @@ public class BoundSearchService extends Service  {
      */
     private void resetLists() {
         List<ArrayList<Result>> lists = new ArrayList<>();
-        lists.add(this.getAnagrams()); lists.add(this.getSubwords());
-        lists.add(this.getMatches());  lists.add(this.getCombos());
+        lists.add(this.getAnagrams());
+        lists.add(this.getSubwords());
+        lists.add(this.getMatches());
+        lists.add(this.getCombos());
         // Clear lists
         for (ArrayList<Result> list : lists) {
             list.clear();

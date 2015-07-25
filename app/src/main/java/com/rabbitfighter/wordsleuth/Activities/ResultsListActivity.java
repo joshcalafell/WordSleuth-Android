@@ -44,12 +44,10 @@ public class ResultsListActivity extends ActionBarActivity {
     public static Map<Integer, String> sortMap;
     static {
         sortMap = new HashMap<>();
-        sortMap.put(0, "Ordered by length (low to high)");    // length ASC
-        sortMap.put(1, "Ordered by length (high to low)");    // length DESC
-        sortMap.put(2, "Ordered by Scrabble(TM) points (low to high)");  // ...
-        sortMap.put(3, "Ordered by Scrabble(TM) points (high to low)");
-        sortMap.put(4, "Ordered by Words(TM) points (low to high)");
-        sortMap.put(5, "Ordered by Words(TM) points (high to low)");
+        sortMap.put(0, "length (low to high)");    // length ASC
+        sortMap.put(1, "length (high to low)");    // length DESC
+        sortMap.put(2, "Scrabble(TM) points");  // ...
+        sortMap.put(3, "Words(TM) points");
     }
 
 
@@ -84,17 +82,7 @@ public class ResultsListActivity extends ActionBarActivity {
             sortType = Integer.valueOf(bundle.get("sortType").toString());
         }
 
-        /*
-        Intent i = new Intent();
-        Bundle b = new Bundle();
-        b.putString("query", query);
-        b.putString("searchType", searchType);
-        b.putString("resultType", resultType);
-        b.putInt("sortType", sortType);
-        i.putExtras(b);
-        // Transition to results fragment
-        */
-        transitionToResultFragment(getIntent());
+        transitionToResultFragment(bundle);
 
         // Action bar stuff
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -106,14 +94,9 @@ public class ResultsListActivity extends ActionBarActivity {
     /**
      * Transition to the correct results fragment
      */
-    private void transitionToResultFragment(Intent i) {
-        bundle = i.getExtras();
-        query = bundle.get("query").toString();
-        searchType = bundle.get("searchType").toString();
-        resultType = bundle.get("resultType").toString();
-        sortType = Integer.valueOf(bundle.get("sortType").toString());
-
-        Log.i(TAG, searchType + " " + resultType + " " + sortType);
+    private void transitionToResultFragment(Bundle b) {
+        String searchType = b.getString("searchType");
+        Log.i(TAG, this.searchType + " " + this.resultType + " " + this.sortType);
 
         // During initial setup, plug in the details fragment.
         if (searchType.compareTo("regularSearch")==0) {
@@ -126,9 +109,8 @@ public class ResultsListActivity extends ActionBarActivity {
             Log.i(TAG, "Something went wrong with the search type bundle info");
         }
 
-        fragment.setArguments(bundle);
+        fragment.setArguments(b);
         getSupportFragmentManager().beginTransaction().add(R.id.contentFragment, fragment).commit();
-
 
     }
 
@@ -166,7 +148,7 @@ public class ResultsListActivity extends ActionBarActivity {
         }
 
         /**
-         * When the sort button is clicked
+         * TODO: When the sort button is clicked
          */
         if (id == R.id.sort) {
             // Sort the items
@@ -183,33 +165,7 @@ public class ResultsListActivity extends ActionBarActivity {
             b.putInt("sortType", sortType);
             i.putExtras(b);
             // Transition to results fragment
-            transitionToResultFragment(i);
-
-            // Message the user
-            switch (sortType) {
-                case 0:
-                    Message.msgShort(getApplicationContext(), "Ordered by length (low to high)");
-                    break;
-                case 1:
-                    Message.msgShort(getApplicationContext(), "Ordered by length (high to low)");
-                    break;
-                case 2:
-                    Message.msgShort(getApplicationContext(), "Ordered by Scrabble(TM) points (low to high)");
-                    break;
-                case 3:
-                    Message.msgShort(getApplicationContext(), "Ordered by Scrabble(TM) points (high to low)");
-                    break;
-                case 4:
-                    Message.msgShort(getApplicationContext(), "Ordered by Words(TM) points (low to high)");
-                    break;
-                case 5:
-                    Message.msgShort(getApplicationContext(), "Ordered by Words(TM) points (high to low)");
-                    break;
-                default:
-                    Message.msgShort(getApplicationContext(), "Something went wrong");
-                    break;
-            }
-
+            transitionToResultFragment(b);
         }
         return super.onOptionsItemSelected(item);
     }

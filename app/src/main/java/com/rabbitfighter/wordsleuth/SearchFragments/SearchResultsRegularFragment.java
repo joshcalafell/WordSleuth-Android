@@ -259,22 +259,22 @@ public class SearchResultsRegularFragment extends Fragment {
         list = (ListView) rootView.findViewById(R.id.lv_results);
         // Set listener
         list.setOnItemClickListener(
-            new AdapterView.OnItemClickListener() {
-                /**
-                 * When an item is clicked
-                 * @param parent - the parent
-                 * @param viewClicked - the view that was clicked
-                 * @param position -  the position of the clicked item
-                 * @param id - ???
-                 */
-                @Override
-                public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                    ResultTypeItem clickedItem = resultTypeItemList.get(position);
-                    openResultListActivity(clickedItem.getResultType().toString());
+                new AdapterView.OnItemClickListener() {
+                    /**
+                     * When an item is clicked
+                     * @param parent - the parent
+                     * @param viewClicked - the view that was clicked
+                     * @param position -  the position of the clicked item
+                     * @param id - ???
+                     */
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
+                        ResultTypeItem clickedItem = resultTypeItemList.get(position);
+                        openResultListActivity(clickedItem.getResultType().toString());
+                    }
+
+
                 }
-
-
-            }
         );
     }
 

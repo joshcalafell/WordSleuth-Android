@@ -359,8 +359,6 @@ public class DictionaryDbHelper extends SQLiteOpenHelper {
         // Add constraints for the second "set"
         dbQuery.append(AND + "length <=" + length);
 
-
-
         return dbQuery.toString();
 
     }
