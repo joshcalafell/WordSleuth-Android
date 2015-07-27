@@ -1,6 +1,7 @@
 package com.rabbitfighter.wordsleuth.SearchFragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.rabbitfighter.wordsleuth.Activities.ResultsListActivity;
 import com.rabbitfighter.wordsleuth.Database.ResultsDbAdapter;
 import com.rabbitfighter.wordsleuth.ListItems.ResultTypeItem;
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.Utils.AppRaterUtil;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 import net.dicesoft.net.apprater.AppRater;
@@ -37,7 +39,7 @@ import java.util.List;
  */
 public class SearchResultsRegularFragment extends Fragment {
 
-    public final static String TAG = "SearchResultsRegularFragment";
+    public final static String TAG = "ResultsRegularFragment";
     private List<ResultTypeItem> resultTypeItemList;
 
     // Query
@@ -108,21 +110,27 @@ public class SearchResultsRegularFragment extends Fragment {
     }
 
     private void runAppRater() {
-        AppRater appRater = new AppRater(getActivity());
-        appRater.setDaysBeforePrompt(3);
-        appRater.setLaunchesBeforePrompt(7);
-        appRater.setTargetUri("http://google.com");
-        appRater.setPhrases(
-                R.string.rate_title,
-                R.string.rate_explanation,
-                R.string.rate_now,
-                R.string.rate_later,
-                R.string.rate_never);
+        Context currentContext = getActivity();
 
-        AlertDialog appRateDialog = appRater.getDialog();
+        if (AppRaterUtil.IsInstalledByGooglePlay(currentContext)) {
+            AppRater appRater = new AppRater(currentContext);
+            appRater.setDaysBeforePrompt(5);
+            appRater.setLaunchesBeforePrompt(7);
+            appRater.setTargetUri("market://details?id=com.rabbitfighter.wordsleuth");
+            appRater.setPhrases(
+                    R.string.rate_title,
+                    R.string.rate_explanation,
+                    R.string.rate_now,
+                    R.string.rate_later,
+                    R.string.rate_never);
 
-        if (appRateDialog != null) {
-            appRateDialog.show();
+            AlertDialog appRateDialog = appRater.getDialog();
+
+            if (appRateDialog != null) {
+                appRateDialog.show();
+            }
+        } else {
+            Log.i(TAG, "not Google Play installed.");
         }
     }
 

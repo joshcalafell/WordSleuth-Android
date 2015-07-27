@@ -170,6 +170,11 @@ public class ResultDetailActivity extends ActionBarActivity {
 
         // Handle item selection
         switch (id) {
+            case R.id.help:
+                Intent startInstructions = new Intent(this, InstructionActivity.class);
+                startActivity(startInstructions);
+
+                return true;
             case R.id.share:
                 showShareOptions();
                 return true;
