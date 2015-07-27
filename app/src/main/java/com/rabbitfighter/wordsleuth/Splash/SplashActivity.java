@@ -51,9 +51,9 @@ public class SplashActivity extends Activity {
     }
 
     /**
-     * Show the splash screen
+     * Pause the splash screen
      */
-    public void showSplashScreen() {
+    public void waitSplashScreen() {
         try {
             SystemClock.sleep(3000);
         } catch (Exception e) {
@@ -71,9 +71,6 @@ public class SplashActivity extends Activity {
 
         if (isHelpOn) {
             Intent instructionStart = new Intent(this, InstructionActivity.class);
-
-            // For future use when we need to check if we need to display a dialog.
-            instructionStart.putExtra("isHelpOn", isHelpOn);
             startActivity(instructionStart);
         } else {
             Intent searchStart = new Intent(this, SearchActivity.class);
@@ -98,7 +95,7 @@ public class SplashActivity extends Activity {
          */
         @Override
         protected Void doInBackground(Void... params) {
-            showSplashScreen();
+            waitSplashScreen();
             return null;
         }
 

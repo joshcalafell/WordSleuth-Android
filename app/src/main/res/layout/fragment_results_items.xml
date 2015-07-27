@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/wordsleuth_bg_512x512"
+                android:background="@drawable/wordsleuth_grey_logo"
                 android:id="@+id/fragment_search_results"
                 android:textAlignment="textEnd">
 

@@ -141,33 +141,35 @@ public class ResultsListActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection Simplifiadid not call through to super.onCreate()bleIfStatement
-        if (id == R.id.search_bar) {
-            Log.i(TAG, "search bar clicked");
-            return true;
+        // Handle item selection
+        switch (id) {
+            case R.id.help:
+
+                Intent startInstructions = new Intent(this, InstructionActivity.class);
+                startActivity(startInstructions);
+
+                return true;
+            case R.id.sort:
+                // Sort the items
+                Log.i(TAG, "Sort menu item clicked");
+
+                // Switch to next sort type
+                sortType = (sortType+1)%sortMap.size(); // This will let us create a circular array
+
+                Intent i = new Intent();
+                Bundle b = new Bundle();
+                b.putString("query", query);
+                b.putString("searchType", searchType);
+                b.putString("resultType", resultType);
+                b.putInt("sortType", sortType);
+                i.putExtras(b);
+                // Transition to results fragment
+                transitionToResultFragment(b);
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        /**
-         * TODO: When the sort button is clicked
-         */
-        if (id == R.id.sort) {
-            // Sort the items
-            Log.i(TAG, "Sort menu item clicked");
-
-            // Switch to next sort type
-            sortType = (sortType+1)%sortMap.size(); // This will let us create a circular array
-
-            Intent i = new Intent();
-            Bundle b = new Bundle();
-            b.putString("query", query);
-            b.putString("searchType", searchType);
-            b.putString("resultType", resultType);
-            b.putInt("sortType", sortType);
-            i.putExtras(b);
-            // Transition to results fragment
-            transitionToResultFragment(b);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /* ------------------ */

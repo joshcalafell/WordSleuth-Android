@@ -2,7 +2,7 @@
                                    android:id="@+id/pager"
                                    android:layout_width="match_parent"
                                    android:layout_height="match_parent"
-                                   android:background="@drawable/wordsleuth_bg_512x512"
+                                   android:background="@drawable/wordsleuth_grey_logo"
                                    android:icon="@mipmap/ic_launcher"
                                    android:name=".InstructionActivity"
                                    android:label="My new title"/>

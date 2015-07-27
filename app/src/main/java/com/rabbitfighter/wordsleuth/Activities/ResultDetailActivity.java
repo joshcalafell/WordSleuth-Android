@@ -170,9 +170,6 @@ public class ResultDetailActivity extends ActionBarActivity {
 
         // Handle item selection
         switch (id) {
-            case R.id.save:
-                // Josh this is your favorite list stuff.
-                return true;
             case R.id.share:
                 showShareOptions();
                 return true;

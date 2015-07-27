@@ -4,27 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/title"
-          android:title="Word Sleuth"/>
+          android:title="@string/app_name"/>
 
     <group>
 
         <item
-            android:id="@+id/about_option"
+            android:id="@+id/help"
             android:orderInCategory="1"
             app:showAsAction="never"
-            android:title="@string/txt_about" />
-
-        <item
-            android:id="@+id/dictionary_option"
-            android:orderInCategory="2"
-            app:showAsAction="never"
-            android:title="@string/txt_dict_info" />
-
-        <item
-            android:id="@+id/settings_option"
-            android:orderInCategory="3"
-            app:showAsAction="never"
-            android:title="@string/txt_settings_tag" />
+            android:label="" />
 
     </group>
 </menu>

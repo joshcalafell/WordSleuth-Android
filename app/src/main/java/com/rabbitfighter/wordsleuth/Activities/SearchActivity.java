@@ -67,12 +67,34 @@ public class SearchActivity extends ActionBarActivity {
 
     // Whether the service is bound or not...
     boolean isBound;
+    /**
+     * Service Connection
+     */
+    public ServiceConnection connection = new ServiceConnection() {
+        // when we connect to the service.
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "Service connected...");
+            // Reference to our binder class
+            BoundSearchService.MyLocalBinder binder = (BoundSearchService.MyLocalBinder) service;
+            // Once we have access, we get the class container IBinder with cool methods.
+            searchService = binder.getService();
+            // Set bound to true, because we are now bound to a service
+            isBound = true;
+        }
 
-    private int searchType;
+        // When we disconnect from a service
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "Service disconnected...");
+            isBound = false;
+        }
+    };
 
     /* ------------------------- */
     /* --- @Override methods --- */
     /* ------------------------- */
+    private int searchType;
 
     /**
      * On creation of activity
@@ -169,6 +191,10 @@ public class SearchActivity extends ActionBarActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /* ---------------- */
+    /* --- Services --- */
+    /* ---------------- */
+
     /**
      * Menu items selected
      * @param item - The menu item passed in.
@@ -186,45 +212,18 @@ public class SearchActivity extends ActionBarActivity {
 
         // Handle item selection
         switch (id) {
-            case R.id.about_option:
-                // Josh this is your favorite list stuff.
-                Intent aboutIntent = new Intent(this, AboutActivity.class);
 
-                startActivity(aboutIntent);
+            case R.id.help:
+
+                Intent startInstructions = new Intent(this, InstructionActivity.class);
+                startActivity(startInstructions);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
-
-    /* ---------------- */
-    /* --- Services --- */
-    /* ---------------- */
-
-    /**
-     * Service Connection
-     */
-    public ServiceConnection connection = new ServiceConnection() {
-        // when we connect to the service.
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.i(TAG, "Service connected...");
-            // Reference to our binder class
-            BoundSearchService.MyLocalBinder binder = (BoundSearchService.MyLocalBinder) service;
-            // Once we have access, we get the class container IBinder with cool methods.
-            searchService = binder.getService();
-            // Set bound to true, because we are now bound to a service
-            isBound = true;
-        }
-
-        // When we disconnect from a service
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Log.i(TAG, "Service disconnected...");
-            isBound = false;
-        }
-    };
 
     /* ---------------------- */
     /* --- Intent related --- */
@@ -424,54 +423,6 @@ public class SearchActivity extends ActionBarActivity {
     }
 
     /**
-     * This is to make the searches bound service asynchronous.
-     */
-    public class AsyncSearchTask extends AsyncTask<Void, Void, Void> {
-
-        // Query
-        String userQuery;
-        int searchType;
-
-        // constructor
-        public AsyncSearchTask(String userQuery, int searchType) {
-            this.userQuery = userQuery;
-            this.searchType = searchType;
-        }
-
-        /**
-         * 1) Pre-Search sets up dictionary
-         */
-        @Override
-        protected void onPreExecute() {
-            searchService.prepareSearch(this.searchType);
-            Log.i(TAG, String.valueOf(this.searchType));
-            Log.i(TAG, this.userQuery);
-        }
-
-        /**
-         * 2) Search searches using the bound service
-         */
-        @Override
-        protected Void doInBackground(Void... params) {
-            searchService.search(this.userQuery);
-            Log.i(TAG, "Got to search start");
-            return null;
-        }
-
-        /**
-         * 3) Post-Search transitions to the results
-         */
-        @Override
-        protected void onPostExecute(Void result) {
-            transitionToResultsFragment(this.userQuery, this.searchType);
-        }
-    }
-
-    /* ---------------------------- */
-    /* ----- Lifecycle States ----- */
-    /* ---------------------------- */
-
-    /**
      * When the activity is started
      */
     @Override
@@ -488,6 +439,10 @@ public class SearchActivity extends ActionBarActivity {
         }
         super.onStart();
     }
+
+    /* ---------------------------- */
+    /* ----- Lifecycle States ----- */
+    /* ---------------------------- */
 
     /**
      * Resume
@@ -537,15 +492,59 @@ public class SearchActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
-    /* --- Getters/Setters */
-
     public int getSearchType() {
 
         return searchType;
     }
 
+    /* --- Getters/Setters */
+
     public void setSearchType(int searchType) {
 
         this.searchType = searchType;
+    }
+
+    /**
+     * This is to make the searches bound service asynchronous.
+     */
+    public class AsyncSearchTask extends AsyncTask<Void, Void, Void> {
+
+        // Query
+        String userQuery;
+        int searchType;
+
+        // constructor
+        public AsyncSearchTask(String userQuery, int searchType) {
+            this.userQuery = userQuery;
+            this.searchType = searchType;
+        }
+
+        /**
+         * 1) Pre-Search sets up dictionary
+         */
+        @Override
+        protected void onPreExecute() {
+            searchService.prepareSearch(this.searchType);
+            Log.i(TAG, String.valueOf(this.searchType));
+            Log.i(TAG, this.userQuery);
+        }
+
+        /**
+         * 2) Search searches using the bound service
+         */
+        @Override
+        protected Void doInBackground(Void... params) {
+            searchService.search(this.userQuery);
+            Log.i(TAG, "Got to search start");
+            return null;
+        }
+
+        /**
+         * 3) Post-Search transitions to the results
+         */
+        @Override
+        protected void onPostExecute(Void result) {
+            transitionToResultsFragment(this.userQuery, this.searchType);
+        }
     }
 }//EOF
