@@ -3,10 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/title"
-          android:title="Word Sleuth"/>
-
-
     <item android:id="@+id/sort"
           android:icon="@mipmap/ic_action_sort_by_size"
           android:title="Sort By"

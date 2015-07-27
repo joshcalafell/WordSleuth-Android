@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.rabbitfighter.wordsleuth.AboutScreen.AboutActivity;
 import com.rabbitfighter.wordsleuth.Entries.Entry;
 import com.rabbitfighter.wordsleuth.R;
 import com.rabbitfighter.wordsleuth.SearchFragments.SearchInputFragment;
