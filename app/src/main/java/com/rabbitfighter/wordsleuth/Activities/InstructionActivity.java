@@ -1,6 +1,11 @@
 package com.rabbitfighter.wordsleuth.Activities;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -10,6 +15,7 @@ import android.view.MenuItem;
 
 import com.rabbitfighter.wordsleuth.Adapters.InstructionsPagerAdapter;
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.Services.BoundSearchService;
 
 /**
  * App instructions. Five fragments
@@ -29,6 +35,40 @@ public class InstructionActivity extends ActionBarActivity {
     InstructionsPagerAdapter adapter;
     ViewPager viewPager;
 
+
+    // Service connection class.
+    BoundSearchService searchService;
+
+    // Search intent for service connection
+    Intent searchIntent;
+
+    // Whether the service is bound or not...
+    boolean isBound;
+
+    /**
+     * Service Connection
+     */
+    public ServiceConnection connection = new ServiceConnection() {
+        // when we connect to the service.
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "Service connected...");
+            // Reference to our binder class
+            BoundSearchService.MyLocalBinder binder = (BoundSearchService.MyLocalBinder) service;
+            // Once we have access, we get the class container IBinder with cool methods.
+            searchService = binder.getService();
+            // Set bound to true, because we are now bound to a service
+            isBound = true;
+        }
+
+        // When we disconnect from a service
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "Service disconnected...");
+            isBound = false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate() called ");
@@ -44,13 +84,8 @@ public class InstructionActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.icon);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
-    }
 
-    /**
-     * Constructor calls super.
-     */
-    public InstructionActivity() {
-
+        isBound = false;
     }
 
     /**
@@ -94,6 +129,43 @@ public class InstructionActivity extends ActionBarActivity {
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart() called");
+
+        if (!isBound) {
+            // Bound service intent, different that received intent
+            searchIntent = new Intent(this, BoundSearchService.class);
+            // We want to bind to this. Params: (Intent, ServiceConnection, How to bind it)
+            bindService(searchIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.i(TAG, "Service is bound from on create");
+        } else {
+            Log.i(TAG, "Service was already bound. Nothing to do...");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i(TAG, "onResume() called");
+
+        if (!isBound) {
+            // Bound service intent, different that received intent
+            searchIntent = new Intent(this, BoundSearchService.class);
+            // We want to bind to this. Params: (Intent, ServiceConnection, How to bind it)
+            bindService(searchIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.i(TAG, "Service is bound from on create");
+        } else {
+            Log.i(TAG, "Service was already bound. Nothing to do...");
+        }
+        super.onResume();
+    }
+
+    /**
+     * On pause.
+     * TODO: Decide what to do with resources.
+     */
+    @Override
+    protected void onPause() {
+        Log.i(TAG, "onPause() called");
+
+        super.onPause();
     }
 
 }//EOF

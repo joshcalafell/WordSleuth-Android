@@ -1,8 +1,12 @@
 package com.rabbitfighter.wordsleuth.Activities;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 
 import com.rabbitfighter.wordsleuth.Entries.Result;
 import com.rabbitfighter.wordsleuth.R;
+import com.rabbitfighter.wordsleuth.Services.BoundSearchService;
 import com.rabbitfighter.wordsleuth.Utils.RobotoFontsHelper;
 
 /**
@@ -49,6 +54,40 @@ public class ResultDetailActivity extends ActionBarActivity {
              tv_words_title,
              tv_words_points;
 
+
+    // Service connection class.
+    BoundSearchService searchService;
+
+    // Search intent for service connection
+    Intent searchIntent;
+
+    // Whether the service is bound or not...
+    boolean isBound;
+
+    /**
+     * Service Connection
+     */
+    public ServiceConnection connection = new ServiceConnection() {
+        // when we connect to the service.
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "Service connected...");
+            // Reference to our binder class
+            BoundSearchService.MyLocalBinder binder = (BoundSearchService.MyLocalBinder) service;
+            // Once we have access, we get the class container IBinder with cool methods.
+            searchService = binder.getService();
+            // Set bound to true, because we are now bound to a service
+            isBound = true;
+        }
+
+        // When we disconnect from a service
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "Service disconnected...");
+            isBound = false;
+        }
+    };
+
     /**
      * On creation of activity. Called first.
      * @param savedInstanceState - the saved instance state
@@ -58,6 +97,8 @@ public class ResultDetailActivity extends ActionBarActivity {
         Log.i(TAG, "onCreate() called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result_details);
+
+        isBound = false;
 
         /*
          Orientation change (TODO for other devs: for now, don't worry about orientation stuff.)
@@ -97,7 +138,21 @@ public class ResultDetailActivity extends ActionBarActivity {
         tv_words_points.setTypeface(RobotoFontsHelper.getTypeface(getApplicationContext(), RobotoFontsHelper.roboto_regular));
 
         /* Set text */
-        tv_title.setText("Result Detail");
+        switch (resultType) {
+            case "anagram":
+                tv_title.setText(getString(R.string.txt_anagram_details));
+                break;
+            case "subword":
+                tv_title.setText(getString(R.string.txt_subword_details));
+                break;
+            case "combo":
+                tv_title.setText(getString(R.string.txt_combo_details));
+                break;
+            default:
+                tv_title.setText("Result Details:");
+                break;
+        }
+
         tv_result.setText(result.getWord());
         //tv_query.setText("\"" + query + "\"");
         tv_length.setText(String.valueOf(result.getNumLetters() + " letters"));
@@ -185,20 +240,59 @@ public class ResultDetailActivity extends ActionBarActivity {
     }
 
     private void showShareOptions() {
+        String userResult = "";
 
         Intent shareResultIntent = new Intent(Intent.ACTION_SEND);
         shareResultIntent.setType("text/plain");
         switch (resultType.toString()) {
             case "anagram":
-                String userResult = getString(R.string.txt_share_I_Found) +
+                userResult = getString(R.string.txt_share_I_Found) +
                         " " + '"' + result.getWord() + '"' + " " +
                         getString(R.string.txt_share_is_an_anagram) + " " +
                         '"' + query.toString() + '"' + " " +
                         getString(R.string.txt_with_word_sleuth);
-                shareResultIntent.putExtra(Intent.EXTRA_TEXT, userResult + " http://aol.com/");
 
+                shareResultIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        userResult + " " + getString(R.string.google_play_store_http_uri));
 
-                startActivity(Intent.createChooser(shareResultIntent, getString(R.string.abc_shareactionprovider_share_with)));
+                startActivity(Intent.createChooser(
+                        shareResultIntent,
+                        getString(R.string.abc_shareactionprovider_share_with)));
+                break;
+            case "subword":
+
+                userResult = getString(R.string.txt_share_I_Found) +
+                        " " + getString(R.string.txt_share_the_subword) +
+                        " " + '"' + result.getWord() + '"' + " " +
+                        getString(R.string.txt_share_from) + " " +
+                        '"' + query.toString() + '"' + " " +
+                        getString(R.string.txt_with_word_sleuth);
+
+                shareResultIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        userResult + getString(R.string.google_play_store_http_uri));
+
+                startActivity(Intent.createChooser(
+                        shareResultIntent,
+                        getString(R.string.abc_shareactionprovider_share_with)));
+                break;
+            case "combo":
+
+                userResult = getString(R.string.txt_share_I_Found) +
+                        " " + getString(R.string.txt_share_combo) + " " +
+                        '"' + result.getWord() + '"' + " " +
+                        getString(R.string.txt_share_from) + " " +
+                        '"' + query.toString() + '"' + " " +
+                        getString(R.string.txt_with_word_sleuth);
+
+                shareResultIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        userResult + getString(R.string.google_play_store_http_uri));
+
+                startActivity(Intent.createChooser(
+                        shareResultIntent,
+                        getString(R.string.abc_shareactionprovider_share_with)));
                 break;
         }
 
@@ -209,30 +303,69 @@ public class ResultDetailActivity extends ActionBarActivity {
     /* ------------------ */
 
     /**
-     * When the activity is started
-     */
-    @Override
-    protected void onStart() {
-        Log.i(TAG, "onStart() called");
-        super.onStart();
-    }
-
-    /**
      * Resume
      */
     @Override
     protected void onResume() {
         Log.i(TAG, "onResume() called");
+
+        if (!isBound) {
+            // Bound service intent, different that received intent
+            searchIntent = new Intent(this, BoundSearchService.class);
+            // We want to bind to this. Params: (Intent, ServiceConnection, How to bind it)
+            bindService(searchIntent, connection, Context.BIND_AUTO_CREATE);
+            Log.i(TAG, "Service is bound from on create");
+        } else {
+            Log.i(TAG, "Service was already bound. Nothing to do...");
+        }
         super.onResume();
     }
 
     /**
      * On pause.
+     * TODO: Decide what to do with resources.
      */
     @Override
     protected void onPause() {
         Log.i(TAG, "onPause() called");
+
+        if (isBound) {
+            unbindService(connection);
+            Log.i(TAG, "Service was unbound from onDestroy");
+            isBound = false;
+        } else {
+            Log.i(TAG, "Service is bound");
+        }
+
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG, "onStop() called");
+
+        if (isBound) {
+            unbindService(connection);
+            Log.i(TAG, "Service was unbound from onDestroy");
+            isBound = false;
+        } else {
+            Log.i(TAG, "Service is bound");
+        }
+        super.onStop();
+    }
+
+    // Unbind service if activity is destroyed. Hopefully fixes stephen's UN-TICKETED BUG!
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy called");
+        if (isBound) {
+            unbindService(connection);
+            Log.i(TAG, "Service was unbound from onDestroy");
+            isBound = false;
+        } else {
+            Log.i(TAG, "Service is bound");
+        }
+        super.onDestroy();
     }
 
 }

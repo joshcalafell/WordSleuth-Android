@@ -116,7 +116,7 @@ public class SearchResultsRegularFragment extends Fragment {
             AppRater appRater = new AppRater(currentContext);
             appRater.setDaysBeforePrompt(5);
             appRater.setLaunchesBeforePrompt(7);
-            appRater.setTargetUri("market://details?id=com.rabbitfighter.wordsleuth");
+            appRater.setTargetUri(getString(R.string.google_play_store_uri));
             appRater.setPhrases(
                     R.string.rate_title,
                     R.string.rate_explanation,

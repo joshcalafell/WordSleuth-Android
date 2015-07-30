@@ -449,6 +449,8 @@ public class SearchActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         Log.i(TAG, "onResume() called");
+
+
         if (!isBound) {
             // Bound service intent, different that received intent
             searchIntent = new Intent(this, BoundSearchService.class);
@@ -468,12 +470,21 @@ public class SearchActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         Log.i(TAG, "onPause() called");
+        
         super.onPause();
     }
 
     @Override
     protected void onStop() {
         Log.i(TAG, "onStop() called");
+
+        if (isBound) {
+            unbindService(connection);
+            Log.i(TAG, "Service was unbound from onDestroy");
+            isBound = false;
+        } else {
+            Log.i(TAG, "Service is bound");
+        }
         super.onStop();
     }
 

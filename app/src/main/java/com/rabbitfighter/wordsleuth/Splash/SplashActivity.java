@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
-
 import com.rabbitfighter.wordsleuth.Activities.InstructionActivity;
 import com.rabbitfighter.wordsleuth.Activities.SearchActivity;
 import com.rabbitfighter.wordsleuth.R;
@@ -38,6 +37,11 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
         new AsyncSplashTask().execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     /**
